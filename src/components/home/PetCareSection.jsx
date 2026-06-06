@@ -1,3 +1,6 @@
+import { Card, CardBody } from "@heroui/card";
+import { Chip } from "@heroui/chip";
+
 const TIPS = [
   {
     number: "01",
@@ -57,144 +60,60 @@ const TIPS = [
 
 export default function PetCareSection() {
   return (
-    <section
-      style={{
-        padding: "96px 0",
-        background: "var(--color-bg)",
-        borderBottom: "1px solid var(--color-border)",
-      }}
-    >
-      <div
-        style={{
-          maxWidth: "1280px",
-          margin: "0 auto",
-          padding: "0 24px",
-        }}
-      >
-        <div style={{ textAlign: "center", marginBottom: "64px" }}>
+    <section className="py-24 bg-[var(--color-bg)] border-b border-[var(--color-border)]">
+      <div className="max-w-[1280px] mx-auto px-6">
+        {/* Header */}
+        <div className="text-center mb-16">
           <p className="section-label">Expert Advice</p>
-          <h2 className="section-title" style={{ marginBottom: "16px" }}>
-            Pet Care Tips
-          </h2>
-          <p
-            style={{
-              fontSize: "15px",
-              color: "var(--color-text-secondary)",
-              maxWidth: "480px",
-              margin: "0 auto",
-              lineHeight: "1.7",
-            }}
-          >
+          <h2 className="section-title mb-4">Pet Care Tips</h2>
+          <p className="text-[15px] text-[var(--color-text-secondary)] max-w-[480px] mx-auto leading-relaxed">
             Insights from our team of veterinarians and behavioral specialists
             to help you and your new companion thrive from day one.
           </p>
         </div>
 
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(3, 1fr)",
-            gap: "20px",
-          }}
-          className="tips-grid"
-        >
+        {/* Tips Grid */}
+        <div className="grid grid-cols-3 lg:grid-cols-2 sm:grid-cols-1 gap-5">
           {TIPS.map((tip) => (
-            <div
-              key={tip.number}
-              style={{
-                padding: "28px",
-                background: "var(--color-surface)",
-                border: "1px solid var(--color-border)",
-                borderRadius: "var(--radius-md)",
-                transition: "all 0.3s ease",
-                position: "relative",
-                overflow: "hidden",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = "rgba(217,249,157,0.2)";
-                e.currentTarget.style.transform = "translateY(-2px)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = "var(--color-border)";
-                e.currentTarget.style.transform = "translateY(0)";
-              }}
-            >
-              <div
-                style={{
-                  position: "absolute",
-                  top: "16px",
-                  right: "16px",
-                  fontSize: "48px",
-                  fontWeight: "800",
-                  color: "rgba(255,255,255,0.03)",
-                  lineHeight: 1,
-                  letterSpacing: "-0.04em",
-                }}
-              >
-                {tip.number}
-              </div>
-
-              <div
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  padding: "4px 10px",
-                  background: tip.tagBg,
-                  borderRadius: "var(--radius-full)",
-                  marginBottom: "16px",
-                }}
-              >
-                <span
-                  style={{
-                    fontSize: "11px",
-                    fontWeight: "700",
-                    letterSpacing: "0.06em",
-                    textTransform: "uppercase",
-                    color: tip.tagColor,
-                  }}
-                >
-                  {tip.tag}
-                </span>
-              </div>
-
-              <h3
-                style={{
-                  fontSize: "16px",
-                  fontWeight: "700",
-                  color: "var(--color-text-primary)",
-                  marginBottom: "12px",
-                  letterSpacing: "-0.01em",
-                  lineHeight: "1.3",
-                }}
-              >
-                {tip.title}
-              </h3>
-              <p
-                style={{
-                  fontSize: "13px",
-                  color: "var(--color-text-secondary)",
-                  lineHeight: "1.7",
-                }}
-              >
-                {tip.description}
-              </p>
-            </div>
+            <TipCard key={tip.number} tip={tip} />
           ))}
         </div>
       </div>
-
-      <style jsx>{`
-        @media (max-width: 1024px) {
-          .tips-grid {
-            grid-template-columns: repeat(2, 1fr) !important;
-          }
-        }
-        @media (max-width: 640px) {
-          .tips-grid {
-            grid-template-columns: 1fr !important;
-          }
-        }
-      `}</style>
     </section>
+  );
+}
+
+function TipCard({ tip }) {
+  return (
+    <Card className="bg-[var(--color-surface)] border border-[var(--color-border)] relative overflow-hidden transition-all duration-300 hover:-translate-y-0.5 hover:border-[rgba(217,249,157,0.2)] group">
+      <CardBody className="p-7">
+        {/* Background Number */}
+        <div className="absolute top-4 right-4 text-[48px] font-extrabold text-white/[0.03] leading-none tracking-tighter">
+          {tip.number}
+        </div>
+
+        {/* Tag */}
+        <Chip
+          size="sm"
+          className="mb-4 text-[11px] font-bold tracking-wider uppercase"
+          style={{
+            background: tip.tagBg,
+            color: tip.tagColor,
+          }}
+        >
+          {tip.tag}
+        </Chip>
+
+        {/* Title */}
+        <h3 className="text-base font-bold text-[var(--color-text-primary)] mb-3 tracking-tight leading-snug">
+          {tip.title}
+        </h3>
+
+        {/* Description */}
+        <p className="text-[13px] text-[var(--color-text-secondary)] leading-relaxed">
+          {tip.description}
+        </p>
+      </CardBody>
+    </Card>
   );
 }

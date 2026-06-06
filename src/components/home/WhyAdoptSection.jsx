@@ -1,3 +1,5 @@
+import { Card, CardBody } from "@heroui/card";
+
 const REASONS = [
   {
     icon: (
@@ -89,124 +91,61 @@ const REASONS = [
 
 export default function WhyAdoptSection() {
   return (
-    <section
-      style={{
-        padding: "96px 0",
-        background: "var(--color-surface)",
-        borderTop: "1px solid var(--color-border)",
-        borderBottom: "1px solid var(--color-border)",
-      }}
-    >
-      <div
-        style={{
-          maxWidth: "1280px",
-          margin: "0 auto",
-          padding: "0 24px",
-        }}
-      >
-        <div style={{ textAlign: "center", marginBottom: "64px" }}>
+    <section className="py-24 bg-[var(--color-surface)] border-t border-b border-[var(--color-border)]">
+      <div className="max-w-[1280px] mx-auto px-6">
+        {/* Header */}
+        <div className="text-center mb-16">
           <p className="section-label">Why Choose Us</p>
-          <h2 className="section-title" style={{ marginBottom: "16px" }}>
-            Why Adopt Through PetNest?
-          </h2>
-          <p
-            style={{
-              fontSize: "16px",
-              color: "var(--color-text-secondary)",
-              maxWidth: "520px",
-              margin: "0 auto",
-              lineHeight: "1.7",
-            }}
-          >
+          <h2 className="section-title mb-4">Why Adopt Through PetNest?</h2>
+          <p className="text-base text-[var(--color-text-secondary)] max-w-[520px] mx-auto leading-relaxed">
             We have reimagined the adoption experience from the ground up,
             making it safer, more transparent, and more joyful for both
             you and your future companion.
           </p>
         </div>
 
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(3, 1fr)",
-            gap: "20px",
-          }}
-          className="why-grid"
-        >
+        {/* Reasons Grid */}
+        <div className="grid grid-cols-3 lg:grid-cols-2 sm:grid-cols-1 gap-5">
           {REASONS.map((reason) => (
-            <div
-              key={reason.title}
-              style={{
-                padding: "28px",
-                background: "var(--color-bg)",
-                border: `1px solid var(--color-border)`,
-                borderRadius: "var(--radius-md)",
-                transition: "all 0.3s ease",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = reason.border;
-                e.currentTarget.style.background = reason.bg;
-                e.currentTarget.style.transform = "translateY(-2px)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = "var(--color-border)";
-                e.currentTarget.style.background = "var(--color-bg)";
-                e.currentTarget.style.transform = "translateY(0)";
-              }}
-            >
-              <div
-                style={{
-                  width: "48px",
-                  height: "48px",
-                  borderRadius: "var(--radius-md)",
-                  background: reason.bg,
-                  border: `1px solid ${reason.border}`,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  color: reason.color,
-                  marginBottom: "20px",
-                  flexShrink: 0,
-                }}
-              >
-                {reason.icon}
-              </div>
-              <h3
-                style={{
-                  fontSize: "16px",
-                  fontWeight: "700",
-                  color: "var(--color-text-primary)",
-                  marginBottom: "10px",
-                  letterSpacing: "-0.01em",
-                }}
-              >
-                {reason.title}
-              </h3>
-              <p
-                style={{
-                  fontSize: "13px",
-                  color: "var(--color-text-secondary)",
-                  lineHeight: "1.65",
-                }}
-              >
-                {reason.description}
-              </p>
-            </div>
+            <ReasonCard key={reason.title} reason={reason} />
           ))}
         </div>
       </div>
-
-      <style jsx>{`
-        @media (max-width: 1024px) {
-          .why-grid {
-            grid-template-columns: repeat(2, 1fr) !important;
-          }
-        }
-        @media (max-width: 640px) {
-          .why-grid {
-            grid-template-columns: 1fr !important;
-          }
-        }
-      `}</style>
     </section>
+  );
+}
+
+function ReasonCard({ reason }) {
+  return (
+    <Card className="bg-[var(--color-bg)] border border-[var(--color-border)] transition-all duration-300 hover:-translate-y-0.5 group">
+      <CardBody
+        className="p-7 transition-all duration-300"
+        onMouseEnter={(e) => {
+          e.currentTarget.style.borderColor = reason.border;
+          e.currentTarget.style.background = reason.bg;
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.borderColor = "var(--color-border)";
+          e.currentTarget.style.background = "var(--color-bg)";
+        }}
+      >
+        <div
+          className="w-12 h-12 rounded-lg flex items-center justify-center mb-5 flex-shrink-0"
+          style={{
+            background: reason.bg,
+            border: `1px solid ${reason.border}`,
+            color: reason.color,
+          }}
+        >
+          {reason.icon}
+        </div>
+        <h3 className="text-base font-bold text-[var(--color-text-primary)] mb-2.5 tracking-tight">
+          {reason.title}
+        </h3>
+        <p className="text-[13px] text-[var(--color-text-secondary)] leading-relaxed">
+          {reason.description}
+        </p>
+      </CardBody>
+    </Card>
   );
 }

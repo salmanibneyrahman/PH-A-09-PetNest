@@ -1,3 +1,6 @@
+import { Card, CardBody } from "@heroui/card";
+import { Avatar } from "@heroui/avatar";
+
 const STORIES = [
   {
     adopter: "Sarah Mitchell",
@@ -36,190 +39,88 @@ const STORIES = [
 
 export default function SuccessStories() {
   return (
-    <section
-      style={{
-        padding: "96px 0",
-        background: "var(--color-surface)",
-        borderTop: "1px solid var(--color-border)",
-        borderBottom: "1px solid var(--color-border)",
-      }}
-    >
-      <div
-        style={{
-          maxWidth: "1280px",
-          margin: "0 auto",
-          padding: "0 24px",
-        }}
-      >
-        <div style={{ textAlign: "center", marginBottom: "64px" }}>
+    <section className="py-24 bg-[var(--color-surface)] border-t border-b border-[var(--color-border)]">
+      <div className="max-w-[1280px] mx-auto px-6">
+        {/* Header */}
+        <div className="text-center mb-16">
           <p className="section-label">Testimonials</p>
-          <h2 className="section-title" style={{ marginBottom: "16px" }}>
-            Success Stories
-          </h2>
-          <p
-            style={{
-              fontSize: "15px",
-              color: "var(--color-text-secondary)",
-              maxWidth: "480px",
-              margin: "0 auto",
-              lineHeight: "1.7",
-            }}
-          >
+          <h2 className="section-title mb-4">Success Stories</h2>
+          <p className="text-[15px] text-[var(--color-text-secondary)] max-w-[480px] mx-auto leading-relaxed">
             Real families, real transformations. Hear from the people who
             found their perfect companions through PetNest.
           </p>
         </div>
 
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(3, 1fr)",
-            gap: "20px",
-          }}
-          className="stories-grid"
-        >
+        {/* Stories Grid */}
+        <div className="grid grid-cols-3 lg:grid-cols-2 sm:grid-cols-1 gap-5">
           {STORIES.map((story) => (
-            <div
-              key={story.adopter}
-              style={{
-                padding: "32px",
-                background: "var(--color-bg)",
-                border: "1px solid var(--color-border)",
-                borderRadius: "var(--radius-md)",
-                transition: "all 0.3s ease",
-                position: "relative",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = "rgba(217,249,157,0.2)";
-                e.currentTarget.style.transform = "translateY(-2px)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = "var(--color-border)";
-                e.currentTarget.style.transform = "translateY(0)";
-              }}
-            >
-              <div
-                style={{
-                  position: "absolute",
-                  top: "24px",
-                  right: "24px",
-                  fontSize: "40px",
-                  color: "rgba(217,249,157,0.1)",
-                  fontFamily: "Georgia, serif",
-                  lineHeight: 1,
-                }}
-              >
-                "
-              </div>
-
-              <div style={{ display: "flex", gap: "4px", marginBottom: "20px" }}>
-                {[...Array(story.rating)].map((_, i) => (
-                  <svg
-                    key={i}
-                    width="14"
-                    height="14"
-                    viewBox="0 0 24 24"
-                    fill="var(--color-lime)"
-                    stroke="var(--color-lime)"
-                    strokeWidth="1"
-                  >
-                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-                  </svg>
-                ))}
-              </div>
-
-              <p
-                style={{
-                  fontSize: "14px",
-                  color: "var(--color-text-secondary)",
-                  lineHeight: "1.75",
-                  marginBottom: "28px",
-                  fontStyle: "italic",
-                }}
-              >
-                "{story.quote}"
-              </p>
-
-              <div
-                style={{
-                  height: "1px",
-                  background: "var(--color-border)",
-                  marginBottom: "20px",
-                }}
-              />
-
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                }}
-              >
-                <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                  <div
-                    style={{
-                      width: "40px",
-                      height: "40px",
-                      borderRadius: "50%",
-                      background: story.avatarColor,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      fontSize: "13px",
-                      fontWeight: "700",
-                      color: story.avatarColor === "var(--color-lime)" ? "#000" : "#fff",
-                      flexShrink: 0,
-                    }}
-                  >
-                    {story.avatar}
-                  </div>
-                  <div>
-                    <p
-                      style={{
-                        fontSize: "14px",
-                        fontWeight: "700",
-                        color: "var(--color-text-primary)",
-                        marginBottom: "2px",
-                      }}
-                    >
-                      {story.adopter}
-                    </p>
-                    <p
-                      style={{
-                        fontSize: "12px",
-                        color: "var(--color-text-muted)",
-                      }}
-                    >
-                      Adopted {story.petName} • {story.species}
-                    </p>
-                  </div>
-                </div>
-                <span
-                  style={{
-                    fontSize: "11px",
-                    color: "var(--color-text-muted)",
-                  }}
-                >
-                  {story.timeAgo}
-                </span>
-              </div>
-            </div>
+            <StoryCard key={story.adopter} story={story} />
           ))}
         </div>
       </div>
-
-      <style jsx>{`
-        @media (max-width: 1024px) {
-          .stories-grid {
-            grid-template-columns: repeat(2, 1fr) !important;
-          }
-        }
-        @media (max-width: 640px) {
-          .stories-grid {
-            grid-template-columns: 1fr !important;
-          }
-        }
-      `}</style>
     </section>
+  );
+}
+
+function StoryCard({ story }) {
+  return (
+    <Card className="bg-[var(--color-bg)] border border-[var(--color-border)] relative transition-all duration-300 hover:border-[rgba(217,249,157,0.2)] hover:-translate-y-0.5">
+      <CardBody className="p-8">
+        {/* Quote Mark */}
+        <div className="absolute top-6 right-6 text-[40px] text-[rgba(217,249,157,0.1)] font-serif leading-none">
+          "
+        </div>
+
+        {/* Rating Stars */}
+        <div className="flex gap-1 mb-5">
+          {[...Array(story.rating)].map((_, i) => (
+            <svg
+              key={i}
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="var(--color-lime)"
+              stroke="var(--color-lime)"
+              strokeWidth="1"
+            >
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+            </svg>
+          ))}
+        </div>
+
+        {/* Quote */}
+        <p className="text-sm text-[var(--color-text-secondary)] leading-relaxed mb-7 italic">
+          "{story.quote}"
+        </p>
+
+        {/* Divider */}
+        <div className="h-px bg-[var(--color-border)] mb-5" />
+
+        {/* Footer */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <Avatar
+              name={story.avatar}
+              className="w-10 h-10 flex-shrink-0 text-[13px] font-bold"
+              style={{
+                background: story.avatarColor,
+                color: story.avatarColor === "var(--color-lime)" ? "#000" : "#fff",
+              }}
+            />
+            <div>
+              <p className="text-sm font-bold text-[var(--color-text-primary)] mb-0.5">
+                {story.adopter}
+              </p>
+              <p className="text-xs text-[var(--color-text-muted)]">
+                Adopted {story.petName} • {story.species}
+              </p>
+            </div>
+          </div>
+          <span className="text-[11px] text-[var(--color-text-muted)]">
+            {story.timeAgo}
+          </span>
+        </div>
+      </CardBody>
+    </Card>
   );
 }

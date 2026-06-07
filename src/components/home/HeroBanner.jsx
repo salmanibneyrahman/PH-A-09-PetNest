@@ -53,7 +53,7 @@ export default function HeroBanner() {
           <Chip
             variant="bordered"
             className="mb-7 border-[rgba(217,249,157,0.2)] bg-[rgba(217,249,157,0.08)]"
-            startContent={
+            startcontent={
               <div
                 className="w-1.5 h-1.5 rounded-full bg-[var(--color-lime)] flex-shrink-0"
                 style={{ boxShadow: "0 0 8px var(--color-lime)" }}
@@ -90,7 +90,7 @@ export default function HeroBanner() {
               value={searchValue}
               onChange={(e) => setSearchValue(e.target.value)}
               placeholder="Search by name, breed, or personality..."
-              startContent={
+              startcontent={
                 <svg
                   width="16"
                   height="16"
@@ -106,7 +106,7 @@ export default function HeroBanner() {
                   <line x1="21" y1="21" x2="16.65" y2="16.65" />
                 </svg>
               }
-              endContent={
+              endcontent={
                 <Button
                   type="submit"
                   size="sm"
@@ -115,7 +115,7 @@ export default function HeroBanner() {
                   Search
                 </Button>
               }
-              classNames={{
+              classnames={{
                 base: "max-w-full",
                 inputWrapper: "bg-[var(--color-surface-2)] border-[var(--color-border)] hover:border-[rgba(217,249,157,0.4)] focus-within:border-[rgba(217,249,157,0.4)] focus-within:shadow-[0_0_0_3px_rgba(217,249,157,0.08)]",
                 input: "text-sm",

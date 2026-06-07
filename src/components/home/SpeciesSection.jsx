@@ -258,6 +258,8 @@ export default function SpeciesSection() {
                   <Image
                     src={species.image}
                     alt={species.name}
+                    width={400}
+                    height={300}
                     style={{
                       width: "100%",
                       height: "100%",

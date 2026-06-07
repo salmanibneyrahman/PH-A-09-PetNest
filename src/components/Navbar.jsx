@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "@/lib/AuthContext";
 import { toast } from "@/lib/toast";
+import Image from "next/image";
 
 export default function Navbar() {
     const { user, isAuthenticated, isLoading, signOut } = useAuth();
@@ -222,7 +223,7 @@ export default function Navbar() {
                                 }}
                             >
                                 {user?.image ? (
-                                    <img
+                                    <Image
                                         src={user.image}
                                         alt={user.name || "User"}
                                         style={{

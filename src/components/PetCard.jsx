@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useAuth } from "@/lib/AuthContext";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 export default function PetCard({ pet }) {
   const { isAuthenticated } = useAuth();
@@ -56,7 +57,7 @@ export default function PetCard({ pet }) {
         }}
       >
         {!imgError && pet.imageURL ? (
-          <img
+          <Image
             src={pet.imageURL}
             alt={pet.name}
             style={{

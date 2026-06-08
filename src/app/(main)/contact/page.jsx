@@ -3,7 +3,7 @@
 import { useState, useCallback, useMemo } from "react";
 import { toast } from "@/lib/toast";
 import { Button } from "@heroui/button";
-import { Input, TextArea } from "@heroui/react";
+import { Input, TextArea, Label } from "@heroui/react";
 import { Card, CardBody } from "@heroui/card";
 
 const CONTACT_ITEMS = [
@@ -144,10 +144,11 @@ export default function ContactPage() {
 
             <form onSubmit={handleSubmit} className="flex flex-col gap-5" noValidate>
               <div className="grid grid-cols-2 sm:grid-cols-1 gap-4">
+                {/* Name Input */}
                 <div className="flex flex-col gap-2">
-                  <label htmlFor="contact-name" className="text-[var(--color-text-secondary)] text-xs font-semibold uppercase tracking-wider">
+                  <Label htmlFor="contact-name" className="text-[var(--color-text-secondary)] text-xs font-semibold uppercase tracking-wider">
                     Your Name
-                  </label>
+                  </Label>
                   <Input
                     id="contact-name"
                     name="name"
@@ -155,17 +156,16 @@ export default function ContactPage() {
                     placeholder="Full name"
                     value={formData.name}
                     onChange={handleChange}
-                    className={errors.name ? "border-danger" : ""}
+                    className={`bg-[var(--color-surface-2)] border ${errors.name ? 'border-[var(--color-error)]' : 'border-[var(--color-border)]'} rounded-md px-3 py-2 outline-none focus:border-[var(--color-lime)]`}
                   />
-                  {errors.name && (
-                    <p className="text-xs text-danger mt-1">{errors.name}</p>
-                  )}
+                  {errors.name && <span className="text-xs text-[var(--color-error)]">{errors.name}</span>}
                 </div>
 
+                {/* Email Input */}
                 <div className="flex flex-col gap-2">
-                  <label htmlFor="contact-email" className="text-[var(--color-text-secondary)] text-xs font-semibold uppercase tracking-wider">
+                  <Label htmlFor="contact-email" className="text-[var(--color-text-secondary)] text-xs font-semibold uppercase tracking-wider">
                     Email Address
-                  </label>
+                  </Label>
                   <Input
                     id="contact-email"
                     name="email"
@@ -173,18 +173,17 @@ export default function ContactPage() {
                     placeholder="you@example.com"
                     value={formData.email}
                     onChange={handleChange}
-                    className={errors.email ? "border-danger" : ""}
+                    className={`bg-[var(--color-surface-2)] border ${errors.email ? 'border-[var(--color-error)]' : 'border-[var(--color-border)]'} rounded-md px-3 py-2 outline-none focus:border-[var(--color-lime)]`}
                   />
-                  {errors.email && (
-                    <p className="text-xs text-danger mt-1">{errors.email}</p>
-                  )}
+                  {errors.email && <span className="text-xs text-[var(--color-error)]">{errors.email}</span>}
                 </div>
               </div>
 
+              {/* Subject Input */}
               <div className="flex flex-col gap-2">
-                <label htmlFor="contact-subject" className="text-[var(--color-text-secondary)] text-xs font-semibold uppercase tracking-wider">
+                <Label htmlFor="contact-subject" className="text-[var(--color-text-secondary)] text-xs font-semibold uppercase tracking-wider">
                   Subject
-                </label>
+                </Label>
                 <Input
                   id="contact-subject"
                   name="subject"
@@ -192,41 +191,39 @@ export default function ContactPage() {
                   placeholder="What is your message about?"
                   value={formData.subject}
                   onChange={handleChange}
-                  className={errors.subject ? "border-danger" : ""}
+                  className={`bg-[var(--color-surface-2)] border ${errors.subject ? 'border-[var(--color-error)]' : 'border-[var(--color-border)]'} rounded-md px-3 py-2 outline-none focus:border-[var(--color-lime)]`}
                 />
-                {errors.subject && (
-                  <p className="text-xs text-danger mt-1">{errors.subject}</p>
-                )}
+                {errors.subject && <span className="text-xs text-[var(--color-error)]">{errors.subject}</span>}
               </div>
 
-              <div className="flex flex-col gap-2">
-                <label htmlFor="contact-message" className="text-[var(--color-text-secondary)] text-xs font-semibold uppercase tracking-wider">
-                  Message
-                </label>
-                <TextArea
-                  id="contact-message"
-                  name="message"
-                  aria-label="Message"
-                  placeholder="Tell us how we can help you..."
-                  value={formData.message}
-                  onChange={handleChange}
-                  rows={6}
-                  style={{ resize: "vertical" }}
-                  className={errors.message ? "border-danger" : ""}
-                />
-                {errors.message && (
-                  <p className="text-xs text-danger mt-1">{errors.message}</p>
-                )}
+              {/* Message TextArea */}
+              <div>
+                <div className="flex flex-col gap-2">
+                  <Label htmlFor="contact-message" className="text-[var(--color-text-secondary)] text-xs font-semibold uppercase tracking-wider">
+                    Message
+                  </Label>
+                  <TextArea
+                    id="contact-message"
+                    name="message"
+                    placeholder="Tell us how we can help you..."
+                    value={formData.message}
+                    onChange={handleChange}
+                    rows={6}
+                    className={`bg-[var(--color-surface-2)] border ${errors.message ? 'border-[var(--color-error)]' : 'border-[var(--color-border)]'} rounded-md px-3 py-2 outline-none focus:border-[var(--color-lime)] min-h-[140px] resize-y`}
+                  />
+                  {errors.message && <span className="text-xs text-[var(--color-error)]">{errors.message}</span>}
+                </div>
                 <p className="text-xs text-[var(--color-text-muted)] mt-1">
                   {characterCount} / 500 characters
                 </p>
               </div>
 
+              {/* Submit Button */}
               <Button
                 type="submit"
                 isDisabled={isSubmitting}
                 isLoading={isSubmitting}
-                className="bg-[var(--color-lime)] text-black font-bold text-[13px] tracking-wider uppercase self-start min-w-[180px] hover:bg-[var(--color-lime-dark)] hover:shadow-[0_4px_20px_rgba(217,249,157,0.2)]"
+                className="bg-[var(--color-lime)] text-black font-bold text-[13px] tracking-wider uppercase self-start min-w-[180px] mt-2 hover:bg-[var(--color-lime-dark)] hover:shadow-[0_4px_20px_rgba(217,249,157,0.2)]"
                 startContent={
                   !isSubmitting && (
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">

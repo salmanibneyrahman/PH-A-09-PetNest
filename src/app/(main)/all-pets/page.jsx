@@ -279,25 +279,26 @@ export default function AllPetsPage() {
             <span className="text-[13px] text-default-400 whitespace-nowrap">
               Sort by:
             </span>
-            <Select
-              className="w-auto min-w-[160px]"
-              value={sortBy}
-              onChange={(key) => setSortBy(key)}
-            >
-              <Select.Trigger className="h-9 min-h-9">
-                <Select.Value />
-                <Select.Indicator />
-              </Select.Trigger>
-              <Select.Popover>
-                <ListBox>
-                  {SORT_OPTIONS.map((opt) => (
-                    <ListBox.Item key={opt.value} id={opt.value} textValue={opt.label}>
-                      {opt.label}
-                    </ListBox.Item>
-                  ))}
-                </ListBox>
-              </Select.Popover>
-            </Select>
+<Select
+  className="w-auto min-w-[160px]"
+  selectedKey={sortBy}
+  onSelectionChange={(key) => setSortBy(key)}
+  aria-label="Sort pets"
+>
+  <Select.Trigger className="h-9 min-h-9">
+    <Select.Value />
+    <Select.Indicator />
+  </Select.Trigger>
+  <Select.Popover>
+    <ListBox aria-label="Sort options">
+      {SORT_OPTIONS.map((opt) => (
+        <ListBox.Item key={opt.value} id={opt.value} textValue={opt.label}>
+          {opt.label}
+        </ListBox.Item>
+      ))}
+    </ListBox>
+  </Select.Popover>
+</Select>
             <button
               aria-label="Filter options"
               className="w-9 h-9 bg-content1 border border-default-200 rounded-md flex items-center justify-center cursor-pointer text-default-400 shrink-0 hover:bg-content2 transition-colors"

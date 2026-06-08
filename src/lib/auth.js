@@ -3,16 +3,15 @@ dns.setServers(["1.1.1.1", "8.8.8.8"]);
 
 import { betterAuth } from "better-auth";
 import { MongoClient } from "mongodb";
+import { mongodbAdapter } from "better-auth/adapters/mongodb";
 import { jwt } from "better-auth/plugins";
 
 const client = new MongoClient(process.env.MONGODB_URI);
 
 export const auth = betterAuth({
-  database: {
-    type: "mongodb",
-    client: client,
-    dbName: process.env.DB_NAME || "petnest",
-  },
+  database: mongodbAdapter(client, {
+    databaseName: process.env.DB_NAME || "petnest",
+  }),
   emailAndPassword: {
     enabled: true,
     minPasswordLength: 6,
@@ -31,15 +30,9 @@ export const auth = betterAuth({
         },
       },
       jwt: {
-        issuer:
-          process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
+        issuer: process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
         audience: process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000",
         expirationTime: "7d",
-      },
-      schema: {
-        jwks: {
-          modelName: "jwks",
-        },
       },
     }),
   ],

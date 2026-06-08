@@ -420,18 +420,12 @@ export default function Navbar() {
                         <>
                             <Link
                                 href="/login"
-                                className="nav-link"
-                                style={{ display: "none" }}
-                                id="login-link-desktop"
+                                className="text-xs font-black uppercase tracking-widest text-zinc-400 hover:text-white transition-colors duration-200"
                             >
                                 Login
                             </Link>
-                            <Link href="/login" className="nav-link desktop-only-login">
-                                LOGIN
-                            </Link>
-                            <Link href="/all-pets" className="btn-primary" style={{ fontSize: "12px", padding: "8px 16px" }}>
-                                ADOPT NOW
-                            </Link>
+
+                            <Link href="/all-pets" className="btn-primary" style={{ fontSize: "12px", padding: "8px 16px" }}> ADOPT NOW </Link>
                         </>
                     )}
 

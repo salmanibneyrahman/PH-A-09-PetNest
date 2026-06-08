@@ -7,14 +7,12 @@ import { signUp, signIn } from "@/lib/auth-client";
 import { generateAndStoreToken, registerUserInDB } from "@/lib/api";
 import { toast } from "@/lib/toast";
 import { useAuth } from "@/lib/AuthContext";
-import {
-    Input,
-    Button,
-    Card,
-    CardBody,
-    Divider,
-    Spinner,
-} from "@heroui/react";
+
+import { Input } from "@heroui/input";
+import { Button } from "@heroui/button";
+import { Card, CardBody } from "@heroui/card";
+import { Divider } from "@heroui/divider";
+import { Spinner } from "@heroui/spinner";
 
 export default function RegisterPage() {
     const router = useRouter();
@@ -209,7 +207,6 @@ export default function RegisterPage() {
 
     return (
         <div className="min-h-screen bg-background flex items-start justify-center pt-20 pb-10 px-6 relative overflow-hidden">
-            {/* Decorative Background Blobs */}
             <div className="absolute top-[10%] -left-[10%] w-[500px] h-[500px] rounded-full bg-[radial-gradient(circle,rgba(217,249,157,0.05)_0%,transparent_70%)] pointer-events-none" />
             <div className="absolute bottom-[5%] -right-[10%] w-[400px] h-[400px] rounded-full bg-[radial-gradient(circle,rgba(168,85,247,0.04)_0%,transparent_70%)] pointer-events-none" />
 
@@ -250,7 +247,6 @@ export default function RegisterPage() {
                 </div>
 
                 <Card className="bg-content1 border border-default-200 shadow-sm relative overflow-visible">
-                    {/* Top Gradient Border */}
                     <div className="absolute top-0 inset-x-0 h-[1px] bg-gradient-to-r from-transparent via-[#d9f99d]/30 to-transparent rounded-t-xl" />
 
                     <CardBody className="p-8">
@@ -314,102 +310,85 @@ export default function RegisterPage() {
                             </div>
                         )}
 
-                        <form onSubmit={handleSubmit} noValidate className="space-y-5">
-                            <Input
-                                label="Full Name"
-                                labelPlacement="outside"
-                                id="name"
-                                name="name"
-                                type="text"
-                                placeholder="Your full name"
-                                autoComplete="name"
-                                value={formData.name}
-                                onChange={handleChange}
-                                isInvalid={!!errors.name}
-                                errorMessage={errors.name}
-                                startContent={
-                                    <svg
-                                        className="text-default-400 w-4 h-4"
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        strokeWidth="2"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                    >
-                                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                                        <circle cx="12" cy="7" r="4" />
-                                    </svg>
-                                }
-                            />
-
-                            <Input
-                                label="Email Address"
-                                labelPlacement="outside"
-                                id="reg-email"
-                                name="email"
-                                type="email"
-                                placeholder="you@example.com"
-                                autoComplete="email"
-                                value={formData.email}
-                                onChange={handleChange}
-                                isInvalid={!!errors.email}
-                                errorMessage={errors.email}
-                                startContent={
-                                    <svg
-                                        className="text-default-400 w-4 h-4"
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        strokeWidth="2"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                    >
-                                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-                                        <polyline points="22,6 12,13 2,6" />
-                                    </svg>
-                                }
-                            />
-
-                            <Input
-                                label={
-                                    <span>
-                                        Photo URL{" "}
-                                        <span className="text-[11px] font-normal text-default-400 normal-case tracking-normal">
-                                            (optional)
-                                        </span>
-                                    </span>
-                                }
-                                labelPlacement="outside"
-                                id="photoURL"
-                                name="photoURL"
-                                type="url"
-                                placeholder="https://example.com/photo.jpg"
-                                value={formData.photoURL}
-                                onChange={handleChange}
-                                isInvalid={!!errors.photoURL}
-                                errorMessage={errors.photoURL}
-                                startContent={
-                                    <svg
-                                        className="text-default-400 w-4 h-4"
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        strokeWidth="2"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                    >
-                                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-                                        <circle cx="8.5" cy="8.5" r="1.5" />
-                                        <polyline points="21 15 16 10 5 21" />
-                                    </svg>
-                                }
-                            />
-
-                            <div>
+                        <form onSubmit={handleSubmit} noValidate className="space-y-6">
+                            {/* Full Name */}
+                            <div className="flex flex-col gap-1.5">
+                                <label htmlFor="name" className="text-[13px] font-semibold text-foreground">
+                                    Full Name
+                                </label>
                                 <Input
-                                    label="Password"
-                                    labelPlacement="outside"
+                                    id="name"
+                                    name="name"
+                                    type="text"
+                                    placeholder="Your full name"
+                                    autoComplete="name"
+                                    value={formData.name}
+                                    onChange={handleChange}
+                                    color={errors.name ? "danger" : "default"}
+                                    startContent={
+                                        <svg className="text-default-400 w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                                            <circle cx="12" cy="7" r="4" />
+                                        </svg>
+                                    }
+                                />
+                                {errors.name && <span className="text-[11px] text-danger">{errors.name}</span>}
+                            </div>
+
+                            {/* Email */}
+                            <div className="flex flex-col gap-1.5">
+                                <label htmlFor="reg-email" className="text-[13px] font-semibold text-foreground">
+                                    Email Address
+                                </label>
+                                <Input
+                                    id="reg-email"
+                                    name="email"
+                                    type="email"
+                                    placeholder="you@example.com"
+                                    autoComplete="email"
+                                    value={formData.email}
+                                    onChange={handleChange}
+                                    color={errors.email ? "danger" : "default"}
+                                    startContent={
+                                        <svg className="text-default-400 w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                                            <polyline points="22,6 12,13 2,6" />
+                                        </svg>
+                                    }
+                                />
+                                {errors.email && <span className="text-[11px] text-danger">{errors.email}</span>}
+                            </div>
+
+                            {/* Photo URL */}
+                            <div className="flex flex-col gap-1.5">
+                                <label htmlFor="photoURL" className="text-[13px] font-semibold text-foreground">
+                                    Photo URL <span className="text-[11px] font-normal text-default-400 tracking-normal">(optional)</span>
+                                </label>
+                                <Input
+                                    id="photoURL"
+                                    name="photoURL"
+                                    type="url"
+                                    placeholder="https://example.com/photo.jpg"
+                                    value={formData.photoURL}
+                                    onChange={handleChange}
+                                    color={errors.photoURL ? "danger" : "default"}
+                                    startContent={
+                                        <svg className="text-default-400 w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                                            <circle cx="8.5" cy="8.5" r="1.5" />
+                                            <polyline points="21 15 16 10 5 21" />
+                                        </svg>
+                                    }
+                                />
+                                {errors.photoURL && <span className="text-[11px] text-danger">{errors.photoURL}</span>}
+                            </div>
+
+                            {/* Password */}
+                            <div className="flex flex-col gap-1.5">
+                                <label htmlFor="reg-password" className="text-[13px] font-semibold text-foreground">
+                                    Password
+                                </label>
+                                <Input
                                     id="reg-password"
                                     name="password"
                                     type={showPassword ? "text" : "password"}
@@ -417,18 +396,9 @@ export default function RegisterPage() {
                                     autoComplete="new-password"
                                     value={formData.password}
                                     onChange={handleChange}
-                                    isInvalid={!!errors.password}
-                                    errorMessage={errors.password}
+                                    color={errors.password ? "danger" : "default"}
                                     startContent={
-                                        <svg
-                                            className="text-default-400 w-4 h-4"
-                                            viewBox="0 0 24 24"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            strokeWidth="2"
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                        >
+                                        <svg className="text-default-400 w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                             <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
                                             <path d="M7 11V7a5 5 0 0 1 10 0v4" />
                                         </svg>
@@ -441,28 +411,12 @@ export default function RegisterPage() {
                                             aria-label={showPassword ? "Hide password" : "Show password"}
                                         >
                                             {showPassword ? (
-                                                <svg
-                                                    className="text-default-400 w-4 h-4"
-                                                    viewBox="0 0 24 24"
-                                                    fill="none"
-                                                    stroke="currentColor"
-                                                    strokeWidth="2"
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                >
+                                                <svg className="text-default-400 w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                                     <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
                                                     <line x1="1" y1="1" x2="23" y2="23" />
                                                 </svg>
                                             ) : (
-                                                <svg
-                                                    className="text-default-400 w-4 h-4"
-                                                    viewBox="0 0 24 24"
-                                                    fill="none"
-                                                    stroke="currentColor"
-                                                    strokeWidth="2"
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                >
+                                                <svg className="text-default-400 w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                                     <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
                                                     <circle cx="12" cy="12" r="3" />
                                                 </svg>
@@ -470,29 +424,23 @@ export default function RegisterPage() {
                                         </button>
                                     }
                                 />
+                                {errors.password && <span className="text-[11px] text-danger">{errors.password}</span>}
 
                                 {formData.password.length > 0 && (
-                                    <div className="mt-3 p-3 bg-content2 rounded-md flex flex-col gap-2">
-                                        <PasswordRequirement
-                                            met={passwordStrength.hasMinLength}
-                                            text="At least 6 characters"
-                                        />
-                                        <PasswordRequirement
-                                            met={passwordStrength.hasUppercase}
-                                            text="One uppercase letter (A-Z)"
-                                        />
-                                        <PasswordRequirement
-                                            met={passwordStrength.hasLowercase}
-                                            text="One lowercase letter (a-z)"
-                                        />
+                                    <div className="mt-2 p-3 bg-content2 rounded-md flex flex-col gap-2">
+                                        <PasswordRequirement met={passwordStrength.hasMinLength} text="At least 6 characters" />
+                                        <PasswordRequirement met={passwordStrength.hasUppercase} text="One uppercase letter (A-Z)" />
+                                        <PasswordRequirement met={passwordStrength.hasLowercase} text="One lowercase letter (a-z)" />
                                     </div>
                                 )}
                             </div>
 
-                            <div className="pb-2">
+                            {/* Confirm Password */}
+                            <div className="flex flex-col gap-1.5 pb-2">
+                                <label htmlFor="confirmPassword" className="text-[13px] font-semibold text-foreground">
+                                    Confirm Password
+                                </label>
                                 <Input
-                                    label="Confirm Password"
-                                    labelPlacement="outside"
                                     id="confirmPassword"
                                     name="confirmPassword"
                                     type={showConfirmPassword ? "text" : "password"}
@@ -507,23 +455,8 @@ export default function RegisterPage() {
                                                 ? "success"
                                                 : "default"
                                     }
-                                    isInvalid={!!errors.confirmPassword}
-                                    errorMessage={errors.confirmPassword}
-                                    description={isConfirmSuccess ? "Passwords match" : undefined}
-                                    classNames={{
-                                        description: isConfirmSuccess ? "text-success" : "",
-                                    }}
                                     startContent={
-                                        <svg
-                                            className={`${isConfirmSuccess ? "text-success" : "text-default-400"
-                                                } w-4 h-4`}
-                                            viewBox="0 0 24 24"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            strokeWidth="2"
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                        >
+                                        <svg className={`${isConfirmSuccess ? "text-success" : "text-default-400"} w-4 h-4`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                             <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
                                             <path d="M7 11V7a5 5 0 0 1 10 0v4" />
                                         </svg>
@@ -533,39 +466,15 @@ export default function RegisterPage() {
                                             className="focus:outline-none"
                                             type="button"
                                             onClick={() => setShowConfirmPassword((prev) => !prev)}
-                                            aria-label={
-                                                showConfirmPassword ? "Hide password" : "Show password"
-                                            }
+                                            aria-label={showConfirmPassword ? "Hide password" : "Show password"}
                                         >
                                             {showConfirmPassword ? (
-                                                <svg
-                                                    className={`${isConfirmSuccess
-                                                            ? "text-success"
-                                                            : "text-default-400"
-                                                        } w-4 h-4`}
-                                                    viewBox="0 0 24 24"
-                                                    fill="none"
-                                                    stroke="currentColor"
-                                                    strokeWidth="2"
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                >
+                                                <svg className={`${isConfirmSuccess ? "text-success" : "text-default-400"} w-4 h-4`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                                     <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
                                                     <line x1="1" y1="1" x2="23" y2="23" />
                                                 </svg>
                                             ) : (
-                                                <svg
-                                                    className={`${isConfirmSuccess
-                                                            ? "text-success"
-                                                            : "text-default-400"
-                                                        } w-4 h-4`}
-                                                    viewBox="0 0 24 24"
-                                                    fill="none"
-                                                    stroke="currentColor"
-                                                    strokeWidth="2"
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                >
+                                                <svg className={`${isConfirmSuccess ? "text-success" : "text-default-400"} w-4 h-4`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                                     <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
                                                     <circle cx="12" cy="12" r="3" />
                                                 </svg>
@@ -573,6 +482,8 @@ export default function RegisterPage() {
                                         </button>
                                     }
                                 />
+                                {errors.confirmPassword && <span className="text-[11px] text-danger">{errors.confirmPassword}</span>}
+                                {isConfirmSuccess && !errors.confirmPassword && <span className="text-[11px] text-success">Passwords match</span>}
                             </div>
 
                             <Button

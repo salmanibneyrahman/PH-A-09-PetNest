@@ -24,6 +24,23 @@ async function getBetterAuthToken() {
     }
 }
 
+export async function generateAndStoreToken(email) {
+    try {
+        const token = await getBetterAuthToken();
+        if (token) {
+            // যদি ব্রাউজার বা লোকাল স্টোরেজে এক্সট্রা রাখতে চাও
+            if (typeof window !== "undefined") {
+                localStorage.setItem("petnest_jwt_token", token);
+            }
+            return token;
+        }
+        return null;
+    } catch (err) {
+        console.error("Failed in generateAndStoreToken handler:", err);
+        return null;
+    }
+}
+
 export async function apiFetch(endpoint, options = {}) {
     const token = await getBetterAuthToken();
 

@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { getAllPets } from "@/lib/api";
 import PetCard from "@/components/PetCard";
-import { Button, Select, SelectItem, Card, Skeleton } from "@heroui/react";
+import { Button, Select, Card, Skeleton, ListBox, Label } from "@heroui/react";
 import Image from "next/image";
 
 const SPECIES_LIST = [
@@ -244,11 +244,10 @@ export default function AllPetsPage() {
               <button
                 key={species.key}
                 onClick={() => handleSpeciesFilter(species.key)}
-                className={`py-6 px-4 border rounded-md cursor-pointer flex flex-col items-center gap-2.5 transition-all duration-200 font-sans relative ${
-                  isActive
-                    ? "bg-[#d9f99d] border-[#d9f99d] text-black"
-                    : "bg-content1 border-default-200 text-default-500 hover:border-[#d9f99d]/30 hover:text-foreground hover:bg-content2"
-                }`}
+                className={`py-6 px-4 border rounded-md cursor-pointer flex flex-col items-center gap-2.5 transition-all duration-200 font-sans relative ${isActive
+                  ? "bg-[#d9f99d] border-[#d9f99d] text-black"
+                  : "bg-content1 border-default-200 text-default-500 hover:border-[#d9f99d]/30 hover:text-foreground hover:bg-content2"
+                  }`}
               >
                 {isActive && (
                   <div className="absolute top-2 right-2 w-1.5 h-1.5 rounded-full bg-black" />
@@ -281,19 +280,23 @@ export default function AllPetsPage() {
               Sort by:
             </span>
             <Select
-              selectedKeys={new Set([sortBy])}
-              onChange={(e) => {
-                if (e.target.value) setSortBy(e.target.value);
-              }}
-              aria-label="Sort options"
               className="w-auto min-w-[160px]"
-              classNames={{ trigger: "h-9 min-h-9" }}
+              value={sortBy}
+              onChange={(key) => setSortBy(key)}
             >
-              {SORT_OPTIONS.map((opt) => (
-                <SelectItem key={opt.value} value={opt.value}>
-                  {opt.label}
-                </SelectItem>
-              ))}
+              <Select.Trigger className="h-9 min-h-9">
+                <Select.Value />
+                <Select.Indicator />
+              </Select.Trigger>
+              <Select.Popover>
+                <ListBox>
+                  {SORT_OPTIONS.map((opt) => (
+                    <ListBox.Item key={opt.value} id={opt.value} textValue={opt.label}>
+                      {opt.label}
+                    </ListBox.Item>
+                  ))}
+                </ListBox>
+              </Select.Popover>
             </Select>
             <button
               aria-label="Filter options"

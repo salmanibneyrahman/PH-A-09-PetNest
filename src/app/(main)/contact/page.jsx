@@ -3,7 +3,7 @@
 import { useState, useCallback, useMemo } from "react";
 import { toast } from "@/lib/toast";
 import { Button } from "@heroui/button";
-import { Input, Textarea } from "@heroui/input";
+import { Input, TextArea } from "@heroui/react";
 import { Card, CardBody } from "@heroui/card";
 
 const CONTACT_ITEMS = [
@@ -144,71 +144,79 @@ export default function ContactPage() {
 
             <form onSubmit={handleSubmit} className="flex flex-col gap-5" noValidate>
               <div className="grid grid-cols-2 sm:grid-cols-1 gap-4">
-                <Input
-                  id="contact-name"
-                  name="name"
-                  type="text"
-                  label="Your Name"
-                  placeholder="Full name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  isInvalid={!!errors.name}
-                  errorMessage={errors.name}
-                  classNames={{
-                    label: "text-[var(--color-text-secondary)] text-xs font-semibold uppercase tracking-wider",
-                    inputWrapper: "bg-[var(--color-surface-2)] border-[var(--color-border)]",
-                  }}
-                />
-                <Input
-                  id="contact-email"
-                  name="email"
-                  type="email"
-                  label="Email Address"
-                  placeholder="you@example.com"
-                  value={formData.email}
-                  onChange={handleChange}
-                  isInvalid={!!errors.email}
-                  errorMessage={errors.email}
-                  classNames={{
-                    label: "text-[var(--color-text-secondary)] text-xs font-semibold uppercase tracking-wider",
-                    inputWrapper: "bg-[var(--color-surface-2)] border-[var(--color-border)]",
-                  }}
-                />
+                <div className="flex flex-col gap-2">
+                  <label htmlFor="contact-name" className="text-[var(--color-text-secondary)] text-xs font-semibold uppercase tracking-wider">
+                    Your Name
+                  </label>
+                  <Input
+                    id="contact-name"
+                    name="name"
+                    type="text"
+                    placeholder="Full name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    className={errors.name ? "border-danger" : ""}
+                  />
+                  {errors.name && (
+                    <p className="text-xs text-danger mt-1">{errors.name}</p>
+                  )}
+                </div>
+
+                <div className="flex flex-col gap-2">
+                  <label htmlFor="contact-email" className="text-[var(--color-text-secondary)] text-xs font-semibold uppercase tracking-wider">
+                    Email Address
+                  </label>
+                  <Input
+                    id="contact-email"
+                    name="email"
+                    type="email"
+                    placeholder="you@example.com"
+                    value={formData.email}
+                    onChange={handleChange}
+                    className={errors.email ? "border-danger" : ""}
+                  />
+                  {errors.email && (
+                    <p className="text-xs text-danger mt-1">{errors.email}</p>
+                  )}
+                </div>
               </div>
 
-              <Input
-                id="contact-subject"
-                name="subject"
-                type="text"
-                label="Subject"
-                placeholder="What is your message about?"
-                value={formData.subject}
-                onChange={handleChange}
-                isInvalid={!!errors.subject}
-                errorMessage={errors.subject}
-                classNames={{
-                  label: "text-[var(--color-text-secondary)] text-xs font-semibold uppercase tracking-wider",
-                  inputWrapper: "bg-[var(--color-surface-2)] border-[var(--color-border)]",
-                }}
-              />
+              <div className="flex flex-col gap-2">
+                <label htmlFor="contact-subject" className="text-[var(--color-text-secondary)] text-xs font-semibold uppercase tracking-wider">
+                  Subject
+                </label>
+                <Input
+                  id="contact-subject"
+                  name="subject"
+                  type="text"
+                  placeholder="What is your message about?"
+                  value={formData.subject}
+                  onChange={handleChange}
+                  className={errors.subject ? "border-danger" : ""}
+                />
+                {errors.subject && (
+                  <p className="text-xs text-danger mt-1">{errors.subject}</p>
+                )}
+              </div>
 
-              <div>
-                <Textarea
+              <div className="flex flex-col gap-2">
+                <label htmlFor="contact-message" className="text-[var(--color-text-secondary)] text-xs font-semibold uppercase tracking-wider">
+                  Message
+                </label>
+                <TextArea
                   id="contact-message"
                   name="message"
-                  label="Message"
+                  aria-label="Message"
                   placeholder="Tell us how we can help you..."
                   value={formData.message}
                   onChange={handleChange}
-                  isInvalid={!!errors.message}
-                  errorMessage={errors.message}
-                  minRows={6}
-                  classNames={{
-                    label: "text-[var(--color-text-secondary)] text-xs font-semibold uppercase tracking-wider",
-                    inputWrapper: "bg-[var(--color-surface-2)] border-[var(--color-border)]",
-                    input: "min-h-[140px] resize-y",
-                  }}
+                  rows={6}
+                  style={{ resize: "vertical" }}
+                  className={errors.message ? "border-danger" : ""}
                 />
+                {errors.message && (
+                  <p className="text-xs text-danger mt-1">{errors.message}</p>
+                )}
                 <p className="text-xs text-[var(--color-text-muted)] mt-1">
                   {characterCount} / 500 characters
                 </p>

@@ -95,7 +95,6 @@ const nextConfig = {
       },
     ];
   },
-  // 💥 Next.js v16+ অফিশিয়াল রুলস অনুসারে এক্সটার্নাল প্যাকেজ ডেডলক বাইপাস:
   serverExternalPackages: ["@better-auth/kysely-adapter", "kysely"],
 };
 

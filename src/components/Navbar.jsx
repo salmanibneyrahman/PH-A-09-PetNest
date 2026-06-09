@@ -211,10 +211,12 @@ export default function Navbar() {
                                     e.currentTarget.style.borderColor = "var(--color-border)";
                                 }}
                             >
-                                {user?.image ? (
+                                                               {user?.image ? (
                                     <Image
                                         src={user.image}
                                         alt={user.name || "User"}
+                                        width={28}
+                                        height={28}
                                         style={{
                                             width: "28px",
                                             height: "28px",

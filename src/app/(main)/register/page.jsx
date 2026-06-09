@@ -176,8 +176,8 @@ export default function RegisterPage() {
         >
             <div
                 className={`w-3.5 h-3.5 rounded-full flex items-center justify-center shrink-0 transition-all duration-200 ${met
-                        ? "bg-success/15 border border-success/40"
-                        : "bg-default-100 border border-default-200"
+                    ? "bg-success/15 border border-success/40"
+                    : "bg-default-100 border border-default-200"
                     }`}
             >
                 {met && (
@@ -325,6 +325,10 @@ export default function RegisterPage() {
                                     value={formData.name}
                                     onChange={handleChange}
                                     color={errors.name ? "danger" : "default"}
+                                    classNames={{
+                                        innerWrapper: "flex items-center gap-2",
+                                        input: "pl-1"
+                                    }}
                                     startContent={
                                         <svg className="text-default-400 w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
@@ -349,6 +353,10 @@ export default function RegisterPage() {
                                     value={formData.email}
                                     onChange={handleChange}
                                     color={errors.email ? "danger" : "default"}
+                                    classNames={{
+                                        innerWrapper: "flex items-center gap-2",
+                                        input: "pl-1"
+                                    }}
                                     startContent={
                                         <svg className="text-default-400 w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                             <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
@@ -372,6 +380,10 @@ export default function RegisterPage() {
                                     value={formData.photoURL}
                                     onChange={handleChange}
                                     color={errors.photoURL ? "danger" : "default"}
+                                    classNames={{
+                                        innerWrapper: "flex items-center gap-2",
+                                        input: "pl-1"
+                                    }}
                                     startContent={
                                         <svg className="text-default-400 w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                             <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
@@ -397,6 +409,10 @@ export default function RegisterPage() {
                                     value={formData.password}
                                     onChange={handleChange}
                                     color={errors.password ? "danger" : "default"}
+                                    classNames={{
+                                        innerWrapper: "flex items-center gap-2",
+                                        input: "pl-1"
+                                    }}
                                     startContent={
                                         <svg className="text-default-400 w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                             <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
@@ -455,6 +471,10 @@ export default function RegisterPage() {
                                                 ? "success"
                                                 : "default"
                                     }
+                                    classNames={{
+                                        innerWrapper: "flex items-center gap-2",
+                                        input: "pl-1"
+                                    }}
                                     startContent={
                                         <svg className={`${isConfirmSuccess ? "text-success" : "text-default-400"} w-4 h-4`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                             <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />

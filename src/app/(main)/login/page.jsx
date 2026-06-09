@@ -195,6 +195,10 @@ export default function LoginPage() {
                                     value={formData.email}
                                     onChange={handleChange}
                                     color={errors.email ? "danger" : "default"}
+                                    classNames={{
+                                        innerWrapper: "flex items-center gap-2",
+                                        input: "pl-1"
+                                    }}
                                     startContent={
                                         <svg className="text-default-400 w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                             <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
@@ -219,6 +223,10 @@ export default function LoginPage() {
                                     value={formData.password}
                                     onChange={handleChange}
                                     color={errors.password ? "danger" : "default"}
+                                    classNames={{
+                                        innerWrapper: "flex items-center gap-2",
+                                        input: "pl-1"
+                                    }}
                                     startContent={
                                         <svg className="text-default-400 w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                             <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />

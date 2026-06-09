@@ -7,12 +7,10 @@ import { signIn } from "@/lib/auth-client";
 import { toast } from "@/lib/toast";
 import { useAuth } from "@/lib/AuthContext";
 
-// Bypass the HeroUI umbrella package to prevent invisible rendering bugs
 import { Input } from "@heroui/input";
 import { Button } from "@heroui/button";
 import { Card, CardBody } from "@heroui/card";
 import { Divider } from "@heroui/divider";
-import { Spinner } from "@heroui/spinner";
 
 export default function LoginPage() {
     const router = useRouter();
@@ -72,6 +70,7 @@ export default function LoginPage() {
             if (result.error) {
                 toast.error(result.error.message || "Invalid email or password");
                 setErrors({ general: "Invalid email or password" });
+                setIsSubmitting(false);
                 return;
             }
 
@@ -80,20 +79,28 @@ export default function LoginPage() {
         } catch (error) {
             toast.error(error.message || "Login failed. Please try again.");
             setErrors({ general: "Login failed. Please try again." });
-        } finally {
             setIsSubmitting(false);
         }
     };
 
     const handleGoogleSignIn = async () => {
         setIsGoogleLoading(true);
+        setErrors({});
         try {
-            await signIn.social({
+            const result = await signIn.social({
                 provider: "google",
                 callbackURL: "/",
             });
+
+            if (result?.error) {
+                toast.error(result.error.message || "Google sign-in failed");
+                setErrors({ general: result.error.message || "Google sign-in failed" });
+                setIsGoogleLoading(false);
+            }
         } catch (error) {
+            console.error("Google sign-in error:", error);
             toast.error("Google sign-in failed. Please try again.");
+            setErrors({ general: "Google sign-in failed. Please try again." });
             setIsGoogleLoading(false);
         }
     };
@@ -101,19 +108,29 @@ export default function LoginPage() {
     if (!mounted || isLoading) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-background">
-                <Spinner size="lg" className="text-[#d9f99d]" color="current" />
+                <div className="flex flex-col items-center gap-4">
+                    <div
+                        style={{
+                            width: "48px",
+                            height: "48px",
+                            borderRadius: "50%",
+                            border: "3px solid var(--color-surface-3)",
+                            borderTopColor: "var(--color-lime)",
+                            animation: "spin 0.8s linear infinite",
+                        }}
+                    />
+                    <p className="text-sm text-default-500">Loading...</p>
+                </div>
             </div>
         );
     }
 
     return (
         <div className="min-h-screen bg-background flex items-start justify-center pt-20 pb-10 px-6 relative overflow-hidden">
-            {/* Decorative Background Blobs */}
             <div className="absolute top-[10%] -left-[10%] w-[500px] h-[500px] rounded-full bg-[radial-gradient(circle,rgba(217,249,157,0.05)_0%,transparent_70%)] pointer-events-none" />
             <div className="absolute bottom-[5%] -right-[10%] w-[400px] h-[400px] rounded-full bg-[radial-gradient(circle,rgba(168,85,247,0.04)_0%,transparent_70%)] pointer-events-none" />
 
             <div className="w-full max-w-[480px] py-5 z-10 relative">
-                {/* Header Section */}
                 <div className="text-center mb-9">
                     <Link
                         href="/"
@@ -137,7 +154,6 @@ export default function LoginPage() {
                     </p>
                 </div>
 
-                {/* Form Wrapper Card */}
                 <Card className="bg-content1 border border-default-200 shadow-sm relative overflow-visible w-full block">
                     <div className="absolute top-0 inset-x-0 h-[1px] bg-gradient-to-r from-transparent via-[#d9f99d]/30 to-transparent rounded-t-xl" />
 
@@ -145,6 +161,7 @@ export default function LoginPage() {
                         <Button
                             onPress={handleGoogleSignIn}
                             isLoading={isGoogleLoading}
+                            isDisabled={isGoogleLoading}
                             variant="bordered"
                             className="w-full h-12 mb-6 border-default-200 text-foreground font-semibold flex items-center justify-center gap-2.5 transition-colors hover:bg-default-100"
                         >
@@ -181,7 +198,6 @@ export default function LoginPage() {
                         )}
 
                         <form onSubmit={handleSubmit} noValidate className="space-y-5">
-                            {/* Email Input */}
                             <div className="flex flex-col gap-1.5">
                                 <label htmlFor="login-email" className="text-[13px] font-semibold text-foreground">
                                     Email Address
@@ -209,7 +225,6 @@ export default function LoginPage() {
                                 {errors.email && <span className="text-[11px] text-danger">{errors.email}</span>}
                             </div>
 
-                            {/* Password Input */}
                             <div className="flex flex-col gap-1.5 pb-2">
                                 <label htmlFor="login-password" className="text-[13px] font-semibold text-foreground">
                                     Password
@@ -260,6 +275,7 @@ export default function LoginPage() {
                             <Button
                                 type="submit"
                                 isLoading={isSubmitting}
+                                isDisabled={isSubmitting}
                                 className="w-full h-12 bg-[#d9f99d] text-black text-[13px] font-bold tracking-wider uppercase transition-all hover:bg-[#c9f17d] hover:-translate-y-px hover:shadow-[0_4px_20px_rgba(217,249,157,0.2)] disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 {isSubmitting ? "Signing in..." : "Sign In"}
@@ -275,6 +291,12 @@ export default function LoginPage() {
                     </CardBody>
                 </Card>
             </div>
+
+            <style jsx>{`
+                @keyframes spin {
+                    to { transform: rotate(360deg); }
+                }
+            `}</style>
         </div>
     );
 }

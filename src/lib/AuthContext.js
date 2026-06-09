@@ -1,73 +1,39 @@
 "use client";
 
-import {
-    createContext,
-    useContext,
-    useEffect,
-    useState,
-    useCallback,
-} from "react";
-import { useSession, signOut } from "@/lib/auth-client";
-import { registerUserInDB } from "@/lib/api";
+import { createContext, useContext } from "react";
+import { useSession } from "@/lib/auth-client";
 
-const AuthContext = createContext(null);
+const AuthContext = createContext({
+    user: null,
+    isAuthenticated: false,
+    isLoading: true,
+    signOut: async () => { },
+});
 
 export function AuthProvider({ children }) {
-    const { data: session, isPending } = useSession();
-    const [hasRegistered, setHasRegistered] = useState(false);
+    const { data: session, isPending, error } = useSession();
 
-    const user = session?.user || null;
-
-    const syncUserToDB = useCallback(async (sessionUser) => {
-        if (!sessionUser?.email || hasRegistered) return;
+    const signOut = async () => {
         try {
-            await registerUserInDB({
-                name: sessionUser.name || "",
-                email: sessionUser.email,
-                photoURL: sessionUser.image || "",
-            });
-            setHasRegistered(true);
-        } catch (error) {
-            console.error("DB sync error (non-critical):", error);
-            setHasRegistered(true);
-        }
-    }, [hasRegistered]);
-
-    useEffect(() => {
-        if (user?.email) {
-            syncUserToDB(user);
-        } else {
-            setHasRegistered(false);
-        }
-    }, [user, syncUserToDB]);
-
-    const handleSignOut = useCallback(async () => {
-        try {
-            await signOut();
-            setHasRegistered(false);
+            await fetch("/api/auth/sign-out", { method: "POST" });
+            window.location.href = "/";
         } catch (error) {
             console.error("Sign out error:", error);
         }
-    }, []);
-
-    const value = {
-        user,
-        isLoading: isPending,
-        isAuthenticated: !!user,
-        signOut: handleSignOut,
     };
 
     return (
-        <AuthContext.Provider value={value}>
+        <AuthContext.Provider
+            value={{
+                user: session?.user || null,
+                isAuthenticated: !!session?.user,
+                isLoading: isPending,
+                signOut,
+            }}
+        >
             {children}
         </AuthContext.Provider>
     );
 }
 
-export function useAuth() {
-    const context = useContext(AuthContext);
-    if (!context) {
-        throw new Error("useAuth must be used within an AuthProvider");
-    }
-    return context;
-}
+export const useAuth = () => useContext(AuthContext);

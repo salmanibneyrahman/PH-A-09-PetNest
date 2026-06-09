@@ -150,13 +150,22 @@ export default function RegisterPage() {
 
     const handleGoogleSignIn = async () => {
         setIsGoogleLoading(true);
+        setErrors({});
         try {
-            await signIn.social({
+            const result = await signIn.social({
                 provider: "google",
                 callbackURL: "/",
             });
+
+            if (result?.error) {
+                toast.error(result.error.message || "Google sign-in failed");
+                setErrors({ general: result.error.message || "Google sign-in failed" });
+                setIsGoogleLoading(false);
+            }
         } catch (error) {
+            console.error("Google sign-in error:", error);
             toast.error("Google sign-in failed. Please try again.");
+            setErrors({ general: "Google sign-in failed. Please try again." });
             setIsGoogleLoading(false);
         }
     };
@@ -164,7 +173,19 @@ export default function RegisterPage() {
     if (!mounted || isLoading) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-background">
-                <Spinner size="lg" className="text-[#d9f99d]" color="current" />
+                <div className="flex flex-col items-center gap-4">
+                    <div
+                        style={{
+                            width: "48px",
+                            height: "48px",
+                            borderRadius: "50%",
+                            border: "3px solid var(--color-surface-3)",
+                            borderTopColor: "var(--color-lime)",
+                            animation: "spin 0.8s linear infinite",
+                        }}
+                    />
+                    <p className="text-sm text-default-500">Loading...</p>
+                </div>
             </div>
         );
     }

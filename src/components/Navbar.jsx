@@ -189,18 +189,7 @@ export default function Navbar() {
                         flexShrink: 0,
                     }}
                 >
-                    {isLoading ? (
-                        <div
-                            style={{
-                                width: "32px",
-                                height: "32px",
-                                borderRadius: "50%",
-                                border: "2px solid var(--color-surface-3)",
-                                borderTopColor: "var(--color-lime)",
-                                animation: "spin 0.8s linear infinite",
-                            }}
-                        />
-                    ) : isAuthenticated ? (
+                    {isAuthenticated ? (
                         <div style={{ position: "relative" }} ref={dropdownRef}>
                             <button
                                 onClick={() => setIsDropdownOpen((prev) => !prev)}

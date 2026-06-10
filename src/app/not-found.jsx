@@ -8,14 +8,9 @@ import { Card } from "@heroui/card";
 export default function NotFound() {
   const [mounted, setMounted] = useState(false);
 
-useEffect(() => {
-  const setMounted = () => {
-    setMountedState(true);
-  };
-
-  // Call the setMounted function after a short delay
-  setTimeout(setMounted, 0);
-}, []);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const quickLinks = useMemo(() => [
     { label: "Home", href: "/" },
@@ -37,24 +32,21 @@ useEffect(() => {
 
       {/* Content Container */}
       <div
-        className={`text-center max-w-[520px] w-full transition-all duration-500 ${
+        className={`text-center max-w-[520px] w-full relative z-10 transition-all duration-500 ${
           mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
         }`}
       >
-        {/* Logo */}
-        <Link
-          href="/"
-          className="inline-flex items-center gap-2.5 no-underline mb-12"
-        >
-          <div className="w-9 h-9 bg-[var(--color-lime)] rounded-lg flex items-center justify-center">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#000" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
-            </svg>
-          </div>
-          <span className="text-lg font-bold text-white tracking-tight">
-            PetNest
-          </span>
-        </Link>
+        {/* FIXED: Logo Wrapper creates physical separation */}
+        <div className="mb-14 flex justify-center">
+          <Link href="/" className="inline-flex items-center gap-2.5 no-underline">
+            <div className="w-9 h-9 bg-[var(--color-lime)] rounded-lg flex items-center justify-center">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#000" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+              </svg>
+            </div>
+            <span className="text-lg font-bold text-white tracking-tight">PetNest</span>
+          </Link>
+        </div>
 
         {/* 404 Number with Glow Effect */}
         <div className="text-[clamp(80px,15vw,140px)] font-extrabold tracking-tighter leading-none mb-6 relative inline-block">

@@ -164,8 +164,15 @@ export default function AddPetPage() {
   );
 
   return (
-    <div style={{ animation: "fadeIn 0.3s ease", maxWidth: "800px" }}>
-      <div style={{ marginBottom: "32px" }}>
+    <div className="w-full max-w-[900px] mx-auto" style={{ animation: "fadeIn 0.3s ease" }}>
+      <div style={{
+        marginBottom: "32px",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        textAlign: "center",
+        width: "100%"
+      }}>
         <h1
           style={{
             fontSize: "26px",

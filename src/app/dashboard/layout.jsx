@@ -7,9 +7,9 @@ import { useAuth } from "@/lib/AuthContext";
 import { AuthProvider } from "@/lib/AuthContext";
 import { toast } from "@/lib/toast";
 import { Button } from "@heroui/button";
-import { Avatar } from "@heroui/avatar";
 import { Card } from "@heroui/card";
 import { Spinner } from "@heroui/spinner";
+import Image from "next/image";
 
 function DashboardSidebar({ isOpen, onClose }) {
   const pathname = usePathname();
@@ -96,66 +96,54 @@ function DashboardSidebar({ isOpen, onClose }) {
 
   return (
     <>
-      {/* Mobile Overlay */}
+      {/* FIXED: Mobile Overlay - Changed 'hidden lg:block' to 'lg:hidden' */}
       {isOpen && (
         <div
           onClick={onClose}
-          className="fixed inset-0 bg-black/60 z-[39] hidden lg:block"
+          className="fixed inset-0 top-[64px] bg-black/60 z-[39] lg:hidden"
         />
       )}
 
-      {/* Sidebar */}
+      {/* FIXED: Sidebar Layout - Placed below Navbar (top-[64px]) and fixed responsive sliding */}
       <aside
-        className={`w-[260px] min-h-screen bg-[var(--color-surface)] border-r border-[var(--color-border)] fixed top-0 left-0 flex flex-col z-40 transition-transform duration-300 lg:${
+        className={`w-[260px] h-[calc(100vh-64px)] bg-[var(--color-surface)] border-r border-[var(--color-border)] fixed top-[64px] left-0 flex flex-col z-40 transition-transform duration-300 ${
           isOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
+        } lg:translate-x-0`}
       >
         {/* Header */}
         <div className="p-6 pb-5 border-b border-[var(--color-border)]">
-          <Link
-            href="/"
-            className="flex items-center gap-2.5 no-underline mb-5"
-          >
+          <Link href="/" className="flex items-center gap-2.5 no-underline mb-5">
             <div className="w-8 h-8 bg-[var(--color-lime)] rounded-lg flex items-center justify-center flex-shrink-0">
-              <svg
-                width="18"
-                height="18"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="#000"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#000" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
               </svg>
             </div>
             <div>
-              <p className="text-[15px] font-bold text-white tracking-tight leading-tight mb-0.5">
-                PetNest
-              </p>
-              <p className="text-[10px] font-semibold tracking-[0.1em] uppercase text-[var(--color-text-muted)]">
-                Partner Portal
-              </p>
+              <p className="text-[15px] font-bold text-white tracking-tight leading-tight mb-0.5">PetNest</p>
+              <p className="text-[10px] font-semibold tracking-[0.1em] uppercase text-[var(--color-text-muted)]">Partner Portal</p>
             </div>
           </Link>
 
-          {/* User Info Card */}
+          {/* FIXED: User Info Card & Avatar - Swapped to raw HTML to prevent blank circles */}
           {user && (
             <Card className="bg-[var(--color-surface-2)] border border-[var(--color-border)] p-3">
               <div className="flex items-center gap-2.5">
-                <Avatar
-                  src={user.image}
-                  name={user.name?.charAt(0)?.toUpperCase() || "U"}
-                  className="w-[34px] h-[34px] flex-shrink-0 bg-[var(--color-lime)] text-black font-bold text-[13px]"
-                />
+                {user.image ? (
+                  <Image 
+                    src={user.image} 
+                    alt={user.name || "User"} 
+                    width={34}
+  height={34}
+                    className="w-[34px] h-[34px] rounded-full object-cover border border-[var(--color-border)] flex-shrink-0"
+                  />
+                ) : (
+                  <div className="w-[34px] h-[34px] rounded-full bg-[var(--color-lime)] text-black font-bold text-[13px] flex items-center justify-center flex-shrink-0">
+                    {user.name?.charAt(0)?.toUpperCase() || "U"}
+                  </div>
+                )}
                 <div className="min-w-0 flex-1">
-                  <p className="text-[13px] font-semibold text-[var(--color-text-primary)] truncate">
-                    {user.name || "User"}
-                  </p>
-                  <p className="text-[11px] text-[var(--color-text-muted)] truncate">
-                    {user.email}
-                  </p>
+                  <p className="text-[13px] font-semibold text-[var(--color-text-primary)] truncate">{user.name || "User"}</p>
+                  <p className="text-[11px] text-[var(--color-text-muted)] truncate">{user.email}</p>
                 </div>
               </div>
             </Card>
@@ -167,9 +155,7 @@ function DashboardSidebar({ isOpen, onClose }) {
           {navSections.map((section, sectionIndex) => (
             <div key={sectionIndex} className="mb-2">
               {section.title && (
-                <p className="text-[10px] font-bold tracking-[0.12em] uppercase text-[var(--color-text-muted)] px-5 py-2 pb-1.5">
-                  {section.title}
-                </p>
+                <p className="text-[10px] font-bold tracking-[0.12em] uppercase text-[var(--color-text-muted)] px-5 py-2 pb-1.5">{section.title}</p>
               )}
               {section.items.map((item) => {
                 const active = isActive(item.href);
@@ -178,29 +164,13 @@ function DashboardSidebar({ isOpen, onClose }) {
                     key={item.href}
                     href={item.href}
                     onClick={onClose}
-                    className={`
-                      flex items-center gap-3 px-5 py-2.5 mx-3 my-0.5 text-sm rounded-sm
-                      no-underline transition-all duration-200 relative
-                      ${
-                        active
-                          ? "font-semibold text-[var(--color-text-primary)] bg-[rgba(217,249,157,0.08)] border border-[rgba(217,249,157,0.15)]"
-                          : "font-medium text-[var(--color-text-secondary)] border border-transparent hover:text-[var(--color-text-primary)] hover:bg-[var(--color-surface-2)]"
-                      }
-                    `}
+                    className={`flex items-center gap-3 px-5 py-2.5 mx-3 my-0.5 text-sm rounded-sm no-underline transition-all duration-200 relative ${
+                      active ? "font-semibold text-[var(--color-text-primary)] bg-[rgba(217,249,157,0.08)] border border-[rgba(217,249,157,0.15)]" : "font-medium text-[var(--color-text-secondary)] border border-transparent hover:text-[var(--color-text-primary)] hover:bg-[var(--color-surface-2)]"
+                    }`}
                   >
-                    <span
-                      className={`flex items-center transition-colors duration-200 ${
-                        active
-                          ? "text-[var(--color-lime)]"
-                          : "text-[var(--color-text-muted)]"
-                      }`}
-                    >
-                      {item.icon}
-                    </span>
+                    <span className={`flex items-center transition-colors duration-200 ${active ? "text-[var(--color-lime)]" : "text-[var(--color-text-muted)]"}`}>{item.icon}</span>
                     {item.label}
-                    {active && (
-                      <div className="ml-auto w-1.5 h-1.5 rounded-full bg-[var(--color-lime)] flex-shrink-0" />
-                    )}
+                    {active && <div className="ml-auto w-1.5 h-1.5 rounded-full bg-[var(--color-lime)] flex-shrink-0" />}
                   </Link>
                 );
               })}
@@ -210,28 +180,11 @@ function DashboardSidebar({ isOpen, onClose }) {
 
         {/* Footer Actions */}
         <div className="p-4 pt-4 border-t border-[var(--color-border)]">
-          <Link
-            href="/"
-            className="flex items-center gap-3 px-5 py-2.5 text-[13px] font-medium text-[var(--color-text-secondary)] rounded-sm no-underline transition-all duration-200 mb-1 hover:text-[var(--color-text-primary)] hover:bg-[var(--color-surface-2)]"
-          >
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-              <polyline points="9 22 9 12 15 12 15 22" />
-            </svg>
+          <Link href="/" className="flex items-center gap-3 px-5 py-2.5 text-[13px] font-medium text-[var(--color-text-secondary)] rounded-sm no-underline transition-all duration-200 mb-1 hover:text-[var(--color-text-primary)] hover:bg-[var(--color-surface-2)]">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /><polyline points="9 22 9 12 15 12 15 22" /></svg>
             Back to Home
           </Link>
-          <Button
-            onPress={handleSignOut}
-            variant="light"
-            className="w-full justify-start gap-3 px-5 text-[13px] font-medium text-[var(--color-error)] hover:bg-danger/8"
-            startContent={
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-                <polyline points="16 17 21 12 16 7" />
-                <line x1="21" y1="12" x2="9" y2="12" />
-              </svg>
-            }
-          >
+          <Button onPress={handleSignOut} variant="light" className="w-full justify-start gap-3 px-5 text-[13px] font-medium text-[var(--color-error)] hover:bg-danger/8" startContent={<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /><polyline points="16 17 21 12 16 7" /><line x1="21" y1="12" x2="9" y2="12" /></svg>}>
             Sign Out
           </Button>
         </div>
@@ -257,56 +210,36 @@ function DashboardContent({ children }) {
       <div className="min-h-screen flex items-center justify-center bg-[var(--color-bg)]">
         <div className="flex flex-col items-center gap-4">
           <Spinner size="lg" color="success" />
-          <p className="text-sm text-[var(--color-text-muted)]">
-            Loading dashboard...
-          </p>
+          <p className="text-sm text-[var(--color-text-muted)]">Loading dashboard...</p>
         </div>
       </div>
     );
   }
 
-  if (!isAuthenticated) {
-    return null;
-  }
+  if (!isAuthenticated) return null;
 
   return (
-    <div className="flex min-h-screen bg-[var(--color-bg)]">
-      <DashboardSidebar
-        isOpen={sidebarOpen}
-        onClose={() => setSidebarOpen(false)}
-      />
+    // FIXED: Added padding-top to prevent hiding under the global navbar
+    <div className="flex min-h-screen bg-[var(--color-bg)] pt-[64px]">
+      <DashboardSidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
-      {/* Main Content */}
-      <div className="ml-[260px] lg:ml-0 flex-1 min-h-screen flex flex-col">
-        {/* Mobile Header */}
-        <div className="h-14 bg-[var(--color-surface)] border-b border-[var(--color-border)] hidden lg:flex items-center px-5 gap-4 sticky top-0 z-30">
-          <Button
-            isIconOnly
-            variant="bordered"
-            size="sm"
-            onPress={() => setSidebarOpen(true)}
-            className="border-[var(--color-border)] text-[var(--color-text-primary)]"
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <line x1="3" y1="12" x2="21" y2="12" />
-              <line x1="3" y1="6" x2="21" y2="6" />
-              <line x1="3" y1="18" x2="21" y2="18" />
-            </svg>
+      {/* FIXED: Content wrapper correctly pushes to the right on desktop */}
+      <div className="ml-0 lg:ml-[260px] flex-1 min-h-[calc(100vh-64px)] flex flex-col">
+        {/* FIXED: Mobile Header - hidden on desktop, flex on mobile */}
+        <div className="h-14 bg-[var(--color-surface)] border-b border-[var(--color-border)] flex lg:hidden items-center px-5 gap-4 sticky top-[64px] z-30">
+          <Button isIconOnly variant="bordered" size="sm" onPress={() => setSidebarOpen(true)} className="border-[var(--color-border)] text-[var(--color-text-primary)]">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="6" x2="21" y2="6" /><line x1="3" y1="18" x2="21" y2="18" /></svg>
           </Button>
           <div className="flex items-center gap-2">
             <div className="w-6 h-6 bg-[var(--color-lime)] rounded flex items-center justify-center">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#000" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
-              </svg>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#000" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" /></svg>
             </div>
-            <span className="text-[15px] font-bold text-white">
-              PetNest
-            </span>
+            <span className="text-[15px] font-bold text-white">PetNest</span>
           </div>
         </div>
 
         {/* Page Content */}
-        <div className="flex-1 p-8 lg:p-5">
+        <div className="flex-1 p-8 lg:p-10">
           {children}
         </div>
       </div>

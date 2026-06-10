@@ -47,47 +47,60 @@ const BLUEPRINT_ITEMS = [
 export default function GuardianshipSection() {
   return (
     <section className="py-24 bg-[var(--color-bg)] border-b border-[var(--color-border)]">
-      <div className="max-w-[1280px] mx-auto px-6">
-        <div className="grid grid-cols-2 lg:grid-cols-1 gap-20 lg:gap-12 items-center">
-          {/* Content Column */}
-          <div>
-            <p className="section-label">Ownership Guide</p>
-            <h2 className="text-[clamp(32px,4vw,48px)] font-bold leading-tight tracking-tight text-[var(--color-text-primary)] mb-2">
-              Pet Guardianship
-            </h2>
-            <h2 className="text-[clamp(32px,4vw,48px)] font-bold leading-tight tracking-tight bg-gradient-to-br from-[#d9f99d] to-[#a3e635] bg-clip-text text-transparent mb-6">
-              Blueprint
-            </h2>
-            <p className="text-[15px] text-[var(--color-text-secondary)] leading-relaxed mb-10 max-w-[420px]">
+      <div className="container mx-auto px-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-26 items-center">
+          
+          {/* Left Content Column */}
+          <div className="flex flex-col items-start gap-8">
+            <div>
+              <p className="section-label mb-4">Ownership Guide</p>
+              <h2 className="text-[clamp(32px,4vw,48px)] font-bold leading-tight tracking-tight text-[var(--color-text-primary)]">
+                Pet Guardianship
+              </h2>
+              <h2 className="text-[clamp(32px,4vw,48px)] font-bold leading-tight tracking-tight bg-gradient-to-br from-[#d9f99d] to-[#a3e635] bg-clip-text text-transparent mb-6">
+                Blueprint
+              </h2>
+            </div>
+
+            <p className="text-[15px] text-[var(--color-text-secondary)] leading-relaxed max-w-[520px]">
               Adoption is the beginning of a lifelong journey. Our comprehensive
               care guide ensures you and your new companion thrive together from
               day one.
             </p>
 
             {/* Blueprint Items */}
-            <div className="flex flex-col gap-6">
+            <div className="flex flex-col gap-6 w-full">
               {BLUEPRINT_ITEMS.map((item) => (
                 <BlueprintItem key={item.title} item={item} />
               ))}
             </div>
           </div>
 
-          {/* Image Column */}
-          <Card className="relative rounded-lg overflow-hidden border border-[var(--color-border)] bg-[var(--color-surface)] aspect-[4/5] lg:max-w-[480px] lg:mx-auto lg:w-full">
-            <Image
-              src="https://images.unsplash.com/photo-1601758228041-f3b2795255f1?w=800&q=80"
-              alt="Pet owner with companion"
-              fill
-              className="object-cover brightness-[0.7]"
-              sizes="(max-width: 1024px) 480px, 640px"
-            />
-            <div
-              className="absolute inset-0"
-              style={{
-                background: "linear-gradient(135deg, rgba(217,249,157,0.05) 0%, transparent 60%)",
-              }}
-            />
-          </Card>
+          {/* Right Image Column */}
+          <div className="relative w-full aspect-[4/5] max-w-[500px] mx-auto lg:ml-auto pl-4">
+            {/* Decorative Elements */}
+            <div className="absolute top-[10%] right-[10%] w-32 h-32 rounded-full bg-[var(--color-lime)] opacity-20 blur-3xl animate-pulse" />
+            <div className="absolute bottom-[15%] left-[15%] w-40 h-40 rounded-full bg-[var(--color-purple)] opacity-15 blur-3xl animate-pulse" style={{ animationDelay: '0.5s' }} />
+            
+            <Card className="relative w-full h-full rounded-[2rem] overflow-hidden border border-[rgba(255,255,255,0.08)] shadow-2xl bg-[var(--color-surface)]">
+              <Image
+                src="https://images.unsplash.com/photo-1601758228041-f3b2795255f1?w=800&q=80"
+                alt="Pet owner with companion"
+                fill
+                sizes="(max-width: 768px) 100vw, 50vw"
+                className="object-cover"
+                priority
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+              <div
+                className="absolute inset-0"
+                style={{
+                  background: "linear-gradient(135deg, rgba(217,249,157,0.05) 0%, transparent 60%)",
+                }}
+              />
+            </Card>
+          </div>
+
         </div>
       </div>
     </section>

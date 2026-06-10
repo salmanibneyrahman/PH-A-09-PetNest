@@ -29,7 +29,7 @@ export default function AnalyticsPage() {
     } finally {
       setIsLoading(false);
     }
-  }, [user?.email]);
+  }, [user]);
 
   useEffect(() => {
     fetchData();

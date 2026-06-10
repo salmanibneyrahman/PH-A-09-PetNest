@@ -20,7 +20,7 @@ import { Select, ListBox, Modal, Checkbox } from "@heroui/react";
 import { Card, CardBody } from "@heroui/card";
 import { Chip } from "@heroui/chip";
 import { Avatar } from "@heroui/avatar";
-import { Spinner } from "@heroui/spinner";
+import Image from "next/image";
 
 export default function MyListingsPage() {
   const { user } = useAuth();
@@ -424,7 +424,7 @@ const PetCard = ({ pet, onOpenRequests, onEdit, onDelete, router }) => {
       <CardBody className="p-0 flex flex-row gap-0">
         <div className="w-[180px] min-h-[180px] relative flex-shrink-0 bg-[var(--color-surface-2)] overflow-hidden">
           {pet.imageURL ? (
-            <img
+            <Image
               src={pet.imageURL}
               alt={pet.name}
               className={`w-full h-full object-cover absolute inset-0 ${isAdopted ? "grayscale-[0.4]" : ""}`}

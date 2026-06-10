@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/AuthContext";
 import { addPet } from "@/lib/api";
 import { toast } from "@/lib/toast";
+import Image from "next/image";
 
 const SPECIES_OPTIONS = ["Dog", "Cat", "Bird", "Rabbit", "Reptile", "Fish", "Guinea Pig", "Hamster", "Other"];
 const GENDER_OPTIONS = ["Male", "Female"];
@@ -612,7 +613,7 @@ export default function AddPetPage() {
                     border: "1px solid var(--color-border)",
                   }}
                 >
-                  <img
+                  <Image
                     src={imagePreview}
                     alt="Preview"
                     style={{

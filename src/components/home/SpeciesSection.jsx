@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 
@@ -9,358 +9,187 @@ const SPECIES = [
     name: "Dogs",
     key: "Dog",
     description: "Faithful, energetic, and always ready for an adventure.",
-    icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M10 5.172C10 3.782 8.423 2.679 6.5 3c-2.823.47-4.113 6.006-4 7 .08.703 1.725 1.722 3.656 1 1.261-.472 1.96-1.45 2.344-2.5" />
-        <path d="M14.267 5.172c0-1.39 1.577-2.493 3.5-2.172 2.823.47 4.113 6.006 4 7-.08.703-1.725 1.722-3.656 1-1.261-.472-1.96-1.45-2.344-2.5" />
-        <path d="M8 14v.5" />
-        <path d="M16 14v.5" />
-        <path d="M11.25 16.25h1.5L12 17l-.75-.75z" />
-        <path d="M4.42 11.247A13.152 13.152 0 0 0 4 14.556C4 18.728 7.582 21 12 21s8-2.272 8-6.444c0-1.061-.162-2.2-.493-3.309m-9.243-6.082A8.801 8.801 0 0 1 12 5c.78 0 1.5.108 2.161.306" />
-      </svg>
-    ),
-    colorClass: "dogs",
     accentColor: "var(--color-purple)",
-    bgColor: "rgba(168, 85, 247, 0.06)",
-    image: "https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=400&q=80",
-  },
-  {
-    name: "Reptiles",
-    key: "Reptile",
-    description: "Unique, low-maintenance companions with fascinating personalities.",
-    icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" />
-        <path d="M12 6v6l4 2" />
-      </svg>
-    ),
-    colorClass: "reptiles",
-    accentColor: "var(--color-coral)",
-    bgColor: "rgba(251, 113, 133, 0.06)",
-    image: "https://images.unsplash.com/photo-1591025207163-942350e47db2?w=400&q=80",
-  },
-  {
-    name: "Birds",
-    key: "Bird",
-    description: "Intelligent and melodic avian friends for a lively home.",
-    icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M16 7h.01" />
-        <path d="M3.4 18H12a8 8 0 0 0 8-8V7a4 4 0 0 0-7.28-2.3L2 20" />
-        <path d="m20 7 2 .5-2 .5" />
-        <path d="M10 18v3" />
-        <path d="M14 17.75V21" />
-        <path d="M7 18a6 6 0 0 0 3.84-10.61" />
-      </svg>
-    ),
-    colorClass: "birds",
-    accentColor: "var(--color-lime)",
-    bgColor: "rgba(217, 249, 157, 0.06)",
-    image: "https://images.unsplash.com/photo-1552728089-57bdde30beb3?w=400&q=80",
+    image: "https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=600&q=80",
   },
   {
     name: "Cats",
     key: "Cat",
     description: "Independent, graceful, and endlessly entertaining companions.",
-    icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M12 5c.67 0 1.35.09 2 .26 1.78-2 5.03-2.84 6.42-2.26 1.4.58-.42 7-.42 7 .57 1.07 1 2.24 1 3.44C21 17.9 17 21 12 21s-9-3-9-7.56c0-1.25.5-2.4 1-3.44 0 0-1.89-6.42-.5-7 1.39-.58 4.72.23 6.5 2.23A9.04 9.04 0 0 1 12 5z" />
-        <path d="M8 14v.5" />
-        <path d="M16 14v.5" />
-        <path d="M11.25 16.25h1.5L12 17l-.75-.75z" />
-      </svg>
-    ),
-    colorClass: "cats",
     accentColor: "var(--color-coral)",
-    bgColor: "rgba(251, 113, 133, 0.06)",
-    image: "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=400&q=80",
+    image: "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=600&q=80",
+  },
+  {
+    name: "Birds",
+    key: "Bird",
+    description: "Intelligent and melodic avian friends for a lively home.",
+    accentColor: "var(--color-lime)",
+    image: "https://images.unsplash.com/photo-1719514160332-8a887399a2b4?w=600&auto=format",
+  },
+  {
+    name: "Reptiles",
+    key: "Reptile",
+    description: "Unique, low-maintenance companions with fascinating personalities.",
+    accentColor: "var(--color-coral)",
+    image: "https://images.unsplash.com/photo-1591025207163-942350e47db2?w=600&q=80",
   },
   {
     name: "Rabbits",
     key: "Rabbit",
     description: "Gentle and curious, perfect for families and quiet homes.",
-    icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M18 4a3 3 0 0 1 0 6" />
-        <path d="M6 4a3 3 0 0 0 0 6" />
-        <path d="M12 7v5" />
-        <path d="M6 10a6 6 0 0 0 12 0" />
-        <path d="M12 17a5 5 0 0 1-5 5h10a5 5 0 0 1-5-5z" />
-      </svg>
-    ),
-    colorClass: "rabbits",
     accentColor: "var(--color-lime)",
-    bgColor: "rgba(217, 249, 157, 0.06)",
-    image: "https://images.unsplash.com/photo-1585110396000-c9ffd4e4b308?w=400&q=80",
+    image: "https://images.unsplash.com/photo-1589933767411-38a58367efd7?q=80&w=858",
   },
 ];
 
 export default function SpeciesSection() {
   const router = useRouter();
-  const [activeIndex, setActiveIndex] = useState(1);
-  const [scrollOffset, setScrollOffset] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+  const scrollerRef = useRef(null);
 
   const handleExplore = (speciesKey) => {
     router.push(`/all-pets?species=${speciesKey}`);
   };
 
-  const handlePrev = () => {
-    setScrollOffset((prev) => Math.max(prev - 1, 0));
-  };
+  // Continuous Auto-play Marquee Logic
+  useEffect(() => {
+    if (isPaused) return;
 
-  const handleNext = () => {
-    setScrollOffset((prev) => Math.min(prev + 1, SPECIES.length - 3));
-  };
+    let animationFrameId;
+    const scroll = () => {
+      if (scrollerRef.current) {
+        scrollerRef.current.scrollLeft += 0.5; // Adjust number for speed (1.5 is a nice smooth pace)
+
+        // Seamless Infinite Loop Reset:
+        // When we scroll exactly halfway through our duplicated list, instantly jump back to 0.
+        if (scrollerRef.current.scrollLeft >= scrollerRef.current.scrollWidth / 2) {
+          scrollerRef.current.scrollLeft = 0;
+        }
+      }
+      animationFrameId = requestAnimationFrame(scroll);
+    };
+
+    animationFrameId = requestAnimationFrame(scroll);
+    return () => cancelAnimationFrame(animationFrameId);
+  }, [isPaused]);
+
+  // Infinite Manual Navigation
+  const handlePrev = useCallback(() => {
+    if (scrollerRef.current) {
+      if (scrollerRef.current.scrollLeft <= 0) {
+        scrollerRef.current.scrollLeft = scrollerRef.current.scrollWidth / 2;
+      }
+      const cardWidth = scrollerRef.current.children[0].offsetWidth + 24; // 24px is the gap-6
+      scrollerRef.current.scrollBy({ left: -cardWidth, behavior: "smooth" });
+    }
+  }, []);
+
+  const handleNext = useCallback(() => {
+    if (scrollerRef.current) {
+      const cardWidth = scrollerRef.current.children[0].offsetWidth + 24;
+      scrollerRef.current.scrollBy({ left: cardWidth, behavior: "smooth" });
+    }
+  }, []);
+
+  // We duplicate the array 4 times to ensure there is always a long enough track for the seamless infinite loop
+  const duplicatedSpecies = [...SPECIES, ...SPECIES, ...SPECIES, ...SPECIES];
 
   return (
-    <section
-      style={{
-        padding: "96px 0",
-        background: "var(--color-bg)",
-        borderTop: "1px solid var(--color-border)",
-      }}
-    >
-      <div
-        style={{
-          maxWidth: "1280px",
-          margin: "0 auto",
-          padding: "0 24px",
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            alignItems: "flex-end",
-            justifyContent: "space-between",
-            marginBottom: "40px",
-            flexWrap: "wrap",
-            gap: "16px",
-          }}
+    <section className="py-24 bg-[var(--color-bg)] border-t border-[var(--color-border)] relative">
+      <div className="max-w-[1280px] mx-auto px-6">
+        
+        {/* CENTERED HEADER & ARROWS */}
+        <div 
+          className="flex flex-col items-center text-center mb-14"
+          onMouseEnter={() => setIsPaused(true)}
+          onMouseLeave={() => setIsPaused(false)}
         >
-          <div>
-            <p className="section-label">Categories</p>
-            <h2 className="section-title">Species of PetNest</h2>
-            <p
-              style={{
-                fontSize: "15px",
-                color: "var(--color-text-secondary)",
-                marginTop: "8px",
-              }}
-            >
-              Find your perfect match among our curated species
-            </p>
-          </div>
-          <div style={{ display: "flex", gap: "8px" }}>
+          <p className="text-[11px] font-bold tracking-[0.12em] uppercase text-[var(--color-lime)] mb-3">
+            Categories
+          </p>
+          <h2 className="text-[clamp(28px,4vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] text-[var(--color-text-primary)]">
+            Species of PetNest
+          </h2>
+          <p className="text-[15px] text-[var(--color-text-secondary)] mt-3 max-w-[500px]">
+            Find your perfect match among our curated species. Click explore to see available pets waiting for a home.
+          </p>
+
+          {/* Infinite Manual Arrows */}
+          <div className="flex gap-3 mt-8">
             <button
               onClick={handlePrev}
-              disabled={scrollOffset === 0}
-              style={{
-                width: "40px",
-                height: "40px",
-                borderRadius: "var(--radius-sm)",
-                border: "1px solid var(--color-border)",
-                background: "var(--color-surface)",
-                color:
-                  scrollOffset === 0
-                    ? "var(--color-text-muted)"
-                    : "var(--color-text-primary)",
-                cursor: scrollOffset === 0 ? "not-allowed" : "pointer",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                transition: "all 0.2s ease",
-              }}
+              className="w-11 h-11 rounded-full border border-[rgba(255,255,255,0.15)] flex items-center justify-center text-white hover:bg-[rgba(255,255,255,0.08)] hover:scale-105 transition-all cursor-pointer"
+              aria-label="Previous species"
             >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <polyline points="15 18 9 12 15 6" />
               </svg>
             </button>
             <button
               onClick={handleNext}
-              disabled={scrollOffset >= SPECIES.length - 3}
-              style={{
-                width: "40px",
-                height: "40px",
-                borderRadius: "var(--radius-sm)",
-                border: "1px solid var(--color-border)",
-                background: "var(--color-surface)",
-                color:
-                  scrollOffset >= SPECIES.length - 3
-                    ? "var(--color-text-muted)"
-                    : "var(--color-text-primary)",
-                cursor:
-                  scrollOffset >= SPECIES.length - 3 ? "not-allowed" : "pointer",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                transition: "all 0.2s ease",
-              }}
+              className="w-11 h-11 rounded-full border border-[rgba(255,255,255,0.15)] flex items-center justify-center text-white hover:bg-[rgba(255,255,255,0.08)] hover:scale-105 transition-all cursor-pointer"
+              aria-label="Next species"
             >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <polyline points="9 18 15 12 9 6" />
               </svg>
             </button>
           </div>
         </div>
 
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(3, 1fr)",
-            gap: "16px",
-            overflow: "hidden",
-          }}
-          className="species-grid"
+        {/* Continuous Marquee Container */}
+        <div 
+          ref={scrollerRef}
+          className="flex gap-6 overflow-x-hidden [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+          onMouseEnter={() => setIsPaused(true)}
+          onMouseLeave={() => setIsPaused(false)}
         >
-          {SPECIES.slice(scrollOffset, scrollOffset + 3).map((species, index) => {
-            const isActive = index === 1;
-            return (
-              <div
-                key={species.key}
-                onClick={() => {
-                  setActiveIndex(index);
-                  handleExplore(species.key);
-                }}
-                style={{
-                  position: "relative",
-                  borderRadius: "var(--radius-md)",
-                  overflow: "hidden",
-                  cursor: "pointer",
-                  border: isActive
-                    ? `1px solid ${species.accentColor}40`
-                    : "1px solid var(--color-border)",
-                  background: isActive
-                    ? species.bgColor
-                    : "var(--color-surface)",
-                  transition: "all 0.3s ease",
-                  minHeight: "300px",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.borderColor = `${species.accentColor}60`;
-                  e.currentTarget.style.background = species.bgColor;
-                  e.currentTarget.style.transform = "translateY(-2px)";
-                }}
-                onMouseLeave={(e) => {
-                  if (!isActive) {
-                    e.currentTarget.style.borderColor = "var(--color-border)";
-                    e.currentTarget.style.background = "var(--color-surface)";
-                  }
-                  e.currentTarget.style.transform = "translateY(0)";
-                }}
-              >
-                <div
-                  style={{
-                    position: "relative",
-                    height: "200px",
-                    overflow: "hidden",
-                  }}
-                >
-                  <Image
-                    src={species.image}
-                    alt={species.name}
-                    width={400}
-                    height={300}
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      objectFit: "cover",
-                      filter: "brightness(0.75)",
-                    }}
-                  />
-                  <div
-                    style={{
-                      position: "absolute",
-                      inset: 0,
-                      background:
-                        "linear-gradient(to bottom, transparent 40%, rgba(0,0,0,0.7) 100%)",
-                    }}
-                  />
-                  <div
-                    style={{
-                      position: "absolute",
-                      top: "16px",
-                      left: "16px",
-                      width: "40px",
-                      height: "40px",
-                      borderRadius: "var(--radius-md)",
-                      background: "rgba(0,0,0,0.6)",
-                      backdropFilter: "blur(8px)",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      color: species.accentColor,
-                      border: `1px solid ${species.accentColor}30`,
-                    }}
-                  >
-                    {species.icon}
-                  </div>
-                </div>
+          {duplicatedSpecies.map((species, index) => (
+            <div
+              key={`${species.key}-${index}`}
+              onClick={() => handleExplore(species.key)}
+              // Widths strictly match the previous grid columns (1 on mobile, 2 on md, 3 on lg)
+              className="group cursor-pointer shrink-0 w-full md:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] rounded-2xl overflow-hidden border border-[rgba(255,255,255,0.08)] bg-[rgba(10,10,10,0.6)] backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:border-[rgba(217,249,157,0.3)] hover:shadow-[0_10px_40px_rgba(217,249,157,0.05)] flex flex-col"
+            >
+              {/* Image Section */}
+              <div className="relative w-full h-[220px] overflow-hidden bg-zinc-900">
+                <Image
+                  src={species.image}
+                  alt={species.name}
+                  fill
+                  sizes="(max-width: 768px) 100vw, 33vw"
+                  className="object-cover transition-transform duration-700 group-hover:scale-105"
+                />
+              </div>
 
-                <div style={{ padding: "20px" }}>
-                  <h3
-                    style={{
-                      fontSize: "18px",
-                      fontWeight: "700",
-                      color: "var(--color-text-primary)",
-                      marginBottom: "6px",
-                      letterSpacing: "-0.01em",
-                    }}
-                  >
+              {/* Glassmorphic Card Content */}
+              <div className="p-6 flex flex-col flex-1 justify-between gap-4">
+                <div>
+                  <h3 className="text-[20px] font-bold text-white mb-2 tracking-tight">
                     {species.name}
                   </h3>
-                  <p
-                    style={{
-                      fontSize: "13px",
-                      color: "var(--color-text-secondary)",
-                      lineHeight: "1.5",
-                      marginBottom: isActive ? "16px" : "0",
-                    }}
-                  >
+                  <p className="text-[14px] text-gray-400 leading-relaxed">
                     {species.description}
                   </p>
-                  {isActive && (
-                    <button
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "6px",
-                        background: "none",
-                        border: "none",
-                        color: species.accentColor,
-                        fontSize: "13px",
-                        fontWeight: "700",
-                        letterSpacing: "0.04em",
-                        cursor: "pointer",
-                        padding: "0",
-                        fontFamily: "var(--font-sans)",
-                      }}
-                    >
-                      EXPLORE
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                        <line x1="5" y1="12" x2="19" y2="12" />
-                        <polyline points="12 5 19 12 12 19" />
-                      </svg>
-                    </button>
-                  )}
                 </div>
+                
+                {/* Explore Button */}
+                <button
+                  className="flex items-center gap-2 text-[13px] font-bold tracking-wide uppercase transition-colors"
+                  style={{ color: species.accentColor }}
+                >
+                  Explore {species.name}
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="transition-transform group-hover:translate-x-1">
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                    <polyline points="12 5 19 12 12 19" />
+                  </svg>
+                </button>
               </div>
-            );
-          })}
+            </div>
+          ))}
         </div>
-      </div>
 
-      <style jsx>{`
-        @media (max-width: 768px) {
-          .species-grid {
-            grid-template-columns: 1fr !important;
-          }
-        }
-        @media (min-width: 769px) and (max-width: 1024px) {
-          .species-grid {
-            grid-template-columns: repeat(2, 1fr) !important;
-          }
-        }
-      `}</style>
+      </div>
     </section>
   );
 }

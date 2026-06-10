@@ -35,6 +35,17 @@ const STORIES = [
     rating: 5,
     avatarColor: "var(--color-coral)",
   },
+  {
+    adopter: "Anika Rahman",
+    petName: "Milo",
+    species: "Persian Cat",
+    quote:
+      "The seamless adoption process and clear background checks made everything so easy. Milo is incredibly playful and has already found his favorite spot on the couch. Highly recommend this platform!",
+    avatar: "AR",
+    timeAgo: "2 weeks ago",
+    rating: 5,
+    avatarColor: "var(--color-amber)",
+  },
 ];
 
 export default function SuccessStories() {

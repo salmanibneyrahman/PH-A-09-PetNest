@@ -1,5 +1,4 @@
 import { Card, CardBody } from "@heroui/card";
-import { Chip } from "@heroui/chip";
 
 const TIPS = [
   {
@@ -62,10 +61,15 @@ export default function PetCareSection() {
   return (
     <section className="py-24 bg-[var(--color-bg)] border-b border-[var(--color-border)]">
       <div className="max-w-[1280px] mx-auto px-6">
+        
         {/* Header */}
         <div className="text-center mb-16">
-          <p className="section-label">Expert Advice</p>
-          <h2 className="section-title mb-4">Pet Care Tips</h2>
+          <p className="text-[11px] font-bold tracking-[0.12em] uppercase text-[var(--color-lime)] mb-3">
+            Expert Advice
+          </p>
+          <h2 className="text-[clamp(28px,4vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] text-[var(--color-text-primary)] mb-4">
+            Pet Care Tips
+          </h2>
           <p className="text-[15px] text-[var(--color-text-secondary)] max-w-[480px] mx-auto leading-relaxed">
             Insights from our team of veterinarians and behavioral specialists
             to help you and your new companion thrive from day one.
@@ -73,7 +77,7 @@ export default function PetCareSection() {
         </div>
 
         {/* Tips Grid */}
-        <div className="grid grid-cols-3 lg:grid-cols-2 sm:grid-cols-1 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {TIPS.map((tip) => (
             <TipCard key={tip.number} tip={tip} />
           ))}
@@ -85,34 +89,37 @@ export default function PetCareSection() {
 
 function TipCard({ tip }) {
   return (
-    <Card className="bg-[var(--color-surface)] border border-[var(--color-border)] relative overflow-hidden transition-all duration-300 hover:-translate-y-0.5 hover:border-[rgba(217,249,157,0.2)] group">
-      <CardBody className="p-7">
-        {/* Background Number */}
-        <div className="absolute top-4 right-4 text-[48px] font-extrabold text-white/[0.03] leading-none tracking-tighter">
+    <Card className="h-full bg-[var(--color-surface)] border border-[var(--color-border)] relative overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:border-[rgba(217,249,157,0.3)] hover:shadow-[0_10px_30px_rgba(217,249,157,0.05)] group">
+      <CardBody className="p-7 flex flex-col h-full relative">
+        
+        {/* Fixed Background Number - Positioned perfectly behind text */}
+        <div className="absolute top-2 right-4 text-[72px] font-black text-[rgba(255,255,255,0.04)] leading-none tracking-tighter select-none pointer-events-none z-0">
           {tip.number}
         </div>
 
-        {/* Tag */}
-        <Chip
-          size="sm"
-          className="mb-4 text-[11px] font-bold tracking-wider uppercase"
-          style={{
-            background: tip.tagBg,
-            color: tip.tagColor,
-          }}
-        >
-          {tip.tag}
-        </Chip>
+        {/* Fixed Tag Badge - Custom span replacing the warped Chip */}
+        <div className="relative z-10 mb-5">
+          <span
+            className="inline-flex items-center px-3 py-1.5 text-[10px] font-bold tracking-widest uppercase rounded-full"
+            style={{
+              backgroundColor: tip.tagBg,
+              color: tip.tagColor,
+            }}
+          >
+            {tip.tag}
+          </span>
+        </div>
 
         {/* Title */}
-        <h3 className="text-base font-bold text-[var(--color-text-primary)] mb-3 tracking-tight leading-snug">
+        <h3 className="text-lg font-bold text-[var(--color-text-primary)] mb-3 tracking-tight leading-snug relative z-10">
           {tip.title}
         </h3>
 
         {/* Description */}
-        <p className="text-[13px] text-[var(--color-text-secondary)] leading-relaxed">
+        <p className="text-[14px] text-[var(--color-text-secondary)] leading-relaxed relative z-10 mt-auto">
           {tip.description}
         </p>
+        
       </CardBody>
     </Card>
   );

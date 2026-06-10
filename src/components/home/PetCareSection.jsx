@@ -61,7 +61,7 @@ export default function PetCareSection() {
   return (
     <section className="py-24 bg-[var(--color-bg)] border-b border-[var(--color-border)]">
       <div className="max-w-[1280px] mx-auto px-6">
-        
+
         {/* Header */}
         <div className="text-center mb-16">
           <p className="text-[11px] font-bold tracking-[0.12em] uppercase text-[var(--color-lime)] mb-3">
@@ -91,7 +91,7 @@ function TipCard({ tip }) {
   return (
     <Card className="h-full bg-[var(--color-surface)] border border-[var(--color-border)] relative overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:border-[rgba(217,249,157,0.3)] hover:shadow-[0_10px_30px_rgba(217,249,157,0.05)] group">
       <CardBody className="p-7 flex flex-col h-full relative">
-        
+
         {/* Fixed Background Number - Positioned perfectly behind text */}
         <div className="absolute top-2 right-4 text-[72px] font-black text-[rgba(255,255,255,0.04)] leading-none tracking-tighter select-none pointer-events-none z-0">
           {tip.number}
@@ -119,7 +119,7 @@ function TipCard({ tip }) {
         <p className="text-[14px] text-[var(--color-text-secondary)] leading-relaxed relative z-10 mt-auto">
           {tip.description}
         </p>
-        
+
       </CardBody>
     </Card>
   );

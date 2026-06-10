@@ -12,14 +12,14 @@ import {
   updateRequestStatus,
 } from "@/lib/api";
 import { toast } from "@/lib/toast";
+
+// Updated HeroUI v3 Imports
 import { Button } from "@heroui/button";
-import { Input, Textarea } from "@heroui/input";
-import { Select, SelectItem } from "@heroui/select";
+import { Input, TextArea } from "@heroui/react";
+import { Select, ListBox, Modal, Checkbox } from "@heroui/react";
 import { Card, CardBody } from "@heroui/card";
-import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter } from "@heroui/modal";
 import { Chip } from "@heroui/chip";
 import { Avatar } from "@heroui/avatar";
-import { Checkbox } from "@heroui/checkbox";
 import { Spinner } from "@heroui/spinner";
 
 export default function MyListingsPage() {
@@ -41,6 +41,7 @@ export default function MyListingsPage() {
   const [isLoadingRequests, setIsLoadingRequests] = useState(false);
   const [updatingRequestId, setUpdatingRequestId] = useState(null);
 
+  // FIXED: Changed dependency from [user?.email] to [user] for React Compiler
   const fetchPets = useCallback(async () => {
     if (!user?.email) return;
     setIsLoading(true);
@@ -52,7 +53,7 @@ export default function MyListingsPage() {
     } finally {
       setIsLoading(false);
     }
-  }, [user?.email]);
+  }, [user]);
 
   useEffect(() => {
     fetchPets();
@@ -176,13 +177,13 @@ export default function MyListingsPage() {
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search pets..."
             className="w-[160px]"
-            startContent={
+            startcontent={
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-muted)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <circle cx="11" cy="11" r="8" />
                 <line x1="21" y1="21" x2="16.65" y2="16.65" />
               </svg>
             }
-            classNames={{
+            classnames={{
               inputWrapper: "bg-[var(--color-surface)] border-[var(--color-border)]",
               input: "text-[13px]",
             }}
@@ -190,7 +191,7 @@ export default function MyListingsPage() {
           <Link href="/dashboard/add-pet">
             <Button
               className="bg-[var(--color-lime)] text-black font-bold text-xs tracking-wider uppercase whitespace-nowrap hover:bg-[var(--color-lime-dark)]"
-              startContent={
+              startcontent={
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                   <line x1="12" y1="5" x2="12" y2="19" />
                   <line x1="5" y1="12" x2="19" y2="12" />
@@ -322,56 +323,57 @@ export default function MyListingsPage() {
         </div>
       )}
 
-      {/* Delete Modal */}
+      {/* FIXED: Delete Modal v3 Syntax */}
       <Modal
         isOpen={deleteModal.open}
-        onClose={() => !isDeleting && setDeleteModal({ open: false, pet: null })}
-        classNames={{
-          base: "bg-[var(--color-surface)] border border-[var(--color-border)]",
-          backdrop: "bg-black/60",
+        onOpenChange={(isOpen) => {
+          if (!isOpen && !isDeleting) setDeleteModal({ open: false, pet: null });
         }}
       >
-        <ModalContent>
-          <ModalBody className="p-7 text-center">
-            <div className="w-13 h-13 rounded-full bg-danger/10 border border-danger/20 flex items-center justify-center mx-auto mb-5 text-[var(--color-error)]">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <polyline points="3 6 5 6 21 6" />
-                <path d="M19 6l-1 14H6L5 6" />
-                <path d="M10 11v6M14 11v6M9 6V4h6v2" />
-              </svg>
-            </div>
-            <h2 className="text-lg font-bold text-[var(--color-text-primary)] mb-2">
-              Delete Listing
-            </h2>
-            <p className="text-sm text-[var(--color-text-secondary)] leading-relaxed mb-7">
-              Are you sure you want to remove{" "}
-              <strong className="text-[var(--color-text-primary)]">
-                {deleteModal.pet?.name}
-              </strong>{" "}
-              from your listings? This action cannot be undone and all
-              associated requests will be deleted.
-            </p>
-            <div className="flex gap-2.5">
-              <Button
-                variant="bordered"
-                onPress={() => setDeleteModal({ open: false, pet: null })}
-                isDisabled={isDeleting}
-                className="flex-1 border-[var(--color-border)] text-[var(--color-text-primary)]"
-              >
-                Cancel
-              </Button>
-              <Button
-                color="danger"
-                onPress={handleDelete}
-                isDisabled={isDeleting}
-                isLoading={isDeleting}
-                className="flex-1 bg-[var(--color-error)] text-white font-bold"
-              >
-                Delete Listing
-              </Button>
-            </div>
-          </ModalBody>
-        </ModalContent>
+        <Modal.Backdrop className="bg-black/60">
+          <Modal.Container>
+            <Modal.Dialog className="bg-[var(--color-surface)] border border-[var(--color-border)]">
+              <Modal.Body className="p-7 text-center">
+                <div className="w-13 h-13 rounded-full bg-danger/10 border border-danger/20 flex items-center justify-center mx-auto mb-5 text-[var(--color-error)]">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="3 6 5 6 21 6" />
+                    <path d="M19 6l-1 14H6L5 6" />
+                    <path d="M10 11v6M14 11v6M9 6V4h6v2" />
+                  </svg>
+                </div>
+                <h2 className="text-lg font-bold text-[var(--color-text-primary)] mb-2">
+                  Delete Listing
+                </h2>
+                <p className="text-sm text-[var(--color-text-secondary)] leading-relaxed mb-7">
+                  Are you sure you want to remove{" "}
+                  <strong className="text-[var(--color-text-primary)]">
+                    {deleteModal.pet?.name}
+                  </strong>{" "}
+                  from your listings? This action cannot be undone.
+                </p>
+                <div className="flex gap-2.5">
+                  <Button
+                    variant="bordered"
+                    onPress={() => setDeleteModal({ open: false, pet: null })}
+                    isDisabled={isDeleting}
+                    className="flex-1 border-[var(--color-border)] text-[var(--color-text-primary)]"
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    color="danger"
+                    onPress={handleDelete}
+                    isDisabled={isDeleting}
+                    isLoading={isDeleting}
+                    className="flex-1 bg-[var(--color-error)] text-white font-bold"
+                  >
+                    Delete Listing
+                  </Button>
+                </div>
+              </Modal.Body>
+            </Modal.Dialog>
+          </Modal.Container>
+        </Modal.Backdrop>
       </Modal>
 
       {/* Requests Modal */}
@@ -420,7 +422,6 @@ const PetCard = ({ pet, onOpenRequests, onEdit, onDelete, router }) => {
       }`}
     >
       <CardBody className="p-0 flex flex-row gap-0">
-        {/* Image */}
         <div className="w-[180px] min-h-[180px] relative flex-shrink-0 bg-[var(--color-surface-2)] overflow-hidden">
           {pet.imageURL ? (
             <img
@@ -450,7 +451,6 @@ const PetCard = ({ pet, onOpenRequests, onEdit, onDelete, router }) => {
           </Chip>
         </div>
 
-        {/* Content */}
         <div className="flex-1 p-4.5 px-5 flex flex-col min-w-0">
           <div className="flex items-start justify-between mb-1 gap-2">
             <h3 className={`text-[17px] font-bold tracking-tight truncate ${
@@ -524,22 +524,8 @@ const PetCard = ({ pet, onOpenRequests, onEdit, onDelete, router }) => {
                 <Button
                   isIconOnly
                   size="sm"
-                  variant="bordered"
-                  onPress={() => router.push(`/pets/${pet._id}`)}
-                  className="w-[34px] h-[34px] bg-[var(--color-surface-2)] border-[var(--color-border)] text-[var(--color-text-muted)] hover:text-[var(--color-lime)] hover:border-[rgba(217,249,157,0.3)]"
-                  title="View Listing"
-                >
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                    <circle cx="12" cy="12" r="3" />
-                  </svg>
-                </Button>
-                <Button
-                  isIconOnly
-                  size="sm"
                   onPress={onDelete}
                   className="w-[34px] h-[34px] bg-danger/8 border border-danger/20 text-[var(--color-error)] hover:bg-danger/15"
-                  title="Delete Listing"
                 >
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <polyline points="3 6 5 6 21 6" />
@@ -554,12 +540,6 @@ const PetCard = ({ pet, onOpenRequests, onEdit, onDelete, router }) => {
                 variant="bordered"
                 onPress={onDelete}
                 className="flex-1 border-[var(--color-border)] text-[var(--color-text-muted)] text-xs font-semibold"
-                startContent={
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
-                    <path d="M3 3v5h5" />
-                  </svg>
-                }
               >
                 Remove
               </Button>
@@ -608,168 +588,153 @@ const StatCard = ({ label, value, subtitle, icon, iconColor }) => {
   );
 };
 
+// FIXED: Requests Modal v3 Syntax
 function RequestsModal({ pet, requests, isLoading, updatingRequestId, onClose, onUpdateStatus, formatDate }) {
   const hasApproved = useMemo(() => requests.some((r) => r.status === "approved"), [requests]);
 
   return (
-    <Modal
-      isOpen={true}
-      onClose={onClose}
-      size="2xl"
-      scrollBehavior="inside"
-      classNames={{
-        base: "bg-[var(--color-surface)] border border-[var(--color-border)]",
-        backdrop: "bg-black/60",
-      }}
-    >
-      <ModalContent>
-        <ModalHeader className="px-6 py-5 border-b border-[var(--color-border)] flex flex-col gap-0.5">
-          <h2 className="text-[17px] font-bold text-[var(--color-text-primary)]">
-            Adoption Requests
-          </h2>
-          <p className="text-[13px] text-[var(--color-text-muted)] font-normal">
-            {pet?.name} • {requests.length} request{requests.length !== 1 ? "s" : ""}
-          </p>
-        </ModalHeader>
-        <ModalBody className="p-0 max-h-[500px]">
-          {isLoading ? (
-            <div className="p-10 flex flex-col gap-3">
-              {[...Array(2)].map((_, i) => (
-                <div key={i} className="p-5 bg-[var(--color-surface-2)] rounded-sm">
-                  <div className="h-4 w-1/2 bg-[var(--color-surface-3)] rounded mb-2 animate-pulse" />
-                  <div className="h-3 w-2/3 bg-[var(--color-surface-3)] rounded animate-pulse" />
-                </div>
-              ))}
-            </div>
-          ) : requests.length === 0 ? (
-            <div className="p-15 text-center text-[var(--color-text-muted)]">
-              <div className="text-4xl mb-3">📭</div>
-              <p className="text-[15px] font-semibold text-[var(--color-text-secondary)]">
-                No requests yet
+    <Modal isOpen={true} onOpenChange={(isOpen) => !isOpen && onClose()}>
+      <Modal.Backdrop className="bg-black/60">
+        <Modal.Container>
+          <Modal.Dialog className="bg-[var(--color-surface)] border border-[var(--color-border)] max-w-2xl overflow-hidden">
+            <Modal.CloseTrigger />
+            <Modal.Header className="px-6 py-5 border-b border-[var(--color-border)] flex flex-col gap-0.5">
+              <h2 className="text-[17px] font-bold text-[var(--color-text-primary)]">
+                Adoption Requests
+              </h2>
+              <p className="text-[13px] text-[var(--color-text-muted)] font-normal">
+                {pet?.name} • {requests.length} request{requests.length !== 1 ? "s" : ""}
               </p>
-              <p className="text-[13px] mt-1.5">
-                Requests will appear here when people apply to adopt {pet?.name}
-              </p>
-            </div>
-          ) : (
-            requests.map((request, index) => (
-              <div
-                key={request._id}
-                className={`px-6 py-5 ${
-                  index < requests.length - 1 ? "border-b border-[var(--color-border)]" : ""
-                } ${
-                  request.status === "approved"
-                    ? "bg-success/[0.03]"
-                    : request.status === "rejected"
-                    ? "bg-danger/[0.03]"
-                    : ""
-                }`}
-              >
-                <div className="flex items-start justify-between mb-3 gap-3 flex-wrap">
-                  <div className="flex items-center gap-3">
-                    <Avatar
-                      name={request.userName?.charAt(0)?.toUpperCase() || "U"}
-                      className="w-10 h-10 flex-shrink-0 bg-[var(--color-surface-2)] border border-[var(--color-border)] text-[var(--color-lime)] font-bold text-[15px]"
-                    />
-                    <div>
-                      <p className="text-sm font-bold text-[var(--color-text-primary)] mb-0.5">
-                        {request.userName || "Anonymous"}
-                      </p>
-                      <p className="text-xs text-[var(--color-text-muted)]">
-                        {request.userEmail}
-                      </p>
+            </Modal.Header>
+            <Modal.Body className="p-0 max-h-[500px] overflow-y-auto">
+              {isLoading ? (
+                <div className="p-10 flex flex-col gap-3">
+                  {[...Array(2)].map((_, i) => (
+                    <div key={i} className="p-5 bg-[var(--color-surface-2)] rounded-sm">
+                      <div className="h-4 w-1/2 bg-[var(--color-surface-3)] rounded mb-2 animate-pulse" />
+                      <div className="h-3 w-2/3 bg-[var(--color-surface-3)] rounded animate-pulse" />
                     </div>
-                  </div>
-
-                  <Chip
-                    variant="bordered"
-                    size="sm"
-                    className={`font-bold text-[11px] uppercase tracking-wider ${
+                  ))}
+                </div>
+              ) : requests.length === 0 ? (
+                <div className="p-15 text-center text-[var(--color-text-muted)]">
+                  <div className="text-4xl mb-3">📭</div>
+                  <p className="text-[15px] font-semibold text-[var(--color-text-secondary)]">
+                    No requests yet
+                  </p>
+                  <p className="text-[13px] mt-1.5">
+                    Requests will appear here when people apply to adopt {pet?.name}
+                  </p>
+                </div>
+              ) : (
+                requests.map((request, index) => (
+                  <div
+                    key={request._id}
+                    className={`px-6 py-5 ${
+                      index < requests.length - 1 ? "border-b border-[var(--color-border)]" : ""
+                    } ${
                       request.status === "approved"
-                        ? "bg-success/12 text-[var(--color-success)] border-success/25"
+                        ? "bg-success/[0.03]"
                         : request.status === "rejected"
-                        ? "bg-danger/12 text-[var(--color-error)] border-danger/25"
-                        : "bg-warning/12 text-[var(--color-warning)] border-warning/25"
+                        ? "bg-danger/[0.03]"
+                        : ""
                     }`}
                   >
-                    {request.status}
-                  </Chip>
-                </div>
+                    <div className="flex items-start justify-between mb-3 gap-3 flex-wrap">
+                      <div className="flex items-center gap-3">
+                        <Avatar
+                          name={request.userName?.charAt(0)?.toUpperCase() || "U"}
+                          className="w-10 h-10 flex-shrink-0 bg-[var(--color-surface-2)] border border-[var(--color-border)] text-[var(--color-lime)] font-bold text-[15px]"
+                        />
+                        <div>
+                          <p className="text-sm font-bold text-[var(--color-text-primary)] mb-0.5">
+                            {request.userName || "Anonymous"}
+                          </p>
+                          <p className="text-xs text-[var(--color-text-muted)]">
+                            {request.userEmail}
+                          </p>
+                        </div>
+                      </div>
 
-                <div className="flex gap-4 mb-3 flex-wrap">
-                  <span className="text-xs text-[var(--color-text-muted)] flex items-center gap-1">
-                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-                      <line x1="16" y1="2" x2="16" y2="6" />
-                      <line x1="8" y1="2" x2="8" y2="6" />
-                      <line x1="3" y1="10" x2="21" y2="10" />
-                    </svg>
-                    Requested: {formatDate(request.requestDate)}
-                  </span>
-                  <span className="text-xs text-[var(--color-text-muted)] flex items-center gap-1">
-                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <rect x="1" y="3" width="15" height="13" />
-                      <polygon points="16 8 20 8 23 11 23 16 16 16 16 8" />
-                      <circle cx="5.5" cy="18.5" r="2.5" />
-                      <circle cx="18.5" cy="18.5" r="2.5" />
-                    </svg>
-                    Pickup: {formatDate(request.pickupDate)}
-                  </span>
-                </div>
+                      <Chip
+                        variant="bordered"
+                        size="sm"
+                        className={`font-bold text-[11px] uppercase tracking-wider ${
+                          request.status === "approved"
+                            ? "bg-success/12 text-[var(--color-success)] border-success/25"
+                            : request.status === "rejected"
+                            ? "bg-danger/12 text-[var(--color-error)] border-danger/25"
+                            : "bg-warning/12 text-[var(--color-warning)] border-warning/25"
+                        }`}
+                      >
+                        {request.status}
+                      </Chip>
+                    </div>
 
-                {request.message && (
-                  <Card className="bg-[var(--color-surface-2)] border border-[var(--color-border)] mb-3.5">
-                    <CardBody className="p-3.5">
-                      <p className="text-[13px] text-[var(--color-text-secondary)] leading-relaxed italic">
-                        "{request.message}"
-                      </p>
-                    </CardBody>
-                  </Card>
-                )}
-
-                {request.status === "pending" && (
-                  <div className="flex gap-2">
-                    <Button
-                      size="sm"
-                      onPress={() => onUpdateStatus(request._id, "approved")}
-                      isDisabled={!!updatingRequestId || hasApproved}
-                      isLoading={updatingRequestId === request._id}
-                      className="flex-1 bg-success/12 border border-success/25 text-[var(--color-success)] text-xs font-bold"
-                      startContent={
-                        updatingRequestId !== request._id && (
-                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                            <polyline points="20 6 9 17 4 12" />
-                          </svg>
-                        )
-                      }
-                    >
-                      Approve
-                    </Button>
-                    <Button
-                      size="sm"
-                      onPress={() => onUpdateStatus(request._id, "rejected")}
-                      isDisabled={!!updatingRequestId}
-                      className="flex-1 bg-danger/8 border border-danger/20 text-[var(--color-error)] text-xs font-bold"
-                      startContent={
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                          <line x1="18" y1="6" x2="6" y2="18" />
-                          <line x1="6" y1="6" x2="18" y2="18" />
+                    <div className="flex gap-4 mb-3 flex-wrap">
+                      <span className="text-xs text-[var(--color-text-muted)] flex items-center gap-1">
+                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                          <line x1="16" y1="2" x2="16" y2="6" />
+                          <line x1="8" y1="2" x2="8" y2="6" />
+                          <line x1="3" y1="10" x2="21" y2="10" />
                         </svg>
-                      }
-                    >
-                      Reject
-                    </Button>
+                        Requested: {formatDate(request.requestDate)}
+                      </span>
+                      <span className="text-xs text-[var(--color-text-muted)] flex items-center gap-1">
+                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <rect x="1" y="3" width="15" height="13" />
+                          <polygon points="16 8 20 8 23 11 23 16 16 16 16 8" />
+                          <circle cx="5.5" cy="18.5" r="2.5" />
+                          <circle cx="18.5" cy="18.5" r="2.5" />
+                        </svg>
+                        Pickup: {formatDate(request.pickupDate)}
+                      </span>
+                    </div>
+
+                    {request.message && (
+                      <Card className="bg-[var(--color-surface-2)] border border-[var(--color-border)] mb-3.5">
+                        <CardBody className="p-3.5">
+                          <p className="text-[13px] text-[var(--color-text-secondary)] leading-relaxed italic">
+                            "{request.message}"
+                          </p>
+                        </CardBody>
+                      </Card>
+                    )}
+
+                    {request.status === "pending" && (
+                      <div className="flex gap-2">
+                        <Button
+                          size="sm"
+                          onPress={() => onUpdateStatus(request._id, "approved")}
+                          isDisabled={!!updatingRequestId || hasApproved}
+                          isLoading={updatingRequestId === request._id}
+                          className="flex-1 bg-success/12 border border-success/25 text-[var(--color-success)] text-xs font-bold"
+                        >
+                          Approve
+                        </Button>
+                        <Button
+                          size="sm"
+                          onPress={() => onUpdateStatus(request._id, "rejected")}
+                          isDisabled={!!updatingRequestId}
+                          className="flex-1 bg-danger/8 border border-danger/20 text-[var(--color-error)] text-xs font-bold"
+                        >
+                          Reject
+                        </Button>
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
-            ))
-          )}
-        </ModalBody>
-      </ModalContent>
+                ))
+              )}
+            </Modal.Body>
+          </Modal.Dialog>
+        </Modal.Container>
+      </Modal.Backdrop>
     </Modal>
   );
 }
 
+// FIXED: Edit Modal v3 Syntax (TextArea and Select -> ListBox conversion)
 function EditPetModal({ pet, onClose, onSuccess }) {
   const SPECIES_OPTIONS = ["Dog", "Cat", "Bird", "Rabbit", "Reptile", "Fish", "Guinea Pig", "Hamster", "Other"];
   const GENDER_OPTIONS = ["Male", "Female"];
@@ -827,155 +792,183 @@ function EditPetModal({ pet, onClose, onSuccess }) {
   return (
     <Modal
       isOpen={true}
-      onClose={() => !isSubmitting && onClose()}
-      size="2xl"
-      scrollBehavior="inside"
-      classNames={{
-        base: "bg-[var(--color-surface)] border border-[var(--color-border)]",
-        backdrop: "bg-black/60",
+      onOpenChange={(isOpen) => {
+        if (!isOpen && !isSubmitting) onClose();
       }}
     >
-      <ModalContent>
-        <ModalHeader className="px-6 py-5 border-b border-[var(--color-border)]">
-          <h2 className="text-[17px] font-bold text-[var(--color-text-primary)]">
-            Edit {pet.name}
-          </h2>
-        </ModalHeader>
-        <form onSubmit={handleSubmit}>
-          <ModalBody className="p-6 grid grid-cols-2 sm:grid-cols-1 gap-4">
-            {[
-              { label: "Pet Name", name: "name", placeholder: "e.g. Buddy" },
-              { label: "Age", name: "age", placeholder: "e.g. 2 years" },
-              { label: "Breed", name: "breed", placeholder: "e.g. Golden Retriever" },
-              { label: "Location", name: "location", placeholder: "e.g. New York" },
-              { label: "Adoption Fee ($)", name: "adoptionFee", type: "number", placeholder: "0 for free" },
-              { label: "Image URL", name: "imageURL", placeholder: "https://..." },
-            ].map((field) => (
-              <Input
-                key={field.name}
-                label={field.label}
-                name={field.name}
-                type={field.type || "text"}
-                value={formData[field.name]}
-                onChange={(e) => handleChange(field.name, e.target.value)}
-                placeholder={field.placeholder}
-                isInvalid={!!errors[field.name]}
-                errorMessage={errors[field.name]}
-                classNames={{
-                  label: `text-[11px] font-semibold uppercase tracking-wider ${errors[field.name] ? "text-[var(--color-error)]" : "text-[var(--color-text-secondary)]"}`,
-                  inputWrapper: "bg-[var(--color-surface-2)] border-[var(--color-border)]",
-                }}
-              />
-            ))}
+      <Modal.Backdrop className="bg-black/60">
+        <Modal.Container>
+          <Modal.Dialog className="bg-[var(--color-surface)] border border-[var(--color-border)] max-w-2xl">
+            <Modal.CloseTrigger />
+            <Modal.Header className="px-6 py-5 border-b border-[var(--color-border)]">
+              <h2 className="text-[17px] font-bold text-[var(--color-text-primary)]">
+                Edit {pet.name}
+              </h2>
+            </Modal.Header>
+            <form onSubmit={handleSubmit}>
+              <Modal.Body className="p-6 grid grid-cols-2 sm:grid-cols-1 gap-4 overflow-y-auto max-h-[60vh]">
+                {[
+                  { label: "Pet Name", name: "name", placeholder: "e.g. Buddy" },
+                  { label: "Age", name: "age", placeholder: "e.g. 2 years" },
+                  { label: "Breed", name: "breed", placeholder: "e.g. Golden Retriever" },
+                  { label: "Location", name: "location", placeholder: "e.g. New York" },
+                  { label: "Adoption Fee ($)", name: "adoptionFee", type: "number", placeholder: "0 for free" },
+                  { label: "Image URL", name: "imageURL", placeholder: "https://..." },
+                ].map((field) => (
+                  <Input
+                    key={field.name}
+                    label={field.label}
+                    name={field.name}
+                    type={field.type || "text"}
+                    value={formData[field.name]}
+                    onChange={(e) => handleChange(field.name, e.target.value)}
+                    placeholder={field.placeholder}
+                    isInvalid={!!errors[field.name]}
+                    errorMessage={errors[field.name]}
+                    classnames={{
+                      label: `text-[11px] font-semibold uppercase tracking-wider ${errors[field.name] ? "text-[var(--color-error)]" : "text-[var(--color-text-secondary)]"}`,
+                      inputWrapper: "bg-[var(--color-surface-2)] border-[var(--color-border)]",
+                    }}
+                  />
+                ))}
 
-            <Select
-              label="Species"
-              selectedKeys={formData.species ? [formData.species] : []}
-              onChange={(e) => handleChange("species", e.target.value)}
-              isInvalid={!!errors.species}
-              errorMessage={errors.species}
-              classNames={{
-                label: "text-[11px] font-semibold uppercase tracking-wider text-[var(--color-text-secondary)]",
-                trigger: "bg-[var(--color-surface-2)] border-[var(--color-border)]",
-              }}
-            >
-              {SPECIES_OPTIONS.map((s) => (
-                <SelectItem key={s} value={s}>
-                  {s}
-                </SelectItem>
-              ))}
-            </Select>
+                <Select
+                  label="Species"
+                  selectedKeys={new Set(formData.species ? [formData.species] : [])}
+                  onSelectionChange={(keys) => {
+                    const selected = Array.from(keys)[0];
+                    if (selected) handleChange("species", selected);
+                  }}
+                  isInvalid={!!errors.species}
+                  errorMessage={errors.species}
+                  classnames={{
+                    label: "text-[11px] font-semibold uppercase tracking-wider text-[var(--color-text-secondary)]",
+                  }}
+                >
+                  <Select.Trigger className="bg-[var(--color-surface-2)] border-[var(--color-border)]">
+                    <Select.Value />
+                  </Select.Trigger>
+                  <Select.Popover>
+                    <ListBox>
+                      {SPECIES_OPTIONS.map((s) => (
+                        <ListBox.Item key={s} id={s} textValue={s}>
+                          {s}
+                        </ListBox.Item>
+                      ))}
+                    </ListBox>
+                  </Select.Popover>
+                </Select>
 
-            <Select
-              label="Gender"
-              selectedKeys={formData.gender ? [formData.gender] : []}
-              onChange={(e) => handleChange("gender", e.target.value)}
-              isInvalid={!!errors.gender}
-              errorMessage={errors.gender}
-              classNames={{
-                label: "text-[11px] font-semibold uppercase tracking-wider text-[var(--color-text-secondary)]",
-                trigger: "bg-[var(--color-surface-2)] border-[var(--color-border)]",
-              }}
-            >
-              {GENDER_OPTIONS.map((g) => (
-                <SelectItem key={g} value={g}>
-                  {g}
-                </SelectItem>
-              ))}
-            </Select>
+                <Select
+                  label="Gender"
+                  selectedKeys={new Set(formData.gender ? [formData.gender] : [])}
+                  onSelectionChange={(keys) => {
+                    const selected = Array.from(keys)[0];
+                    if (selected) handleChange("gender", selected);
+                  }}
+                  isInvalid={!!errors.gender}
+                  errorMessage={errors.gender}
+                  classnames={{
+                    label: "text-[11px] font-semibold uppercase tracking-wider text-[var(--color-text-secondary)]",
+                  }}
+                >
+                  <Select.Trigger className="bg-[var(--color-surface-2)] border-[var(--color-border)]">
+                    <Select.Value />
+                  </Select.Trigger>
+                  <Select.Popover>
+                    <ListBox>
+                      {GENDER_OPTIONS.map((g) => (
+                        <ListBox.Item key={g} id={g} textValue={g}>
+                          {g}
+                        </ListBox.Item>
+                      ))}
+                    </ListBox>
+                  </Select.Popover>
+                </Select>
 
-            <Select
-              label="Health Status"
-              selectedKeys={formData.healthStatus ? [formData.healthStatus] : []}
-              onChange={(e) => handleChange("healthStatus", e.target.value)}
-              classNames={{
-                label: "text-[11px] font-semibold uppercase tracking-wider text-[var(--color-text-secondary)]",
-                trigger: "bg-[var(--color-surface-2)] border-[var(--color-border)]",
-              }}
-            >
-              {HEALTH_OPTIONS.map((h) => (
-                <SelectItem key={h} value={h}>
-                  {h}
-                </SelectItem>
-              ))}
-            </Select>
+                <Select
+                  label="Health Status"
+                  selectedKeys={new Set(formData.healthStatus ? [formData.healthStatus] : [])}
+                  onSelectionChange={(keys) => {
+                    const selected = Array.from(keys)[0];
+                    if (selected) handleChange("healthStatus", selected);
+                  }}
+                  classnames={{
+                    label: "text-[11px] font-semibold uppercase tracking-wider text-[var(--color-text-secondary)]",
+                  }}
+                >
+                  <Select.Trigger className="bg-[var(--color-surface-2)] border-[var(--color-border)]">
+                    <Select.Value />
+                  </Select.Trigger>
+                  <Select.Popover>
+                    <ListBox>
+                      {HEALTH_OPTIONS.map((h) => (
+                        <ListBox.Item key={h} id={h} textValue={h}>
+                          {h}
+                        </ListBox.Item>
+                      ))}
+                    </ListBox>
+                  </Select.Popover>
+                </Select>
 
-            <div className="flex items-center mt-4">
-              <Checkbox
-                isSelected={formData.vaccinationStatus}
-                onValueChange={(checked) => handleChange("vaccinationStatus", checked)}
-                classNames={{
-                  base: `p-3 px-3.5 rounded-sm w-full transition-all ${
-                    formData.vaccinationStatus
-                      ? "bg-success/8 border-success/25"
-                      : "bg-[var(--color-surface-2)] border-[var(--color-border)]"
-                  }`,
-                  label: `text-[13px] font-semibold ${
-                    formData.vaccinationStatus
-                      ? "text-[var(--color-success)]"
-                      : "text-[var(--color-text-primary)]"
-                  }`,
-                }}
-              >
-                Vaccinated
-              </Checkbox>
-            </div>
+                <div className="flex items-center mt-4">
+                  <Checkbox
+                    isSelected={formData.vaccinationStatus}
+                    onValueChange={(checked) => handleChange("vaccinationStatus", checked)}
+                    classnames={{
+                      base: `p-3 px-3.5 rounded-sm w-full transition-all ${
+                        formData.vaccinationStatus
+                          ? "bg-success/8 border-success/25"
+                          : "bg-[var(--color-surface-2)] border-[var(--color-border)]"
+                      }`,
+                      label: `text-[13px] font-semibold ${
+                        formData.vaccinationStatus
+                          ? "text-[var(--color-success)]"
+                          : "text-[var(--color-text-primary)]"
+                      }`,
+                    }}
+                  >
+                    Vaccinated
+                  </Checkbox>
+                </div>
 
-            <div className="col-span-2 sm:col-span-1">
-              <Textarea
-                label="Description"
-                name="description"
-                value={formData.description}
-                onChange={(e) => handleChange("description", e.target.value)}
-                placeholder="Describe this pet..."
-                minRows={4}
-                classNames={{
-                  label: "text-[11px] font-semibold uppercase tracking-wider text-[var(--color-text-secondary)]",
-                  inputWrapper: "bg-[var(--color-surface-2)] border-[var(--color-border)]",
-                }}
-              />
-            </div>
-          </ModalBody>
-          <ModalFooter className="px-6 py-4 border-t border-[var(--color-border)] gap-2.5">
-            <Button
-              variant="bordered"
-              onPress={() => !isSubmitting && onClose()}
-              isDisabled={isSubmitting}
-              className="border-[var(--color-border)] text-[var(--color-text-primary)]"
-            >
-              Cancel
-            </Button>
-            <Button
-              type="submit"
-              isDisabled={isSubmitting}
-              isLoading={isSubmitting}
-              className="bg-[var(--color-lime)] text-black font-bold"
-            >
-              Save Changes
-            </Button>
-          </ModalFooter>
-        </form>
-      </ModalContent>
+                <div className="col-span-2 sm:col-span-1">
+                  <TextArea
+                    label="Description"
+                    name="description"
+                    value={formData.description}
+                    onChange={(e) => handleChange("description", e.target.value)}
+                    placeholder="Describe this pet..."
+                    minRows={4}
+                    classnames={{
+                      label: "text-[11px] font-semibold uppercase tracking-wider text-[var(--color-text-secondary)]",
+                      inputWrapper: "bg-[var(--color-surface-2)] border-[var(--color-border)]",
+                    }}
+                  />
+                </div>
+              </Modal.Body>
+              <Modal.Footer className="px-6 py-4 border-t border-[var(--color-border)] gap-2.5">
+                <Button
+                  variant="bordered"
+                  onPress={() => !isSubmitting && onClose()}
+                  isDisabled={isSubmitting}
+                  className="border-[var(--color-border)] text-[var(--color-text-primary)]"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  type="submit"
+                  isDisabled={isSubmitting}
+                  isLoading={isSubmitting}
+                  className="bg-[var(--color-lime)] text-black font-bold"
+                >
+                  Save Changes
+                </Button>
+              </Modal.Footer>
+            </form>
+          </Modal.Dialog>
+        </Modal.Container>
+      </Modal.Backdrop>
     </Modal>
   );
 }

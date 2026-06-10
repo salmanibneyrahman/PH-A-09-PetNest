@@ -6,7 +6,7 @@ import { toast } from "@/lib/toast";
 import { Button } from "@heroui/button";
 import { Input } from "@heroui/input";
 import { Card, CardBody } from "@heroui/card";
-import { Switch } from "@heroui/switch";
+import { Switch } from "@heroui/react";
 
 const NOTIFICATION_OPTIONS = [
   {

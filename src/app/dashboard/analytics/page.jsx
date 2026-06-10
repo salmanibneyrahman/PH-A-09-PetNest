@@ -5,7 +5,7 @@ import { useAuth } from "@/lib/AuthContext";
 import { getOwnerPets, getUserRequests } from "@/lib/api";
 import { Card, CardBody } from "@heroui/card";
 import { Chip } from "@heroui/chip";
-import { Skeleton } from "@heroui/skeleton";
+import { Skeleton } from "@heroui/react";
 import Image from "next/image";
 
 export default function AnalyticsPage() {

@@ -310,35 +310,24 @@ function PetPerformanceRow({ pet, isLast }) {
 
   return (
     <div
-      className={`px-4 md:px-6 py-4 ${
-        !isLast ? "border-b border-[var(--color-border)]" : ""
-      } hover:bg-[var(--color-surface-2)] transition-colors`}
+      className={`px-4 md:px-6 py-4 ${!isLast ? "border-b border-[var(--color-border)]" : ""
+        } hover:bg-[var(--color-surface-2)] transition-colors`}
     >
-      {/* Desktop Layout */}
-      <div className="hidden md:grid md:grid-cols-[1fr_100px_90px_110px_90px] gap-4 items-center">
-        {/* Pet Info */}
-        <div className="flex items-center gap-3 min-w-0">
-          <div className="w-12 h-12 rounded-lg bg-[var(--color-surface-2)] border border-[var(--color-border)] overflow-hidden flex-shrink-0 relative">
+      <div className="flex flex-col md:grid md:grid-cols-[1fr_100px_90px_110px_90px] gap-4 items-start md:items-center">
+        <div className="flex items-center gap-3 min-w-0 w-full md:w-auto">
+          <div className="w-12 h-12 md:w-14 md:h-14 rounded-lg bg-[var(--color-surface-2)] border border-[var(--color-border)] overflow-hidden flex-shrink-0 relative">
             {!imgError && pet.imageURL ? (
               <Image
                 src={pet.imageURL}
                 alt={pet.name}
                 fill
-                sizes="48px"
+                sizes="(max-width: 768px) 56px, 48px"
                 className="object-cover"
                 onError={() => setImgError(true)}
               />
             ) : (
-              <div className="w-full h-full flex items-center justify-center text-xl">
-                {pet.species === "Dog"
-                  ? "🐕"
-                  : pet.species === "Cat"
-                  ? "🐈"
-                  : pet.species === "Bird"
-                  ? "🦜"
-                  : pet.species === "Rabbit"
-                  ? "🐇"
-                  : "🐾"}
+              <div className="w-full h-full flex items-center justify-center text-xl md:text-2xl">
+                {pet.species === "Dog" ? "🐶" : pet.species === "Cat" ? "🐱" : pet.species === "Bird" ? "🦜" : pet.species === "Rabbit" ? "🐰" : "🐾"}
               </div>
             )}
           </div>
@@ -347,90 +336,21 @@ function PetPerformanceRow({ pet, isLast }) {
               {pet.name}
             </p>
             <p className="text-xs text-[var(--color-text-muted)] truncate">
-              {pet.species}
-              {pet.breed && ` • ${pet.breed}`}
+              {pet.species} {pet.breed && ` • ${pet.breed}`}
             </p>
           </div>
         </div>
-
-        {/* Views */}
-        <div>
-          <p className="text-base font-bold text-[var(--color-text-primary)]">
-            {(pet.views || 0).toLocaleString()}
-          </p>
-        </div>
-
-        {/* Status */}
-        <div>
-          <Chip
-            size="sm"
-            className=" px-2 text-[10px] font-bold uppercase tracking-wider"
-            style={{
-              background: statusConfig.bg,
-              color: statusConfig.color,
-              border: `1px solid ${statusConfig.color}30`,
-            }}
-          >
-            {statusConfig.label}
-          </Chip>
-        </div>
-
-        {/* Date */}
-        <div>
-          <p className="text-xs text-[var(--color-text-secondary)]">
-            {formatDate(pet.createdAt)}
-          </p>
-        </div>
-
-        {/* Actions */}
-        <div className="flex justify-end">
-          <Link
-            href={`/pets/${pet._id}`}
-            className="text-xs font-semibold text-[var(--color-lime)] hover:text-[var(--color-lime-dark)] transition-colors no-underline"
-          >
-            View Details →
-          </Link>
-        </div>
-      </div>
-
-      {/* Mobile Layout */}
-      <div className="md:hidden space-y-3">
-        <div className="flex items-center gap-3">
-          <div className="w-14 h-14 rounded-lg bg-[var(--color-surface-2)] border border-[var(--color-border)] overflow-hidden flex-shrink-0 relative">
-            {!imgError && pet.imageURL ? (
-              <Image
-                src={pet.imageURL}
-                alt={pet.name}
-                fill
-                sizes="56px"
-                className="object-cover"
-                onError={() => setImgError(true)}
-              />
-            ) : (
-              <div className="w-full h-full flex items-center justify-center text-2xl">
-                {pet.species === "Dog"
-                  ? "🐕"
-                  : pet.species === "Cat"
-                  ? "🐈"
-                  : pet.species === "Bird"
-                  ? "🦜"
-                  : pet.species === "Rabbit"
-                  ? "🐇"
-                  : "🐾"}
-              </div>
-            )}
+        <div className="flex items-center justify-between w-full md:contents border-t border-[var(--color-border)]/30 pt-3 md:pt-0 mt-2 md:mt-0 text-xs md:text-sm">
+          <div>
+            <span className="text-[var(--color-text-muted)] md:hidden">Views: </span>
+            <span className="font-bold text-[var(--color-text-primary)] md:text-base">
+              {(pet.views || 0).toLocaleString()}
+            </span>
           </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-sm font-semibold text-[var(--color-text-primary)] truncate mb-1">
-              {pet.name}
-            </p>
-            <p className="text-xs text-[var(--color-text-muted)] mb-2">
-              {pet.species}
-              {pet.breed && ` • ${pet.breed}`}
-            </p>
+          <div>
             <Chip
               size="sm"
-              className="text-[9px] px-2 font-bold uppercase tracking-wider"
+              className="px-2 text-[9px] md:text-[10px] font-bold uppercase tracking-wider"
               style={{
                 background: statusConfig.bg,
                 color: statusConfig.color,
@@ -440,27 +360,23 @@ function PetPerformanceRow({ pet, isLast }) {
               {statusConfig.label}
             </Chip>
           </div>
-        </div>
-        <div className="flex items-center justify-between text-xs">
-          <div className="flex items-center gap-4">
-            <div>
-              <span className="text-[var(--color-text-muted)]">Views: </span>
-              <span className="font-bold text-[var(--color-text-primary)]">
-                {(pet.views || 0).toLocaleString()}
-              </span>
-            </div>
-            <div className="text-[var(--color-text-muted)]">
-              {formatDate(pet.createdAt)}
-            </div>
+
+          <div className="text-[var(--color-text-muted)] md:text-[var(--color-text-secondary)] md:text-xs">
+            {formatDate(pet.createdAt)}
           </div>
-          <Link
-            href={`/pets/${pet._id}`}
-            className="font-semibold text-[var(--color-lime)] hover:text-[var(--color-lime-dark)] transition-colors no-underline"
-          >
-            View →
-          </Link>
+
+          <div className="flex md:justify-end">
+            <Link
+              href={`/pets/${pet._id}`}
+              className="font-semibold md:font-semibold text-[var(--color-lime)] hover:text-[var(--color-lime-dark)] transition-colors no-underline"
+            >
+              View <span className="hidden md:inline">Details →</span>
+            </Link>
+          </div>
+
         </div>
       </div>
     </div>
   );
+
 }

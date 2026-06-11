@@ -18,7 +18,7 @@ export default function AnalyticsPage() {
 
   const fetchData = useCallback(async () => {
     if (!user?.email || hasFetched) return;
-    
+
     setIsLoading(true);
     try {
       const [petsData, requestsData] = await Promise.all([
@@ -33,7 +33,7 @@ export default function AnalyticsPage() {
     } finally {
       setIsLoading(false);
     }
-  }, [user?.email, hasFetched]);
+  }, [user]);
 
   useEffect(() => {
     if (!authLoading && user?.email) {
@@ -121,7 +121,6 @@ export default function AnalyticsPage() {
     ];
   }, [pets, requests]);
 
-  // Show loading spinner while authenticating or fetching data
   if (authLoading || isLoading) {
     return (
       <div className="min-h-[60vh] flex flex-col items-center justify-center">
@@ -136,8 +135,8 @@ export default function AnalyticsPage() {
   return (
     <div className="animate-[fadeIn_0.3s_ease]">
       {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-[26px] font-bold text-[var(--color-text-primary)] tracking-tight mb-1">
+      <div className="mb-6 md:mb-8">
+        <h1 className="text-2xl md:text-[26px] font-bold text-[var(--color-text-primary)] tracking-tight mb-1">
           Analytics
         </h1>
         <p className="text-sm text-[var(--color-text-secondary)]">
@@ -146,7 +145,7 @@ export default function AnalyticsPage() {
       </div>
 
       {/* Metrics Grid */}
-      <div className="grid grid-cols-3 lg:grid-cols-2 sm:grid-cols-1 gap-4 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6 md:mb-8">
         {metrics.map((metric) => (
           <MetricCard key={metric.label} metric={metric} />
         ))}
@@ -155,17 +154,17 @@ export default function AnalyticsPage() {
       {/* Listings Performance Table */}
       {pets.length > 0 ? (
         <Card className="bg-[var(--color-surface)] border border-[var(--color-border)] overflow-hidden">
-          <div className="px-6 py-4 border-b border-[var(--color-border)] flex items-center justify-between">
-            <h2 className="text-[15px] font-bold text-[var(--color-text-primary)]">
+          <div className="px-4 md:px-6 py-4 border-b border-[var(--color-border)] flex items-center justify-between flex-wrap gap-2">
+            <h2 className="text-sm md:text-[15px] font-bold text-[var(--color-text-primary)]">
               Listings Performance
             </h2>
             <div className="text-xs text-[var(--color-text-muted)] font-medium">
-              {pets.length} Total Listing{pets.length !== 1 ? 's' : ''}
+              {pets.length} Total Listing{pets.length !== 1 ? "s" : ""}
             </div>
           </div>
 
-          {/* Table Header */}
-          <div className="px-6 py-3 bg-[var(--color-surface-2)] border-b border-[var(--color-border)] hidden md:grid grid-cols-[1fr_120px_100px_120px_100px] gap-4">
+          {/* Table Header - Hidden on mobile */}
+          <div className="px-4 md:px-6 py-3 bg-[var(--color-surface-2)] border-b border-[var(--color-border)] hidden md:grid md:grid-cols-[1fr_100px_90px_110px_90px] gap-4">
             <div className="text-[10px] font-bold tracking-[0.1em] uppercase text-[var(--color-text-muted)]">
               Pet
             </div>
@@ -196,7 +195,7 @@ export default function AnalyticsPage() {
         </Card>
       ) : (
         <Card className="bg-[var(--color-surface)] border border-[var(--color-border)]">
-          <CardBody className="p-12 text-center">
+          <CardBody className="p-8 md:p-12 text-center">
             <div className="w-16 h-16 rounded-full bg-[var(--color-surface-2)] border border-[var(--color-border)] flex items-center justify-center text-3xl mx-auto mb-4">
               🐾
             </div>
@@ -234,7 +233,7 @@ function MetricCard({ metric }) {
         }}
       />
       <CardBody
-        className="p-6 transition-all duration-200"
+        className="p-5 md:p-6 transition-all duration-200"
         onMouseEnter={(e) => {
           e.currentTarget.parentElement.style.borderColor = `${metric.color}40`;
         }}
@@ -242,12 +241,12 @@ function MetricCard({ metric }) {
           e.currentTarget.parentElement.style.borderColor = "var(--color-border)";
         }}
       >
-        <div className="flex justify-between items-start mb-4">
-          <p className="text-[11px] font-bold tracking-[0.1em] uppercase text-[var(--color-text-muted)]">
+        <div className="flex justify-between items-start mb-3 md:mb-4">
+          <p className="text-[10px] md:text-[11px] font-bold tracking-[0.1em] uppercase text-[var(--color-text-muted)]">
             {metric.label}
           </p>
           <div
-            className="w-8 h-8 rounded-sm flex items-center justify-center"
+            className="w-8 h-8 rounded-sm flex items-center justify-center flex-shrink-0"
             style={{
               background: `${metric.color}15`,
               border: `1px solid ${metric.color}25`,
@@ -258,7 +257,7 @@ function MetricCard({ metric }) {
           </div>
         </div>
         <p
-          className="text-4xl font-extrabold tracking-tighter leading-none"
+          className="text-3xl md:text-4xl font-extrabold tracking-tighter leading-none"
           style={{ color: metric.color }}
         >
           {metric.value}
@@ -311,12 +310,12 @@ function PetPerformanceRow({ pet, isLast }) {
 
   return (
     <div
-      className={`px-6 py-4 ${
+      className={`px-4 md:px-6 py-4 ${
         !isLast ? "border-b border-[var(--color-border)]" : ""
       } hover:bg-[var(--color-surface-2)] transition-colors`}
     >
       {/* Desktop Layout */}
-      <div className="hidden md:grid grid-cols-[1fr_120px_100px_120px_100px] gap-4 items-center">
+      <div className="hidden md:grid md:grid-cols-[1fr_100px_90px_110px_90px] gap-4 items-center">
         {/* Pet Info */}
         <div className="flex items-center gap-3 min-w-0">
           <div className="w-12 h-12 rounded-lg bg-[var(--color-surface-2)] border border-[var(--color-border)] overflow-hidden flex-shrink-0 relative">
@@ -331,10 +330,15 @@ function PetPerformanceRow({ pet, isLast }) {
               />
             ) : (
               <div className="w-full h-full flex items-center justify-center text-xl">
-                {pet.species === "Dog" ? "🐕" :
-                 pet.species === "Cat" ? "🐈" :
-                 pet.species === "Bird" ? "🦜" :
-                 pet.species === "Rabbit" ? "🐇" : "🐾"}
+                {pet.species === "Dog"
+                  ? "🐕"
+                  : pet.species === "Cat"
+                  ? "🐈"
+                  : pet.species === "Bird"
+                  ? "🦜"
+                  : pet.species === "Rabbit"
+                  ? "🐇"
+                  : "🐾"}
               </div>
             )}
           </div>
@@ -360,7 +364,7 @@ function PetPerformanceRow({ pet, isLast }) {
         <div>
           <Chip
             size="sm"
-            className="text-[10px] font-bold uppercase tracking-wider"
+            className=" px-2 text-[10px] font-bold uppercase tracking-wider"
             style={{
               background: statusConfig.bg,
               color: statusConfig.color,
@@ -392,49 +396,62 @@ function PetPerformanceRow({ pet, isLast }) {
       {/* Mobile Layout */}
       <div className="md:hidden space-y-3">
         <div className="flex items-center gap-3">
-          <div className="w-12 h-12 rounded-lg bg-[var(--color-surface-2)] border border-[var(--color-border)] overflow-hidden flex-shrink-0 relative">
+          <div className="w-14 h-14 rounded-lg bg-[var(--color-surface-2)] border border-[var(--color-border)] overflow-hidden flex-shrink-0 relative">
             {!imgError && pet.imageURL ? (
               <Image
                 src={pet.imageURL}
                 alt={pet.name}
                 fill
-                sizes="48px"
+                sizes="56px"
                 className="object-cover"
                 onError={() => setImgError(true)}
               />
             ) : (
-              <div className="w-full h-full flex items-center justify-center text-xl">
-                {pet.species === "Dog" ? "🐕" :
-                 pet.species === "Cat" ? "🐈" :
-                 pet.species === "Bird" ? "🦜" :
-                 pet.species === "Rabbit" ? "🐇" : "🐾"}
+              <div className="w-full h-full flex items-center justify-center text-2xl">
+                {pet.species === "Dog"
+                  ? "🐕"
+                  : pet.species === "Cat"
+                  ? "🐈"
+                  : pet.species === "Bird"
+                  ? "🦜"
+                  : pet.species === "Rabbit"
+                  ? "🐇"
+                  : "🐾"}
               </div>
             )}
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-semibold text-[var(--color-text-primary)] truncate">
+            <p className="text-sm font-semibold text-[var(--color-text-primary)] truncate mb-1">
               {pet.name}
             </p>
-            <p className="text-xs text-[var(--color-text-muted)]">
+            <p className="text-xs text-[var(--color-text-muted)] mb-2">
               {pet.species}
               {pet.breed && ` • ${pet.breed}`}
             </p>
+            <Chip
+              size="sm"
+              className="text-[9px] px-2 font-bold uppercase tracking-wider"
+              style={{
+                background: statusConfig.bg,
+                color: statusConfig.color,
+                border: `1px solid ${statusConfig.color}30`,
+              }}
+            >
+              {statusConfig.label}
+            </Chip>
           </div>
-          <Chip
-            size="sm"
-            className="text-[10px] font-bold uppercase tracking-wider"
-            style={{
-              background: statusConfig.bg,
-              color: statusConfig.color,
-              border: `1px solid ${statusConfig.color}30`,
-            }}
-          >
-            {statusConfig.label}
-          </Chip>
         </div>
         <div className="flex items-center justify-between text-xs">
-          <div className="text-[var(--color-text-muted)]">
-            {(pet.views || 0).toLocaleString()} views • {formatDate(pet.createdAt)}
+          <div className="flex items-center gap-4">
+            <div>
+              <span className="text-[var(--color-text-muted)]">Views: </span>
+              <span className="font-bold text-[var(--color-text-primary)]">
+                {(pet.views || 0).toLocaleString()}
+              </span>
+            </div>
+            <div className="text-[var(--color-text-muted)]">
+              {formatDate(pet.createdAt)}
+            </div>
           </div>
           <Link
             href={`/pets/${pet._id}`}

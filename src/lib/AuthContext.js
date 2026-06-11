@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext } from "react";
-import { useSession } from "@/lib/auth-client";
+import { useSession, signOut as clientSignOut } from "@/lib/auth-client";
 
 const AuthContext = createContext({
     user: null,
@@ -12,11 +12,15 @@ const AuthContext = createContext({
 
 export function AuthProvider({ children }) {
     const { data: session, isPending, error } = useSession();
-
     const signOut = async () => {
         try {
-            await fetch("/api/auth/sign-out", { method: "POST" });
-            window.location.href = "/";
+            await clientSignOut({
+                fetchOptions: {
+                    onSuccess: () => {
+                        window.location.href = "/";
+                    }
+                }
+            });
         } catch (error) {
             console.error("Sign out error:", error);
         }

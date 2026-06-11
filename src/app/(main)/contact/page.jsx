@@ -3,7 +3,6 @@
 import { useState, useCallback, useMemo } from "react";
 import { toast } from "@/lib/toast";
 import { Button } from "@heroui/button";
-import { Input, TextArea, Label } from "@heroui/react";
 import { Card, CardBody } from "@heroui/card";
 
 const CONTACT_ITEMS = [
@@ -91,30 +90,36 @@ export default function ContactPage() {
     setErrors((prev) => ({ ...prev, [name]: "" }));
   }, []);
 
-  const handleSubmit = useCallback(async (e) => {
-    e.preventDefault();
-    if (!validate()) return;
-    setIsSubmitting(true);
-    await new Promise((r) => setTimeout(r, 1200));
-    toast.success(
-      "Message sent successfully! We will get back to you within 24 hours."
-    );
-    setFormData({ name: "", email: "", subject: "", message: "" });
-    setIsSubmitting(false);
-  }, [validate]);
+  const handleSubmit = useCallback(
+    async (e) => {
+      e.preventDefault();
+      if (!validate()) return;
+      setIsSubmitting(true);
+      await new Promise((r) => setTimeout(r, 1200));
+      toast.success(
+        "Message sent successfully! We will get back to you within 24 hours."
+      );
+      setFormData({ name: "", email: "", subject: "", message: "" });
+      setIsSubmitting(false);
+    },
+    [validate]
+  );
 
-  const characterCount = useMemo(() => formData.message.length, [formData.message]);
+  const characterCount = useMemo(
+    () => formData.message.length,
+    [formData.message]
+  );
 
   return (
     <div className="min-h-screen bg-[var(--color-bg)] pb-24">
       {/* Hero Section */}
-      <div className="bg-[var(--color-surface)] border-b border-[var(--color-border)] py-20 pb-16">
+      <div className="bg-[var(--color-surface)] border-b border-[var(--color-border)] py-12 md:py-20 pb-10 md:pb-16">
         <div className="max-w-[1280px] mx-auto px-6 text-center">
           <p className="section-label mb-4">Get in Touch</p>
-          <h1 className="text-[clamp(36px,5vw,56px)] font-bold tracking-[-0.03em] text-[var(--color-text-primary)] mb-4 leading-tight">
+          <h1 className="text-[clamp(32px,5vw,56px)] font-bold tracking-[-0.03em] text-[var(--color-text-primary)] mb-4 leading-tight">
             We are here to help
           </h1>
-          <p className="text-base text-[var(--color-text-secondary)] max-w-[480px] mx-auto leading-relaxed">
+          <p className="text-sm md:text-base text-[var(--color-text-secondary)] max-w-[480px] mx-auto leading-relaxed">
             Have a question about an adoption, a listing, or our platform? Send
             us a message and our team will get back to you shortly.
           </p>
@@ -122,96 +127,144 @@ export default function ContactPage() {
       </div>
 
       {/* Main Content */}
-      <div className="max-w-[1280px] mx-auto px-6 pt-16">
+      <div className="max-w-[1280px] mx-auto px-6 pt-10 md:pt-16">
         {/* Contact Info Cards */}
-        <div className="grid grid-cols-3 md:grid-cols-1 gap-4 mb-16">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-10 md:mb-16">
           {CONTACT_ITEMS.map((item) => (
             <ContactInfoCard key={item.label} item={item} />
           ))}
         </div>
 
         {/* Form and Sidebar */}
-        <div className="grid grid-cols-2 lg:grid-cols-1 gap-10 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10 items-start">
           {/* Form Section */}
           <div>
-            <h2 className="text-2xl font-bold text-[var(--color-text-primary)] tracking-tight mb-2">
+            <h2 className="text-xl md:text-2xl font-bold text-[var(--color-text-primary)] tracking-tight mb-2">
               Send us a message
             </h2>
-            <p className="text-sm text-[var(--color-text-secondary)] mb-8 leading-relaxed">
+            <p className="text-sm text-[var(--color-text-secondary)] mb-6 md:mb-8 leading-relaxed">
               Fill out the form below and a member of our team will respond
               within one business day.
             </p>
 
-            <form onSubmit={handleSubmit} className="flex flex-col gap-5" noValidate>
-              <div className="grid grid-cols-2 sm:grid-cols-1 gap-4">
+            <form
+              onSubmit={handleSubmit}
+              className="flex flex-col gap-5"
+              noValidate
+            >
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {/* Name Input */}
                 <div className="flex flex-col gap-2">
-                  <Label htmlFor="contact-name" className="text-[var(--color-text-secondary)] text-xs font-semibold uppercase tracking-wider">
+                  <label
+                    htmlFor="contact-name"
+                    className="text-[var(--color-text-secondary)] text-xs font-semibold uppercase tracking-wider"
+                  >
                     Your Name
-                  </Label>
-                  <Input
+                  </label>
+                  <input
                     id="contact-name"
                     name="name"
                     type="text"
                     placeholder="Full name"
                     value={formData.name}
                     onChange={handleChange}
-                    className={`bg-[var(--color-surface-2)] border ${errors.name ? 'border-[var(--color-error)]' : 'border-[var(--color-border)]'} rounded-md px-3 py-2 outline-none focus:border-[var(--color-lime)]`}
+                    className={`bg-[var(--color-surface-2)] border ${
+                      errors.name
+                        ? "border-[var(--color-error)]"
+                        : "border-[var(--color-border)]"
+                    } rounded-md px-4 py-3 outline-none focus:border-[var(--color-lime)] text-[var(--color-text-primary)] text-sm transition-all`}
                   />
-                  {errors.name && <span className="text-xs text-[var(--color-error)]">{errors.name}</span>}
+                  {errors.name && (
+                    <span className="text-xs text-[var(--color-error)]">
+                      {errors.name}
+                    </span>
+                  )}
                 </div>
 
                 {/* Email Input */}
                 <div className="flex flex-col gap-2">
-                  <Label htmlFor="contact-email" className="text-[var(--color-text-secondary)] text-xs font-semibold uppercase tracking-wider">
+                  <label
+                    htmlFor="contact-email"
+                    className="text-[var(--color-text-secondary)] text-xs font-semibold uppercase tracking-wider"
+                  >
                     Email Address
-                  </Label>
-                  <Input
+                  </label>
+                  <input
                     id="contact-email"
                     name="email"
                     type="email"
                     placeholder="you@example.com"
                     value={formData.email}
                     onChange={handleChange}
-                    className={`bg-[var(--color-surface-2)] border ${errors.email ? 'border-[var(--color-error)]' : 'border-[var(--color-border)]'} rounded-md px-3 py-2 outline-none focus:border-[var(--color-lime)]`}
+                    className={`bg-[var(--color-surface-2)] border ${
+                      errors.email
+                        ? "border-[var(--color-error)]"
+                        : "border-[var(--color-border)]"
+                    } rounded-md px-4 py-3 outline-none focus:border-[var(--color-lime)] text-[var(--color-text-primary)] text-sm transition-all`}
                   />
-                  {errors.email && <span className="text-xs text-[var(--color-error)]">{errors.email}</span>}
+                  {errors.email && (
+                    <span className="text-xs text-[var(--color-error)]">
+                      {errors.email}
+                    </span>
+                  )}
                 </div>
               </div>
 
               {/* Subject Input */}
               <div className="flex flex-col gap-2">
-                <Label htmlFor="contact-subject" className="text-[var(--color-text-secondary)] text-xs font-semibold uppercase tracking-wider">
+                <label
+                  htmlFor="contact-subject"
+                  className="text-[var(--color-text-secondary)] text-xs font-semibold uppercase tracking-wider"
+                >
                   Subject
-                </Label>
-                <Input
+                </label>
+                <input
                   id="contact-subject"
                   name="subject"
                   type="text"
                   placeholder="What is your message about?"
                   value={formData.subject}
                   onChange={handleChange}
-                  className={`bg-[var(--color-surface-2)] border ${errors.subject ? 'border-[var(--color-error)]' : 'border-[var(--color-border)]'} rounded-md px-3 py-2 outline-none focus:border-[var(--color-lime)]`}
+                  className={`bg-[var(--color-surface-2)] border ${
+                    errors.subject
+                      ? "border-[var(--color-error)]"
+                      : "border-[var(--color-border)]"
+                  } rounded-md px-4 py-3 outline-none focus:border-[var(--color-lime)] text-[var(--color-text-primary)] text-sm transition-all`}
                 />
-                {errors.subject && <span className="text-xs text-[var(--color-error)]">{errors.subject}</span>}
+                {errors.subject && (
+                  <span className="text-xs text-[var(--color-error)]">
+                    {errors.subject}
+                  </span>
+                )}
               </div>
 
               {/* Message TextArea */}
               <div>
                 <div className="flex flex-col gap-2">
-                  <Label htmlFor="contact-message" className="text-[var(--color-text-secondary)] text-xs font-semibold uppercase tracking-wider">
+                  <label
+                    htmlFor="contact-message"
+                    className="text-[var(--color-text-secondary)] text-xs font-semibold uppercase tracking-wider"
+                  >
                     Message
-                  </Label>
-                  <TextArea
+                  </label>
+                  <textarea
                     id="contact-message"
                     name="message"
                     placeholder="Tell us how we can help you..."
                     value={formData.message}
                     onChange={handleChange}
                     rows={6}
-                    className={`bg-[var(--color-surface-2)] border ${errors.message ? 'border-[var(--color-error)]' : 'border-[var(--color-border)]'} rounded-md px-3 py-2 outline-none focus:border-[var(--color-lime)] min-h-[140px] resize-y`}
+                    className={`bg-[var(--color-surface-2)] border ${
+                      errors.message
+                        ? "border-[var(--color-error)]"
+                        : "border-[var(--color-border)]"
+                    } rounded-md px-4 py-3 outline-none focus:border-[var(--color-lime)] text-[var(--color-text-primary)] text-sm min-h-[140px] resize-y transition-all`}
                   />
-                  {errors.message && <span className="text-xs text-[var(--color-error)]">{errors.message}</span>}
+                  {errors.message && (
+                    <span className="text-xs text-[var(--color-error)]">
+                      {errors.message}
+                    </span>
+                  )}
                 </div>
                 <p className="text-xs text-[var(--color-text-muted)] mt-1">
                   {characterCount} / 500 characters
@@ -223,10 +276,19 @@ export default function ContactPage() {
                 type="submit"
                 isDisabled={isSubmitting}
                 isLoading={isSubmitting}
-                className="bg-[var(--color-lime)] text-black font-bold text-[13px] tracking-wider uppercase self-start min-w-[180px] mt-2 hover:bg-[var(--color-lime-dark)] hover:shadow-[0_4px_20px_rgba(217,249,157,0.2)]"
+                className="bg-[var(--color-lime)] text-black font-bold text-[13px] tracking-wider uppercase w-full sm:w-auto sm:self-start sm:min-w-[180px] mt-2 hover:bg-[var(--color-lime-dark)] hover:shadow-[0_4px_20px_rgba(217,249,157,0.2)]"
                 startContent={
                   !isSubmitting && (
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <svg
+                      width="14"
+                      height="14"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
                       <line x1="22" y1="2" x2="11" y2="13" />
                       <polygon points="22 2 15 22 11 13 2 9 22 2" />
                     </svg>
@@ -242,7 +304,7 @@ export default function ContactPage() {
           <div className="flex flex-col gap-5">
             {/* Common Topics */}
             <Card className="bg-[var(--color-surface)] border border-[var(--color-border)]">
-              <CardBody className="p-7">
+              <CardBody className="p-5 md:p-7">
                 <h3 className="text-base font-bold text-[var(--color-text-primary)] mb-4">
                   Common Topics
                 </h3>
@@ -261,6 +323,7 @@ export default function ContactPage() {
                         strokeWidth="2.5"
                         strokeLinecap="round"
                         strokeLinejoin="round"
+                        className="flex-shrink-0"
                       >
                         <polyline points="9 18 15 12 9 6" />
                       </svg>
@@ -273,10 +336,19 @@ export default function ContactPage() {
 
             {/* Status Card */}
             <Card className="bg-[rgba(217,249,157,0.05)] border border-[rgba(217,249,157,0.15)]">
-              <CardBody className="p-6">
+              <CardBody className="p-5 md:p-6">
                 <div className="flex gap-3 items-start">
                   <div className="w-9 h-9 rounded-full bg-success/12 border border-success/25 flex items-center justify-center flex-shrink-0">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-success)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="var(--color-success)"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
                       <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
                       <polyline points="22 4 12 14.01 9 11.01" />
                     </svg>
@@ -304,7 +376,7 @@ function ContactInfoCard({ item }) {
   return (
     <Card className="bg-[var(--color-surface)] border border-[var(--color-border)] transition-all duration-300 hover:-translate-y-0.5 group">
       <CardBody
-        className="p-7 transition-all duration-300"
+        className="p-5 md:p-7 transition-all duration-300"
         style={{
           borderColor: "var(--color-border)",
         }}
@@ -330,12 +402,10 @@ function ContactInfoCard({ item }) {
         <p className="text-[11px] font-bold tracking-[0.1em] uppercase text-[var(--color-text-muted)] mb-1.5">
           {item.label}
         </p>
-        <p className="text-base font-semibold text-[var(--color-text-primary)] mb-1">
+        <p className="text-sm md:text-base font-semibold text-[var(--color-text-primary)] mb-1">
           {item.value}
         </p>
-        <p className="text-[13px] text-[var(--color-text-muted)]">
-          {item.sub}
-        </p>
+        <p className="text-[13px] text-[var(--color-text-muted)]">{item.sub}</p>
       </CardBody>
     </Card>
   );

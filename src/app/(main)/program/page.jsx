@@ -148,33 +148,30 @@ export default function ProgramPage() {
 
       {/* Main Content */}
       <div className="max-w-[1280px] mx-auto px-6 pt-20">
-        {/* How It Works Section */}
         <div className="text-center mb-14">
           <p className="section-label">Process</p>
           <h2 className="section-title">How Adoption Works</h2>
         </div>
 
-        <div className="grid grid-cols-4 lg:grid-cols-2 sm:grid-cols-1 gap-5 mb-24">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mb-24 items-stretch">
           {STEPS.map((step, index) => (
             <StepCard key={step.number} step={step} isLast={index === STEPS.length - 1} />
           ))}
         </div>
 
-        {/* FAQ Section */}
         <div className="border-t border-[var(--color-border)] pt-20 mb-24">
           <div className="text-center mb-14">
             <p className="section-label">FAQ</p>
             <h2 className="section-title">Frequently Asked Questions</h2>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-1 gap-4 max-w-[960px] mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-[960px] mx-auto">
             {FAQS.map((faq) => (
               <FAQCard key={faq.question} faq={faq} />
             ))}
           </div>
         </div>
 
-        {/* CTA Section */}
         <Card className="bg-[var(--color-surface)] border border-[rgba(217,249,157,0.15)] relative overflow-hidden">
           <div
             className="absolute top-0 left-0 right-0 h-px"
@@ -212,41 +209,41 @@ export default function ProgramPage() {
           </CardBody>
         </Card>
       </div>
+
     </div>
   );
 }
 
 function StepCard({ step, isLast }) {
   return (
-    <Card className="bg-[var(--color-surface)] border border-[var(--color-border)] relative transition-all duration-300 hover:-translate-y-0.5 group">
-      <CardBody className="p-7 px-6">
-        <div
-          className="absolute top-5 right-5 text-[40px] font-extrabold text-white/[0.03] tracking-tighter leading-none"
-        >
-          {step.number}
+    <Card className="h-full bg-[var(--color-surface)] border border-[var(--color-border)] relative transition-all duration-300 hover:-translate-y-0.5 group overflow-visible">
+      <CardBody className="p-7 px-6 h-full flex flex-col justify-between">
+        <div>
+          <div className="absolute top-5 right-5 text-[40px] font-extrabold text-white/[0.03] tracking-tighter leading-none select-none">
+            {step.number}
+          </div>
+
+          {/* আইকন বক্স */}
+          <div
+            className="w-13 h-13 rounded-lg flex items-center justify-center mb-5 transition-all"
+            style={{
+              background: step.bg,
+              border: `1px solid ${step.border}`,
+              color: step.color,
+            }}
+          >
+            {step.icon}
+          </div>
+          <h3 className="text-base font-bold text-[var(--color-text-primary)] mb-2.5 tracking-tight">
+            {step.title}
+          </h3>
+          <p className="text-[13px] text-[var(--color-text-secondary)] leading-relaxed">
+            {step.description}
+          </p>
         </div>
-
-        <div
-          className="w-13 h-13 rounded-lg flex items-center justify-center mb-5 transition-all"
-          style={{
-            background: step.bg,
-            border: `1px solid ${step.border}`,
-            color: step.color,
-          }}
-        >
-          {step.icon}
-        </div>
-
-        <h3 className="text-base font-bold text-[var(--color-text-primary)] mb-2.5 tracking-tight">
-          {step.title}
-        </h3>
-        <p className="text-[13px] text-[var(--color-text-secondary)] leading-relaxed">
-          {step.description}
-        </p>
-
         {!isLast && (
-          <div className="absolute top-12 -right-3.5 z-10 text-[var(--color-text-muted)] lg:hidden">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <div className="hidden lg:flex absolute top-1/2 -right-4.5 -translate-y-1/2 z-10 text-[var(--color-text-muted)] items-center justify-center">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <polyline points="9 18 15 12 9 6" />
             </svg>
           </div>
@@ -255,6 +252,7 @@ function StepCard({ step, isLast }) {
     </Card>
   );
 }
+
 
 function FAQCard({ faq }) {
   return (

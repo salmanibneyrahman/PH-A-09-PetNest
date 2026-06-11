@@ -107,7 +107,7 @@ export default function WhyAdoptSection() {
         </div>
 
         {/* Reasons Grid */}
-        <div className="grid grid-cols-3 lg:grid-cols-2 sm:grid-cols-1 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {REASONS.map((reason) => (
             <ReasonCard key={reason.title} reason={reason} />
           ))}

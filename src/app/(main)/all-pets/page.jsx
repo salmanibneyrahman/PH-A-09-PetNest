@@ -48,9 +48,12 @@ const SPECIES_LIST = [
     label: "Reptiles",
     icon: (
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" />
-        <path d="M8 12h8M12 8v8" />
+        <path d="m12 10 2 4v3a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1v-3a8 8 0 1 0-16 0v3a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1v-3l2-4h4Z" />
+        <path d="M4.82 7.9 8 10" />
+        <path d="M15.18 7.9 12 10" />
+        <path d="M16.93 10H20a2 2 0 0 1 0 4H2" />
       </svg>
+
     ),
   },
   {
@@ -58,10 +61,13 @@ const SPECIES_LIST = [
     label: "Rabbits",
     icon: (
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M18 4a3 3 0 0 1 0 6M6 4a3 3 0 0 0 0 6M12 7v5" />
-        <path d="M6 10a6 6 0 0 0 12 0" />
-        <path d="M12 17a5 5 0 0 1-5 5h10a5 5 0 0 1-5-5z" />
+        <path d="M13 16a3 3 0 0 1 2.24 5" />
+        <path d="M18 12h.01" />
+        <path d="M18 21h-8a4 4 0 0 1-4-4 7 7 0 0 1 7-7h.2L9.6 6.4a1 1 0 1 1 2.8-2.8L15.8 7h.2c3.3 0 6 2.7 6 6v1a2 2 0 0 1-2 2h-1a3 3 0 0 0-3 3" />
+        <path d="M20 8.54V4a2 2 0 1 0-4 0v3" />
+        <path d="M7.612 12.524a3 3 0 1 0-1.6 4.3" />
       </svg>
+
     ),
   },
 ];
@@ -262,53 +268,53 @@ export default function AllPetsPage() {
             );
           })}
         </div>
-
-        <div className="flex items-center justify-between mb-7 flex-wrap gap-3">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-7 gap-4">
           <div>
-            <p className="text-[11px] font-semibold tracking-wider uppercase text-default-400 mb-1">
+            <p className="text-[11px] font-semibold tracking-wider uppercase text-default-400 mb-1.5">
               Results
             </p>
-            <h3 className="text-[22px] font-bold text-foreground tracking-[-0.01em]">
+            <h3 className="text-[22px] font-bold text-foreground tracking-[-0.01em] leading-none">
               {isLoading
                 ? "Loading..."
                 : `${totalCount} ${speciesLabel} Found`}
             </h3>
           </div>
 
-          <div className="flex items-center gap-3">
-            <span className="text-[13px] text-default-400 whitespace-nowrap">
+          <div className="flex items-center gap-3 shrink-0 sm:pb-0.5">
+            <span className="text-[13px] text-default-400 whitespace-nowrap hidden sm:inline-block">
               Sort by:
             </span>
-<Select
-  className="w-auto min-w-[160px]"
-  selectedKey={sortBy}
-  onSelectionChange={(key) => setSortBy(key)}
-  aria-label="Sort pets"
->
-  <Select.Trigger className="h-9 min-h-9">
-    <Select.Value />
-    <Select.Indicator />
-  </Select.Trigger>
-  <Select.Popover>
-    <ListBox aria-label="Sort options">
-      {SORT_OPTIONS.map((opt) => (
-        <ListBox.Item key={opt.value} id={opt.value} textValue={opt.label}>
-          {opt.label}
-        </ListBox.Item>
-      ))}
-    </ListBox>
-  </Select.Popover>
-</Select>
-            <button
-              aria-label="Filter options"
-              className="w-9 h-9 bg-content1 border border-default-200 rounded-md flex items-center justify-center cursor-pointer text-default-400 shrink-0 hover:bg-content2 transition-colors"
+
+            <Select
+              aria-label="Sort pets"
+              placeholder="Newest First"
+              defaultSelectedKeys={[sortBy]}
+              onSelectionChange={(keys) => {
+                const selectedValue = Array.from(keys);
+                if (selectedValue) setSortBy(selectedValue);
+              }}
+              className="w-[160px] shrink-0"
             >
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <line x1="4" y1="6" x2="20" y2="6" />
-                <line x1="8" y1="12" x2="16" y2="12" />
-                <line x1="10" y1="18" x2="14" y2="18" />
-              </svg>
-            </button>
+              <Select.Trigger className="h-9 min-h-9 flex items-center justify-between px-3 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-full outline-none relative">
+                <Select.Value className="text-[13px] text-left flex items-center h-full" />
+                <Select.Indicator className="flex items-center justify-center text-[var(--color-text-muted)] self-center h-fit" />
+              </Select.Trigger>
+
+              <Select.Popover>
+                <ListBox aria-label="Sort options" className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl p-1 shadow-lg">
+                  {SORT_OPTIONS.map((opt) => (
+                    <ListBox.Item
+                      key={opt.value}
+                      id={opt.value}
+                      textValue={opt.label}
+                      className="text-[13px] px-3 py-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-zinc-800 cursor-pointer transition-colors"
+                    >
+                      {opt.label}
+                    </ListBox.Item>
+                  ))}
+                </ListBox>
+              </Select.Popover>
+            </Select>
           </div>
         </div>
 
@@ -340,20 +346,18 @@ export default function AllPetsPage() {
             </p>
             <Button
               onPress={handleClearFilters}
-              className="mt-2 bg-primary text-primary-foreground font-semibold"
+              className="mt-2 bg-primary text-primary-foreground font-semibold px-2"
             >
               Clear Filters
             </Button>
           </div>
         ) : (
           <>
+            {/* FIXED: Removed buggy .filter logic that hid single items. Now directly uses .slice(0,3) */}
             <div className="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-5 mb-10">
-              {pets
-                .filter((_, i) => i < pets.length - 1 || pets.length % 4 !== 1)
-                .slice(0, 3)
-                .map((pet) => (
-                  <PetCard key={pet._id} pet={pet} />
-                ))}
+              {pets.slice(0, 3).map((pet) => (
+                <PetCard key={pet._id} pet={pet} />
+              ))}
             </div>
 
             {pets.length > 3 && (

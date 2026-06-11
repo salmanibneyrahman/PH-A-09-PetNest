@@ -5,17 +5,20 @@ import { useAuth } from "@/lib/AuthContext";
 import { getOwnerPets, getUserRequests } from "@/lib/api";
 import { Card, CardBody } from "@heroui/card";
 import { Chip } from "@heroui/chip";
-import { Skeleton } from "@heroui/react";
+import { Spinner } from "@heroui/spinner";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function AnalyticsPage() {
-  const { user } = useAuth();
+  const { user, isLoading: authLoading } = useAuth();
   const [pets, setPets] = useState([]);
   const [requests, setRequests] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [hasFetched, setHasFetched] = useState(false);
 
   const fetchData = useCallback(async () => {
-    if (!user?.email) return;
+    if (!user?.email || hasFetched) return;
+    
     setIsLoading(true);
     try {
       const [petsData, requestsData] = await Promise.all([
@@ -24,16 +27,19 @@ export default function AnalyticsPage() {
       ]);
       setPets(petsData);
       setRequests(requestsData);
+      setHasFetched(true);
     } catch (error) {
       console.error("Failed to load analytics:", error);
     } finally {
       setIsLoading(false);
     }
-  }, [user]);
+  }, [user?.email, hasFetched]);
 
   useEffect(() => {
-    fetchData();
-  }, [fetchData]);
+    if (!authLoading && user?.email) {
+      fetchData();
+    }
+  }, [authLoading, user?.email, fetchData]);
 
   const metrics = useMemo(() => {
     const totalViews = pets.reduce((sum, p) => sum + (p.views || 0), 0);
@@ -115,7 +121,17 @@ export default function AnalyticsPage() {
     ];
   }, [pets, requests]);
 
-  const displayPets = useMemo(() => pets.slice(0, 8), [pets]);
+  // Show loading spinner while authenticating or fetching data
+  if (authLoading || isLoading) {
+    return (
+      <div className="min-h-[60vh] flex flex-col items-center justify-center">
+        <Spinner size="lg" color="success" />
+        <p className="text-sm text-[var(--color-text-muted)] mt-4">
+          Loading analytics...
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="animate-[fadeIn_0.3s_ease]">
@@ -130,45 +146,79 @@ export default function AnalyticsPage() {
       </div>
 
       {/* Metrics Grid */}
-      {isLoading ? (
-        <div className="grid grid-cols-3 lg:grid-cols-2 sm:grid-cols-1 gap-4">
-          {[...Array(6)].map((_, i) => (
-            <Card key={i} className="bg-[var(--color-surface)] border border-[var(--color-border)]">
-              <CardBody className="p-6">
-                <Skeleton className="h-3.5 w-1/2 mb-4 rounded" />
-                <Skeleton className="h-9 w-2/5 rounded" />
-              </CardBody>
-            </Card>
-          ))}
-        </div>
-      ) : (
-        <>
-          <div className="grid grid-cols-3 lg:grid-cols-2 sm:grid-cols-1 gap-4 mb-8">
-            {metrics.map((metric) => (
-              <MetricCard key={metric.label} metric={metric} />
-            ))}
+      <div className="grid grid-cols-3 lg:grid-cols-2 sm:grid-cols-1 gap-4 mb-8">
+        {metrics.map((metric) => (
+          <MetricCard key={metric.label} metric={metric} />
+        ))}
+      </div>
+
+      {/* Listings Performance Table */}
+      {pets.length > 0 ? (
+        <Card className="bg-[var(--color-surface)] border border-[var(--color-border)] overflow-hidden">
+          <div className="px-6 py-4 border-b border-[var(--color-border)] flex items-center justify-between">
+            <h2 className="text-[15px] font-bold text-[var(--color-text-primary)]">
+              Listings Performance
+            </h2>
+            <div className="text-xs text-[var(--color-text-muted)] font-medium">
+              {pets.length} Total Listing{pets.length !== 1 ? 's' : ''}
+            </div>
           </div>
 
-          {/* Performance Table */}
-          {pets.length > 0 && (
-            <Card className="bg-[var(--color-surface)] border border-[var(--color-border)] overflow-hidden">
-              <div className="px-6 py-4 border-b border-[var(--color-border)]">
-                <h2 className="text-[15px] font-bold text-[var(--color-text-primary)]">
-                  Performance by Listing
-                </h2>
-              </div>
-              <div>
-                {displayPets.map((pet, index) => (
-                  <PetPerformanceRow
-                    key={pet._id}
-                    pet={pet}
-                    isLast={index === displayPets.length - 1}
-                  />
-                ))}
-              </div>
-            </Card>
-          )}
-        </>
+          {/* Table Header */}
+          <div className="px-6 py-3 bg-[var(--color-surface-2)] border-b border-[var(--color-border)] hidden md:grid grid-cols-[1fr_120px_100px_120px_100px] gap-4">
+            <div className="text-[10px] font-bold tracking-[0.1em] uppercase text-[var(--color-text-muted)]">
+              Pet
+            </div>
+            <div className="text-[10px] font-bold tracking-[0.1em] uppercase text-[var(--color-text-muted)]">
+              Views
+            </div>
+            <div className="text-[10px] font-bold tracking-[0.1em] uppercase text-[var(--color-text-muted)]">
+              Status
+            </div>
+            <div className="text-[10px] font-bold tracking-[0.1em] uppercase text-[var(--color-text-muted)]">
+              Date Listed
+            </div>
+            <div className="text-[10px] font-bold tracking-[0.1em] uppercase text-[var(--color-text-muted)] text-right">
+              Actions
+            </div>
+          </div>
+
+          {/* Table Body */}
+          <div>
+            {pets.map((pet, index) => (
+              <PetPerformanceRow
+                key={pet._id}
+                pet={pet}
+                isLast={index === pets.length - 1}
+              />
+            ))}
+          </div>
+        </Card>
+      ) : (
+        <Card className="bg-[var(--color-surface)] border border-[var(--color-border)]">
+          <CardBody className="p-12 text-center">
+            <div className="w-16 h-16 rounded-full bg-[var(--color-surface-2)] border border-[var(--color-border)] flex items-center justify-center text-3xl mx-auto mb-4">
+              🐾
+            </div>
+            <h3 className="text-lg font-bold text-[var(--color-text-primary)] mb-2">
+              No listings yet
+            </h3>
+            <p className="text-sm text-[var(--color-text-secondary)] mb-6">
+              Create your first pet listing to see analytics here
+            </p>
+            <Link
+              href="/dashboard/add-pet"
+              className="inline-flex items-center gap-2 px-6 py-2.5 bg-[var(--color-lime)] text-black text-sm font-bold rounded-sm hover:bg-[var(--color-lime-dark)] transition-colors no-underline"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="8" x2="12" y2="16" />
+                <line x1="8" y1="12" x2="16" y2="12" />
+              </svg>
+              Add Pet
+            </Link>
+          </CardBody>
+        </Card>
       )}
     </div>
   );
@@ -219,84 +269,179 @@ function MetricCard({ metric }) {
 }
 
 function PetPerformanceRow({ pet, isLast }) {
+  const [imgError, setImgError] = useState(false);
+
   const getStatusConfig = useCallback((status) => {
     switch (status) {
       case "adopted":
         return {
-          bg: "var(--color-surface-3)",
+          bg: "rgba(100,100,100,0.12)",
           color: "var(--color-text-muted)",
+          label: "Adopted",
         };
       case "available":
         return {
           bg: "rgba(217,249,157,0.12)",
           color: "var(--color-lime)",
+          label: "Available",
         };
       default:
         return {
           bg: "rgba(168,85,247,0.12)",
           color: "var(--color-purple)",
+          label: "Pending",
         };
     }
   }, []);
 
-  const statusConfig = useMemo(() => getStatusConfig(pet.status || "available"), [pet.status, getStatusConfig]);
+  const statusConfig = useMemo(
+    () => getStatusConfig(pet.status || "available"),
+    [pet.status, getStatusConfig]
+  );
+
+  const formatDate = (dateString) => {
+    if (!dateString) return "N/A";
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
+  };
 
   return (
     <div
-      className={`flex items-center gap-4 px-6 py-4 ${
+      className={`px-6 py-4 ${
         !isLast ? "border-b border-[var(--color-border)]" : ""
-      }`}
+      } hover:bg-[var(--color-surface-2)] transition-colors`}
     >
-      {/* Pet Image */}
-      <div className="w-10 h-10 rounded-sm bg-[var(--color-surface-2)] border border-[var(--color-border)] overflow-hidden flex-shrink-0">
-        {pet.imageURL ? (
-          <Image
-            src={pet.imageURL}
-            alt={pet.name}
-            fill
-            className="w-full h-full object-cover"
-          />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center text-lg">
-            🐾
+      {/* Desktop Layout */}
+      <div className="hidden md:grid grid-cols-[1fr_120px_100px_120px_100px] gap-4 items-center">
+        {/* Pet Info */}
+        <div className="flex items-center gap-3 min-w-0">
+          <div className="w-12 h-12 rounded-lg bg-[var(--color-surface-2)] border border-[var(--color-border)] overflow-hidden flex-shrink-0 relative">
+            {!imgError && pet.imageURL ? (
+              <Image
+                src={pet.imageURL}
+                alt={pet.name}
+                fill
+                sizes="48px"
+                className="object-cover"
+                onError={() => setImgError(true)}
+              />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center text-xl">
+                {pet.species === "Dog" ? "🐕" :
+                 pet.species === "Cat" ? "🐈" :
+                 pet.species === "Bird" ? "🦜" :
+                 pet.species === "Rabbit" ? "🐇" : "🐾"}
+              </div>
+            )}
           </div>
-        )}
-      </div>
+          <div className="min-w-0 flex-1">
+            <p className="text-sm font-semibold text-[var(--color-text-primary)] truncate">
+              {pet.name}
+            </p>
+            <p className="text-xs text-[var(--color-text-muted)] truncate">
+              {pet.species}
+              {pet.breed && ` • ${pet.breed}`}
+            </p>
+          </div>
+        </div>
 
-      {/* Pet Info */}
-      <div className="flex-1 min-w-0">
-        <p className="text-sm font-semibold text-[var(--color-text-primary)] truncate">
-          {pet.name}
-        </p>
-        <p className="text-xs text-[var(--color-text-muted)]">
-          {pet.species}{pet.breed ? ` • ${pet.breed}` : ""}
-        </p>
-      </div>
-
-      {/* Stats */}
-      <div className="flex gap-8 flex-shrink-0">
-        <div className="text-right">
-          <p className="text-[11px] text-[var(--color-text-muted)] mb-0.5 tracking-wider uppercase">
-            Views
-          </p>
-          <p className="text-[15px] font-bold text-[var(--color-text-primary)]">
+        {/* Views */}
+        <div>
+          <p className="text-base font-bold text-[var(--color-text-primary)]">
             {(pet.views || 0).toLocaleString()}
           </p>
         </div>
-        <div className="text-right">
-          <p className="text-[11px] text-[var(--color-text-muted)] mb-0.5 tracking-wider uppercase">
-            Status
-          </p>
+
+        {/* Status */}
+        <div>
           <Chip
             size="sm"
-            className="text-[11px] font-bold capitalize"
+            className="text-[10px] font-bold uppercase tracking-wider"
             style={{
               background: statusConfig.bg,
               color: statusConfig.color,
+              border: `1px solid ${statusConfig.color}30`,
             }}
           >
-            {pet.status || "available"}
+            {statusConfig.label}
           </Chip>
+        </div>
+
+        {/* Date */}
+        <div>
+          <p className="text-xs text-[var(--color-text-secondary)]">
+            {formatDate(pet.createdAt)}
+          </p>
+        </div>
+
+        {/* Actions */}
+        <div className="flex justify-end">
+          <Link
+            href={`/pets/${pet._id}`}
+            className="text-xs font-semibold text-[var(--color-lime)] hover:text-[var(--color-lime-dark)] transition-colors no-underline"
+          >
+            View Details →
+          </Link>
+        </div>
+      </div>
+
+      {/* Mobile Layout */}
+      <div className="md:hidden space-y-3">
+        <div className="flex items-center gap-3">
+          <div className="w-12 h-12 rounded-lg bg-[var(--color-surface-2)] border border-[var(--color-border)] overflow-hidden flex-shrink-0 relative">
+            {!imgError && pet.imageURL ? (
+              <Image
+                src={pet.imageURL}
+                alt={pet.name}
+                fill
+                sizes="48px"
+                className="object-cover"
+                onError={() => setImgError(true)}
+              />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center text-xl">
+                {pet.species === "Dog" ? "🐕" :
+                 pet.species === "Cat" ? "🐈" :
+                 pet.species === "Bird" ? "🦜" :
+                 pet.species === "Rabbit" ? "🐇" : "🐾"}
+              </div>
+            )}
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-semibold text-[var(--color-text-primary)] truncate">
+              {pet.name}
+            </p>
+            <p className="text-xs text-[var(--color-text-muted)]">
+              {pet.species}
+              {pet.breed && ` • ${pet.breed}`}
+            </p>
+          </div>
+          <Chip
+            size="sm"
+            className="text-[10px] font-bold uppercase tracking-wider"
+            style={{
+              background: statusConfig.bg,
+              color: statusConfig.color,
+              border: `1px solid ${statusConfig.color}30`,
+            }}
+          >
+            {statusConfig.label}
+          </Chip>
+        </div>
+        <div className="flex items-center justify-between text-xs">
+          <div className="text-[var(--color-text-muted)]">
+            {(pet.views || 0).toLocaleString()} views • {formatDate(pet.createdAt)}
+          </div>
+          <Link
+            href={`/pets/${pet._id}`}
+            className="font-semibold text-[var(--color-lime)] hover:text-[var(--color-lime-dark)] transition-colors no-underline"
+          >
+            View →
+          </Link>
         </div>
       </div>
     </div>

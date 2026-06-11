@@ -43,7 +43,7 @@ const STORIES = [
     avatar: "AR",
     timeAgo: "2 weeks ago",
     rating: 5,
-    avatarColor: "var(--color-warning)", // Changed from amber to a standard CSS var or color
+    avatarColor: "var(--color-warning)", 
   },
 ];
 
@@ -90,7 +90,7 @@ function StoryCard({ story }) {
       <Card className="h-full bg-[rgba(15,15,15,0.6)] backdrop-blur-xl border border-[rgba(255,255,255,0.08)] transition-all duration-300 hover:border-[rgba(217,249,157,0.3)] hover:-translate-y-1 hover:shadow-[0_15px_40px_rgba(217,249,157,0.06)]">
         <CardBody className="p-7 flex flex-col h-full relative overflow-hidden">
 
-          {/* SVG Quote Mark (Fixed visual asset rendering) */}
+          {/* SVG Quote Mark */}
           <div className="absolute top-6 right-6 text-[rgba(255,255,255,0.05)] group-hover:text-[rgba(217,249,157,0.15)] transition-colors duration-300">
             <svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor">
               <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />

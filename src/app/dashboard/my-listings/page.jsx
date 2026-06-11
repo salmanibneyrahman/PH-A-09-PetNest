@@ -427,6 +427,7 @@ const PetCard = ({ pet, onOpenRequests, onEdit, onDelete, router }) => {
             <Image
               src={pet.imageURL}
               alt={pet.name}
+              fill
               className={`w-full h-full object-cover absolute inset-0 ${isAdopted ? "grayscale-[0.4]" : ""}`}
             />
           ) : (

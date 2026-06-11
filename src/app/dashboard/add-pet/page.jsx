@@ -87,82 +87,6 @@ export default function AddPetPage() {
     }
   };
 
-  const InputField = ({
-    label,
-    name,
-    type = "text",
-    placeholder,
-    required = false,
-    children,
-    hint,
-  }) => (
-    <div>
-      <label
-        htmlFor={name}
-        style={{
-          display: "block",
-          fontSize: "12px",
-          fontWeight: "600",
-          letterSpacing: "0.08em",
-          textTransform: "uppercase",
-          color: errors[name]
-            ? "var(--color-error)"
-            : "var(--color-text-secondary)",
-          marginBottom: "8px",
-        }}
-      >
-        {label}
-        {required && (
-          <span style={{ color: "var(--color-lime)", marginLeft: "3px" }}>*</span>
-        )}
-      </label>
-      {children || (
-        <input
-          id={name}
-          name={name}
-          type={type}
-          value={formData[name]}
-          onChange={handleChange}
-          placeholder={placeholder}
-          className="input-field"
-          style={{
-            borderColor: errors[name] ? "var(--color-error)" : undefined,
-          }}
-        />
-      )}
-      {errors[name] && (
-        <p
-          style={{
-            fontSize: "12px",
-            color: "var(--color-error)",
-            marginTop: "5px",
-            display: "flex",
-            alignItems: "center",
-            gap: "4px",
-          }}
-        >
-          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-            <circle cx="12" cy="12" r="10" />
-            <line x1="12" y1="8" x2="12" y2="12" />
-            <line x1="12" y1="16" x2="12.01" y2="16" />
-          </svg>
-          {errors[name]}
-        </p>
-      )}
-      {hint && !errors[name] && (
-        <p
-          style={{
-            fontSize: "12px",
-            color: "var(--color-text-muted)",
-            marginTop: "5px",
-          }}
-        >
-          {hint}
-        </p>
-      )}
-    </div>
-  );
-
   return (
     <div className="w-full max-w-[900px] mx-auto" style={{ animation: "fadeIn 0.3s ease" }}>
       <div style={{
@@ -246,12 +170,42 @@ export default function AddPetPage() {
             }}
             className="form-grid-2"
           >
-            <InputField
-              label="Pet Name"
-              name="name"
-              placeholder="e.g. Buddy, Luna, Max"
-              required
-            />
+            <div>
+              <label
+                htmlFor="name"
+                style={{
+                  display: "block",
+                  fontSize: "12px",
+                  fontWeight: "600",
+                  letterSpacing: "0.08em",
+                  textTransform: "uppercase",
+                  color: errors.name ? "var(--color-error)" : "var(--color-text-secondary)",
+                  marginBottom: "8px",
+                }}
+              >
+                Pet Name <span style={{ color: "var(--color-lime)", marginLeft: "3px" }}>*</span>
+              </label>
+              <input
+                id="name"
+                name="name"
+                type="text"
+                value={formData.name}
+                onChange={handleChange}
+                placeholder="e.g. Buddy, Luna, Max"
+                className="input-field"
+                style={{ borderColor: errors.name ? "var(--color-error)" : undefined }}
+              />
+              {errors.name && (
+                <p style={{ fontSize: "12px", color: "var(--color-error)", marginTop: "5px", display: "flex", alignItems: "center", gap: "4px" }}>
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="12" y1="8" x2="12" y2="12" />
+                    <line x1="12" y1="16" x2="12.01" y2="16" />
+                  </svg>
+                  {errors.name}
+                </p>
+              )}
+            </div>
 
             <div>
               <label
@@ -262,9 +216,7 @@ export default function AddPetPage() {
                   fontWeight: "600",
                   letterSpacing: "0.08em",
                   textTransform: "uppercase",
-                  color: errors.species
-                    ? "var(--color-error)"
-                    : "var(--color-text-secondary)",
+                  color: errors.species ? "var(--color-error)" : "var(--color-text-secondary)",
                   marginBottom: "8px",
                 }}
               >
@@ -276,11 +228,7 @@ export default function AddPetPage() {
                 value={formData.species}
                 onChange={handleChange}
                 className="select-field"
-                style={{
-                  borderColor: errors.species
-                    ? "var(--color-error)"
-                    : undefined,
-                }}
+                style={{ borderColor: errors.species ? "var(--color-error)" : undefined }}
               >
                 <option value="">Select species...</option>
                 {SPECIES_OPTIONS.map((s) => (
@@ -294,19 +242,71 @@ export default function AddPetPage() {
               )}
             </div>
 
-            <InputField
-              label="Breed"
-              name="breed"
-              placeholder="e.g. Golden Retriever, Persian"
-              hint="Leave blank if mixed breed or unknown"
-            />
+            <div>
+              <label
+                htmlFor="breed"
+                style={{
+                  display: "block",
+                  fontSize: "12px",
+                  fontWeight: "600",
+                  letterSpacing: "0.08em",
+                  textTransform: "uppercase",
+                  color: "var(--color-text-secondary)",
+                  marginBottom: "8px",
+                }}
+              >
+                Breed
+              </label>
+              <input
+                id="breed"
+                name="breed"
+                type="text"
+                value={formData.breed}
+                onChange={handleChange}
+                placeholder="e.g. Golden Retriever, Persian"
+                className="input-field"
+              />
+              <p style={{ fontSize: "12px", color: "var(--color-text-muted)", marginTop: "5px" }}>
+                Leave blank if mixed breed or unknown
+              </p>
+            </div>
 
-            <InputField
-              label="Age"
-              name="age"
-              placeholder="e.g. 2 years, 6 months"
-              required
-            />
+            <div>
+              <label
+                htmlFor="age"
+                style={{
+                  display: "block",
+                  fontSize: "12px",
+                  fontWeight: "600",
+                  letterSpacing: "0.08em",
+                  textTransform: "uppercase",
+                  color: errors.age ? "var(--color-error)" : "var(--color-text-secondary)",
+                  marginBottom: "8px",
+                }}
+              >
+                Age <span style={{ color: "var(--color-lime)" }}>*</span>
+              </label>
+              <input
+                id="age"
+                name="age"
+                type="text"
+                value={formData.age}
+                onChange={handleChange}
+                placeholder="e.g. 2 years, 6 months"
+                className="input-field"
+                style={{ borderColor: errors.age ? "var(--color-error)" : undefined }}
+              />
+              {errors.age && (
+                <p style={{ fontSize: "12px", color: "var(--color-error)", marginTop: "5px", display: "flex", alignItems: "center", gap: "4px" }}>
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="12" y1="8" x2="12" y2="12" />
+                    <line x1="12" y1="16" x2="12.01" y2="16" />
+                  </svg>
+                  {errors.age}
+                </p>
+              )}
+            </div>
 
             <div>
               <label
@@ -317,9 +317,7 @@ export default function AddPetPage() {
                   fontWeight: "600",
                   letterSpacing: "0.08em",
                   textTransform: "uppercase",
-                  color: errors.gender
-                    ? "var(--color-error)"
-                    : "var(--color-text-secondary)",
+                  color: errors.gender ? "var(--color-error)" : "var(--color-text-secondary)",
                   marginBottom: "8px",
                 }}
               >
@@ -331,11 +329,7 @@ export default function AddPetPage() {
                 value={formData.gender}
                 onChange={handleChange}
                 className="select-field"
-                style={{
-                  borderColor: errors.gender
-                    ? "var(--color-error)"
-                    : undefined,
-                }}
+                style={{ borderColor: errors.gender ? "var(--color-error)" : undefined }}
               >
                 <option value="">Select gender...</option>
                 {GENDER_OPTIONS.map((g) => (
@@ -349,12 +343,42 @@ export default function AddPetPage() {
               )}
             </div>
 
-            <InputField
-              label="Location"
-              name="location"
-              placeholder="e.g. New York, NY"
-              required
-            />
+            <div>
+              <label
+                htmlFor="location"
+                style={{
+                  display: "block",
+                  fontSize: "12px",
+                  fontWeight: "600",
+                  letterSpacing: "0.08em",
+                  textTransform: "uppercase",
+                  color: errors.location ? "var(--color-error)" : "var(--color-text-secondary)",
+                  marginBottom: "8px",
+                }}
+              >
+                Location <span style={{ color: "var(--color-lime)" }}>*</span>
+              </label>
+              <input
+                id="location"
+                name="location"
+                type="text"
+                value={formData.location}
+                onChange={handleChange}
+                placeholder="e.g. New York, NY"
+                className="input-field"
+                style={{ borderColor: errors.location ? "var(--color-error)" : undefined }}
+              />
+              {errors.location && (
+                <p style={{ fontSize: "12px", color: "var(--color-error)", marginTop: "5px", display: "flex", alignItems: "center", gap: "4px" }}>
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="12" y1="8" x2="12" y2="12" />
+                    <line x1="12" y1="16" x2="12.01" y2="16" />
+                  </svg>
+                  {errors.location}
+                </p>
+              )}
+            </div>
           </div>
         </div>
 
@@ -443,13 +467,7 @@ export default function AddPetPage() {
               </select>
             </div>
 
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "0",
-              }}
-            >
+            <div style={{ display: "flex", alignItems: "center", gap: "0" }}>
               <div style={{ paddingTop: "20px", width: "100%" }}>
                 <label
                   style={{
@@ -458,9 +476,7 @@ export default function AddPetPage() {
                     gap: "12px",
                     cursor: "pointer",
                     padding: "14px 16px",
-                    background: formData.vaccinationStatus
-                      ? "rgba(34,197,94,0.08)"
-                      : "var(--color-surface-2)",
+                    background: formData.vaccinationStatus ? "rgba(34,197,94,0.08)" : "var(--color-surface-2)",
                     border: `1px solid ${formData.vaccinationStatus ? "rgba(34,197,94,0.25)" : "var(--color-border)"}`,
                     borderRadius: "var(--radius-sm)",
                     transition: "all 0.2s ease",
@@ -473,9 +489,7 @@ export default function AddPetPage() {
                       height: "18px",
                       borderRadius: "4px",
                       border: `2px solid ${formData.vaccinationStatus ? "var(--color-success)" : "var(--color-border)"}`,
-                      background: formData.vaccinationStatus
-                        ? "var(--color-success)"
-                        : "transparent",
+                      background: formData.vaccinationStatus ? "var(--color-success)" : "transparent",
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
@@ -501,20 +515,13 @@ export default function AddPetPage() {
                       style={{
                         fontSize: "13px",
                         fontWeight: "600",
-                        color: formData.vaccinationStatus
-                          ? "var(--color-success)"
-                          : "var(--color-text-primary)",
+                        color: formData.vaccinationStatus ? "var(--color-success)" : "var(--color-text-primary)",
                         marginBottom: "1px",
                       }}
                     >
                       Vaccinated
                     </p>
-                    <p
-                      style={{
-                        fontSize: "11px",
-                        color: "var(--color-text-muted)",
-                      }}
-                    >
+                    <p style={{ fontSize: "11px", color: "var(--color-text-muted)" }}>
                       Check if up-to-date on vaccinations
                     </p>
                   </div>
@@ -581,9 +588,7 @@ export default function AddPetPage() {
                   fontWeight: "600",
                   letterSpacing: "0.08em",
                   textTransform: "uppercase",
-                  color: errors.imageURL
-                    ? "var(--color-error)"
-                    : "var(--color-text-secondary)",
+                  color: errors.imageURL ? "var(--color-error)" : "var(--color-text-secondary)",
                   marginBottom: "8px",
                 }}
               >
@@ -597,11 +602,7 @@ export default function AddPetPage() {
                 onChange={handleChange}
                 placeholder="https://example.com/pet-photo.jpg"
                 className="input-field"
-                style={{
-                  borderColor: errors.imageURL
-                    ? "var(--color-error)"
-                    : undefined,
-                }}
+                style={{ borderColor: errors.imageURL ? "var(--color-error)" : undefined }}
               />
               {errors.imageURL && (
                 <p style={{ fontSize: "12px", color: "var(--color-error)", marginTop: "5px" }}>
@@ -623,6 +624,8 @@ export default function AddPetPage() {
                   <Image
                     src={imagePreview}
                     alt="Preview"
+                    width={120}
+                    height={90}
                     style={{
                       width: "100%",
                       height: "100%",
@@ -674,13 +677,7 @@ export default function AddPetPage() {
                 className="input-field"
                 style={{ resize: "vertical", minHeight: "120px" }}
               />
-              <p
-                style={{
-                  fontSize: "12px",
-                  color: "var(--color-text-muted)",
-                  marginTop: "5px",
-                }}
-              >
+              <p style={{ fontSize: "12px", color: "var(--color-text-muted)", marginTop: "5px" }}>
                 {formData.description.length} characters
               </p>
             </div>
@@ -743,13 +740,47 @@ export default function AddPetPage() {
             }}
             className="form-grid-2"
           >
-            <InputField
-              label="Adoption Fee ($)"
-              name="adoptionFee"
-              type="number"
-              placeholder="0 for free"
-              hint="Enter 0 if you are listing for free"
-            />
+            <div>
+              <label
+                htmlFor="adoptionFee"
+                style={{
+                  display: "block",
+                  fontSize: "12px",
+                  fontWeight: "600",
+                  letterSpacing: "0.08em",
+                  textTransform: "uppercase",
+                  color: errors.adoptionFee ? "var(--color-error)" : "var(--color-text-secondary)",
+                  marginBottom: "8px",
+                }}
+              >
+                Adoption Fee ($)
+              </label>
+              <input
+                id="adoptionFee"
+                name="adoptionFee"
+                type="number"
+                value={formData.adoptionFee}
+                onChange={handleChange}
+                placeholder="0 for free"
+                className="input-field"
+                style={{ borderColor: errors.adoptionFee ? "var(--color-error)" : undefined }}
+              />
+              {errors.adoptionFee && (
+                <p style={{ fontSize: "12px", color: "var(--color-error)", marginTop: "5px", display: "flex", alignItems: "center", gap: "4px" }}>
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="12" y1="8" x2="12" y2="12" />
+                    <line x1="12" y1="16" x2="12.01" y2="16" />
+                  </svg>
+                  {errors.adoptionFee}
+                </p>
+              )}
+              {!errors.adoptionFee && (
+                <p style={{ fontSize: "12px", color: "var(--color-text-muted)", marginTop: "5px" }}>
+                  Enter 0 if you are listing for free
+                </p>
+              )}
+            </div>
 
             <div>
               <label
@@ -772,27 +803,14 @@ export default function AddPetPage() {
                 className="input-field"
                 style={{ opacity: 0.5, cursor: "not-allowed" }}
               />
-              <p
-                style={{
-                  fontSize: "12px",
-                  color: "var(--color-text-muted)",
-                  marginTop: "5px",
-                }}
-              >
+              <p style={{ fontSize: "12px", color: "var(--color-text-muted)", marginTop: "5px" }}>
                 Auto-filled from your account
               </p>
             </div>
           </div>
         </div>
 
-        <div
-          style={{
-            display: "flex",
-            gap: "12px",
-            justifyContent: "flex-end",
-            flexWrap: "wrap",
-          }}
-        >
+        <div style={{ display: "flex", gap: "12px", justifyContent: "flex-end", flexWrap: "wrap" }}>
           <button
             type="button"
             onClick={() => router.push("/dashboard/my-listings")}
@@ -807,9 +825,7 @@ export default function AddPetPage() {
             style={{
               minWidth: "160px",
               padding: "12px 24px",
-              background: isSubmitting
-                ? "rgba(217,249,157,0.5)"
-                : "var(--color-lime)",
+              background: isSubmitting ? "rgba(217,249,157,0.5)" : "var(--color-lime)",
               border: "none",
               borderRadius: "var(--radius-sm)",
               color: "#000",
@@ -828,8 +844,7 @@ export default function AddPetPage() {
             onMouseEnter={(e) => {
               if (!isSubmitting) {
                 e.currentTarget.style.background = "var(--color-lime-dark)";
-                e.currentTarget.style.boxShadow =
-                  "0 4px 20px rgba(217,249,157,0.2)";
+                e.currentTarget.style.boxShadow = "0 4px 20px rgba(217,249,157,0.2)";
               }
             }}
             onMouseLeave={(e) => {

@@ -10,6 +10,7 @@ import { Button } from "@heroui/button";
 import { Card } from "@heroui/card";
 import { Spinner } from "@heroui/spinner";
 import Image from "next/image";
+import Navbar from "@/components/Navbar";
 
 function DashboardSidebar({ isOpen, onClose }) {
   const pathname = usePathname();
@@ -96,7 +97,7 @@ function DashboardSidebar({ isOpen, onClose }) {
 
   return (
     <>
-      {/* FIXED: Mobile Overlay - Changed 'hidden lg:block' to 'lg:hidden' */}
+      {/* Mobile Overlay*/}
       {isOpen && (
         <div
           onClick={onClose}
@@ -104,7 +105,7 @@ function DashboardSidebar({ isOpen, onClose }) {
         />
       )}
 
-      {/* FIXED: Sidebar Layout - Placed below Navbar (top-[64px]) and fixed responsive sliding */}
+      {/*Sidebar Layout*/}
       <aside
         className={`w-[260px] h-[calc(100vh-64px)] bg-[var(--color-surface)] border-r border-[var(--color-border)] fixed top-[64px] left-0 flex flex-col z-40 transition-transform duration-300 ${
           isOpen ? "translate-x-0" : "-translate-x-full"
@@ -112,19 +113,7 @@ function DashboardSidebar({ isOpen, onClose }) {
       >
         {/* Header */}
         <div className="p-6 pb-5 border-b border-[var(--color-border)]">
-          <Link href="/" className="flex items-center gap-2.5 no-underline mb-5">
-            <div className="w-8 h-8 bg-[var(--color-lime)] rounded-lg flex items-center justify-center flex-shrink-0">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#000" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
-              </svg>
-            </div>
-            <div>
-              <p className="text-[15px] font-bold text-white tracking-tight leading-tight mb-0.5">PetNest</p>
-              <p className="text-[10px] font-semibold tracking-[0.1em] uppercase text-[var(--color-text-muted)]">Partner Portal</p>
-            </div>
-          </Link>
-
-          {/* FIXED: User Info Card & Avatar - Swapped to raw HTML to prevent blank circles */}
+          {/* User Info Card & Avatar*/}
           {user && (
             <Card className="bg-[var(--color-surface-2)] border border-[var(--color-border)] p-3">
               <div className="flex items-center gap-2.5">
@@ -133,7 +122,7 @@ function DashboardSidebar({ isOpen, onClose }) {
                     src={user.image} 
                     alt={user.name || "User"} 
                     width={34}
-  height={34}
+                    height={34}
                     className="w-[34px] h-[34px] rounded-full object-cover border border-[var(--color-border)] flex-shrink-0"
                   />
                 ) : (
@@ -250,6 +239,24 @@ function DashboardContent({ children }) {
 export default function DashboardLayout({ children }) {
   return (
     <AuthProvider>
+      <div className="dashboard-navbar-override">
+        <Navbar />
+      </div>
+
+      <style jsx global>{`
+        .dashboard-navbar-override header > div {
+          max-width: 100% !important;
+          width: 100% !important;
+        }
+
+        @media (min-width: 1024px) {
+          .dashboard-navbar-override header > div {
+            padding-left: 24px !important;  
+            padding-right: 40px !important; 
+          }
+        }
+      `}</style>
+
       <DashboardContent>{children}</DashboardContent>
     </AuthProvider>
   );

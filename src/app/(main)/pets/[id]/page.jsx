@@ -115,6 +115,7 @@ export default function PetDetailsPage() {
               <Image
                 src={pet.imageURL}
                 alt={pet.name}
+                fill
                 className="w-full h-full object-cover"
                 onError={() => setImgError(true)}
               />

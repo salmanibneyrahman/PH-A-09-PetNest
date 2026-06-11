@@ -253,6 +253,7 @@ function PetPerformanceRow({ pet, isLast }) {
           <Image
             src={pet.imageURL}
             alt={pet.name}
+            fill
             className="w-full h-full object-cover"
           />
         ) : (

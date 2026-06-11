@@ -15,7 +15,7 @@ import { toast } from "@/lib/toast";
 
 // Updated HeroUI v3 Imports
 import { Button } from "@heroui/button";
-import { Input, TextArea } from "@heroui/react";
+import { Input, Textarea } from "@heroui/input";
 import { Select, ListBox, Modal, Checkbox } from "@heroui/react";
 import { Card, CardBody } from "@heroui/card";
 import { Chip } from "@heroui/chip";
@@ -124,8 +124,8 @@ export default function MyListingsPage() {
           r._id === requestId
             ? { ...r, status }
             : status === "approved" && r.status === "pending"
-            ? { ...r, status: "rejected" }
-            : r
+              ? { ...r, status: "rejected" }
+              : r
         )
       );
       if (status === "approved") {
@@ -171,27 +171,30 @@ export default function MyListingsPage() {
           </p>
         </div>
         <div className="flex gap-3 items-center flex-wrap">
-          <Input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search pets..."
-            className="w-[160px]"
-            startcontent={
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-muted)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <div className="relative flex items-center w-[160px]">
+            <div className="absolute left-3 flex items-center pointer-events-none text-[var(--color-text-muted)] z-10">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <circle cx="11" cy="11" r="8" />
                 <line x1="21" y1="21" x2="16.65" y2="16.65" />
               </svg>
-            }
-            classnames={{
-              inputWrapper: "bg-[var(--color-surface)] border-[var(--color-border)]",
-              input: "text-[13px]",
-            }}
-          />
+            </div>
+            <Input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search pets..."
+              className="w-full"
+              classNames={{
+                inputWrapper: "bg-[var(--color-surface)] border-[var(--color-border)] pl-9",
+                input: "text-[13px]",
+              }}
+            />
+          </div>
+          {/* New Listing Button */}
           <Link href="/dashboard/add-pet">
             <Button
               className="bg-[var(--color-lime)] text-black font-bold text-xs tracking-wider uppercase whitespace-nowrap hover:bg-[var(--color-lime-dark)]"
-              startcontent={
+              startContent={
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                   <line x1="12" y1="5" x2="12" y2="19" />
                   <line x1="5" y1="12" x2="19" y2="12" />
@@ -253,11 +256,10 @@ export default function MyListingsPage() {
               key={status}
               variant={filterStatus === status ? "solid" : "bordered"}
               onClick={() => setFilterStatus(status)}
-              className={`cursor-pointer capitalize text-xs font-semibold ${
-                filterStatus === status
-                  ? "bg-[var(--color-surface-3)] text-[var(--color-text-primary)] border-white/20"
-                  : "bg-transparent text-[var(--color-text-secondary)] border-[var(--color-border)] hover:border-white/20"
-              }`}
+              className={`cursor-pointer capitalize text-xs font-semibold ${filterStatus === status
+                ? "bg-[var(--color-surface-3)] text-[var(--color-text-primary)] border-white/20"
+                : "bg-transparent text-[var(--color-text-secondary)] border-[var(--color-border)] hover:border-white/20"
+                }`}
             >
               {status === "all" ? "All" : status}
             </Chip>
@@ -289,15 +291,15 @@ export default function MyListingsPage() {
               {searchQuery
                 ? "No matching pets found"
                 : filterStatus === "all"
-                ? "No listings yet"
-                : `No ${filterStatus} pets`}
+                  ? "No listings yet"
+                  : `No ${filterStatus} pets`}
             </h3>
             <p className="text-sm text-[var(--color-text-secondary)] mb-6">
               {searchQuery
                 ? "Try a different search term"
                 : filterStatus === "all"
-                ? "Create your first pet listing to get started"
-                : "Switch to a different filter to see other pets"}
+                  ? "Create your first pet listing to get started"
+                  : "Switch to a different filter to see other pets"}
             </p>
             {!searchQuery && filterStatus === "all" && (
               <Link href="/dashboard/add-pet">
@@ -415,11 +417,10 @@ const PetCard = ({ pet, onOpenRequests, onEdit, onDelete, router }) => {
 
   return (
     <Card
-      className={`bg-[var(--color-surface)] border transition-all duration-200 ${
-        isAdopted
-          ? "opacity-75 border-[var(--color-border)]"
-          : "border-[var(--color-border)] hover:border-[rgba(217,249,157,0.2)]"
-      }`}
+      className={`bg-[var(--color-surface)] border transition-all duration-200 ${isAdopted
+        ? "opacity-75 border-[var(--color-border)]"
+        : "border-[var(--color-border)] hover:border-[rgba(217,249,157,0.2)]"
+        }`}
     >
       <CardBody className="p-0 flex flex-row gap-0">
         <div className="w-[180px] min-h-[180px] relative flex-shrink-0 bg-[var(--color-surface-2)] overflow-hidden">
@@ -433,20 +434,19 @@ const PetCard = ({ pet, onOpenRequests, onEdit, onDelete, router }) => {
           ) : (
             <div className="w-full h-full flex items-center justify-center text-5xl absolute inset-0">
               {pet.species === "Dog" ? "🐕" :
-               pet.species === "Cat" ? "🐈" :
-               pet.species === "Bird" ? "🦜" :
-               pet.species === "Rabbit" ? "🐇" : "🐾"}
+                pet.species === "Cat" ? "🐈" :
+                  pet.species === "Bird" ? "🦜" :
+                    pet.species === "Rabbit" ? "🐇" : "🐾"}
             </div>
           )}
           <Chip
             size="sm"
-            className={`absolute top-2.5 left-2.5 font-extrabold text-[9px] uppercase tracking-wider ${
-              pet.status === "available"
-                ? "bg-[var(--color-lime)] text-black"
-                : pet.status === "adopted"
+            className={`absolute top-2.5 left-2.5 px-2 py-0.5 rounded-full font-extrabold text-[9px] uppercase tracking-wider ${pet.status === "available"
+              ? "bg-[var(--color-lime)] text-black"
+              : pet.status === "adopted"
                 ? "bg-[var(--color-surface-3)] text-[var(--color-text-muted)]"
                 : "bg-[var(--color-purple)] text-white"
-            }`}
+              }`}
           >
             {pet.status || "available"}
           </Chip>
@@ -454,9 +454,8 @@ const PetCard = ({ pet, onOpenRequests, onEdit, onDelete, router }) => {
 
         <div className="flex-1 p-4.5 px-5 flex flex-col min-w-0">
           <div className="flex items-start justify-between mb-1 gap-2">
-            <h3 className={`text-[17px] font-bold tracking-tight truncate ${
-              isAdopted ? "text-[var(--color-text-secondary)]" : "text-[var(--color-text-primary)]"
-            }`}>
+            <h3 className={`text-[17px] font-bold tracking-tight truncate ${isAdopted ? "text-[var(--color-text-secondary)]" : "text-[var(--color-text-primary)]"
+              }`}>
               {pet.name}
             </h3>
             <Button isIconOnly size="sm" variant="light" className="text-[var(--color-text-muted)] min-w-0 w-auto h-auto p-0.5">
@@ -631,15 +630,13 @@ function RequestsModal({ pet, requests, isLoading, updatingRequestId, onClose, o
                 requests.map((request, index) => (
                   <div
                     key={request._id}
-                    className={`px-6 py-5 ${
-                      index < requests.length - 1 ? "border-b border-[var(--color-border)]" : ""
-                    } ${
-                      request.status === "approved"
+                    className={`px-6 py-5 ${index < requests.length - 1 ? "border-b border-[var(--color-border)]" : ""
+                      } ${request.status === "approved"
                         ? "bg-success/[0.03]"
                         : request.status === "rejected"
-                        ? "bg-danger/[0.03]"
-                        : ""
-                    }`}
+                          ? "bg-danger/[0.03]"
+                          : ""
+                      }`}
                   >
                     <div className="flex items-start justify-between mb-3 gap-3 flex-wrap">
                       <div className="flex items-center gap-3">
@@ -660,13 +657,12 @@ function RequestsModal({ pet, requests, isLoading, updatingRequestId, onClose, o
                       <Chip
                         variant="bordered"
                         size="sm"
-                        className={`font-bold text-[11px] uppercase tracking-wider ${
-                          request.status === "approved"
-                            ? "bg-success/12 text-[var(--color-success)] border-success/25"
-                            : request.status === "rejected"
+                        className={`font-bold text-[11px] uppercase tracking-wider ${request.status === "approved"
+                          ? "bg-success/12 text-[var(--color-success)] border-success/25"
+                          : request.status === "rejected"
                             ? "bg-danger/12 text-[var(--color-error)] border-danger/25"
                             : "bg-warning/12 text-[var(--color-warning)] border-warning/25"
-                        }`}
+                          }`}
                       >
                         {request.status}
                       </Chip>
@@ -917,16 +913,14 @@ function EditPetModal({ pet, onClose, onSuccess }) {
                     isSelected={formData.vaccinationStatus}
                     onValueChange={(checked) => handleChange("vaccinationStatus", checked)}
                     classnames={{
-                      base: `p-3 px-3.5 rounded-sm w-full transition-all ${
-                        formData.vaccinationStatus
-                          ? "bg-success/8 border-success/25"
-                          : "bg-[var(--color-surface-2)] border-[var(--color-border)]"
-                      }`,
-                      label: `text-[13px] font-semibold ${
-                        formData.vaccinationStatus
-                          ? "text-[var(--color-success)]"
-                          : "text-[var(--color-text-primary)]"
-                      }`,
+                      base: `p-3 px-3.5 rounded-sm w-full transition-all ${formData.vaccinationStatus
+                        ? "bg-success/8 border-success/25"
+                        : "bg-[var(--color-surface-2)] border-[var(--color-border)]"
+                        }`,
+                      label: `text-[13px] font-semibold ${formData.vaccinationStatus
+                        ? "text-[var(--color-success)]"
+                        : "text-[var(--color-text-primary)]"
+                        }`,
                     }}
                   >
                     Vaccinated

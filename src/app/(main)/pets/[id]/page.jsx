@@ -116,6 +116,7 @@ export default function PetDetailsPage() {
                 src={pet.imageURL}
                 alt={pet.name}
                 fill
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw"
                 className="w-full h-full object-cover"
                 onError={() => setImgError(true)}
               />

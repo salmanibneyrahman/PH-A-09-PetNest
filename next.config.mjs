@@ -52,6 +52,7 @@
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  turbopack: false,
   images: {
     remotePatterns: [
       {

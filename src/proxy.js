@@ -13,7 +13,7 @@ const PET_DETAIL_PREFIX = "/pets/";
 
 const AUTH_ROUTES = ["/login", "/register"];
 
-export async function middleware(request) {
+export async function proxy(request) {
   const { pathname } = request.nextUrl;
 
   const sessionToken =

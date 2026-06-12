@@ -28,7 +28,6 @@ export async function generateAndStoreToken(email) {
     try {
         const token = await getBetterAuthToken();
         if (token) {
-            // যদি ব্রাউজার বা লোকাল স্টোরেজে এক্সট্রা রাখতে চাও
             if (typeof window !== "undefined") {
                 localStorage.setItem("petnest_jwt_token", token);
             }

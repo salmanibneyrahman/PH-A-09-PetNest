@@ -28,21 +28,31 @@ export default function PetDetailsPage() {
   useEffect(() => {
     if (!id) return;
 
-    const fetchPet = async () => {
+    const fetchPetData = async () => {
       setIsLoading(true);
+      
+      // Step 1: Fetch Pet Details first
       try {
         const data = await getPetById(id);
         setPet(data);
-        await incrementPetView(id);
       } catch (error) {
         console.error("Failed to fetch pet:", error);
         toast.error("Failed to load pet details");
-      } finally {
         setIsLoading(false);
+        return; // Stop execution if pet is not found
       }
+
+      // Step 2: Increment View (Silently handle if it fails)
+      try {
+        await incrementPetView(id);
+      } catch (error) {
+        console.warn("View increment failed, but pet is loaded:", error.message);
+      }
+
+      setIsLoading(false);
     };
 
-    fetchPet();
+    fetchPetData();
   }, [id]);
 
   if (isLoading) {

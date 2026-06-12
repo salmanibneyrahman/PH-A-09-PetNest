@@ -3,12 +3,13 @@
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { useAuth } from "@/lib/AuthContext";
-import { getUserRequests, cancelRequest } from "@/lib/api";
+import { getUserRequests, cancelRequest, getPetById } from "@/lib/api";
 import { toast } from "@/lib/toast";
 import { Button } from "@heroui/button";
 import { Card, CardBody } from "@heroui/card";
 import { Chip } from "@heroui/chip";
 import { Spinner } from "@heroui/spinner";
+import Image from "next/image";
 
 export default function MyRequestsPage() {
   const { user } = useAuth();
@@ -17,13 +18,29 @@ export default function MyRequestsPage() {
   const [cancellingId, setCancellingId] = useState(null);
   const [confirmCancelId, setConfirmCancelId] = useState(null);
   const [filterStatus, setFilterStatus] = useState("all");
+  const [petImages, setPetImages] = useState({});
+  const [imageErrors, setImageErrors] = useState({});
 
- const fetchRequests = useCallback(async () => {
+  const fetchRequests = useCallback(async () => {
     if (!user?.email) return;
     setIsLoading(true);
     try {
       const data = await getUserRequests(user.email);
       setRequests(data);
+
+      // Fetch pet images for each request
+      const images = {};
+      for (const request of data) {
+        try {
+          const pet = await getPetById(request.petId);
+          if (pet?.imageURL) {
+            images[request.petId] = pet.imageURL;
+          }
+        } catch (err) {
+          console.error(`Failed to fetch pet ${request.petId}:`, err);
+        }
+      }
+      setPetImages(images);
     } catch (error) {
       toast.error("Failed to load your requests");
     } finally {
@@ -74,15 +91,15 @@ export default function MyRequestsPage() {
     const statusConfig = {
       pending: {
         color: "warning",
-        className: "bg-warning/12 text-[var(--color-warning)] border-warning/25 px-2",
+        className: "bg-warning/12 text-[var(--color-warning)] border-warning/25 px-2.5",
       },
       approved: {
         color: "success",
-        className: "bg-success/12 text-[var(--color-success)] border-success/25 px-2",
+        className: "bg-success/12 text-[var(--color-success)] border-success/25 px-2.5",
       },
       rejected: {
         color: "danger",
-        className: "bg-danger/12 text-[var(--color-error)] border-danger/25 px-2",
+        className: "bg-danger/12 text-[var(--color-error)] border-danger/25 px-2.5",
       },
     };
     
@@ -100,6 +117,20 @@ export default function MyRequestsPage() {
         {status}
       </Chip>
     );
+  };
+
+  const handleImageError = (petId) => {
+    setImageErrors(prev => ({ ...prev, [petId]: true }));
+  };
+
+  const getPetEmoji = (petName) => {
+    const name = petName?.toLowerCase() || "";
+    if (name.includes("dog") || name.includes("pup")) return "🐕";
+    if (name.includes("cat") || name.includes("kitten")) return "🐈";
+    if (name.includes("bird") || name.includes("parrot")) return "🦜";
+    if (name.includes("rabbit") || name.includes("bunny")) return "🐇";
+    if (name.includes("fish")) return "🐠";
+    return "🐾";
   };
 
   return (
@@ -130,7 +161,7 @@ export default function MyRequestsPage() {
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-4 md:grid-cols-2 gap-4 mb-8">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
         {[
           { key: "all", label: "Total", color: "var(--color-lime)" },
           { key: "pending", label: "Pending", color: "var(--color-warning)" },
@@ -236,9 +267,20 @@ export default function MyRequestsPage() {
                     : ""
                 }`}
               >
-                {/* Pet Icon */}
-                <div className="w-[52px] h-[52px] rounded-lg bg-[var(--color-surface-2)] border border-[var(--color-border)] flex items-center justify-center text-2xl flex-shrink-0">
-                  🐾
+                {/* Pet Image */}
+                <div className="w-[52px] h-[52px] rounded-lg bg-[var(--color-surface-2)] border border-[var(--color-border)] flex items-center justify-center overflow-hidden flex-shrink-0">
+                  {petImages[request.petId] && !imageErrors[request.petId] ? (
+                    <Image
+                      src={petImages[request.petId]}
+                      alt={request.petName}
+                      width={52}
+                      height={52}
+                      className="w-full h-full object-cover"
+                      onError={() => handleImageError(request.petId)}
+                    />
+                  ) : (
+                    <span className="text-2xl">{getPetEmoji(request.petName)}</span>
+                  )}
                 </div>
 
                 {/* Request Info */}

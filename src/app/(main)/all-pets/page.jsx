@@ -391,6 +391,8 @@ function FeaturedSpotlight({ pet }) {
           <Image
             src={pet.imageURL}
             alt={pet.name}
+            fill
+            sizes="(max-width: 768px) 100vw, 700px"
             className="w-full h-full object-cover absolute inset-0"
             onError={() => setImgError(true)}
           />
@@ -432,7 +434,7 @@ function FeaturedSpotlight({ pet }) {
 
         <Button
           onPress={() => router.push(`/pets/${pet._id}`)}
-          className="self-start bg-primary text-primary-foreground font-semibold"
+          className="self-start bg-primary text-primary-foreground font-semibold px-2"
         >
           Adopt {pet.name}
         </Button>

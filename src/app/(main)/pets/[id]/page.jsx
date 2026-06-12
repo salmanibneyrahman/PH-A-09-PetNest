@@ -8,7 +8,6 @@ import { useAuth } from "@/lib/AuthContext";
 import { toast } from "@/lib/toast";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { Button } from "@heroui/button";
-import { Input, Textarea } from "@heroui/input";
 import { Card, CardBody, CardHeader } from "@heroui/card";
 import { Chip } from "@heroui/chip";
 import { Avatar } from "@heroui/avatar";
@@ -94,7 +93,7 @@ export default function PetDetailsPage() {
 
       {/* Breadcrumb */}
       <div className="bg-[var(--color-surface)] border-b border-[var(--color-border)] py-4 mt-16">
-        <div className="max-w-[1100px] mx-auto px-6 flex items-center gap-2">
+        <div className="max-w-[1100px] mx-auto px-4 sm:px-6 flex items-center gap-2">
           <Link
             href="/all-pets"
             className="flex items-center gap-1.5 text-[13px] text-[var(--color-text-muted)] no-underline transition-colors hover:text-[var(--color-text-primary)]"
@@ -107,17 +106,17 @@ export default function PetDetailsPage() {
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-muted)" strokeWidth="1.5">
             <polyline points="9 18 15 12 9 6" />
           </svg>
-          <span className="text-[13px] text-[var(--color-text-primary)] font-medium">
+          <span className="text-[13px] text-[var(--color-text-primary)] font-medium truncate">
             {pet.name}
           </span>
         </div>
       </div>
 
       {/* Main Content Grid */}
-      <div className="max-w-[1100px] mx-auto px-6 py-8 w-full">
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-8">
+      <div className="max-w-[1100px] mx-auto px-4 sm:px-6 py-6 sm:py-8 w-full">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-6 lg:gap-8">
           {/* Left Column */}
-          <div className="space-y-6">
+          <div className="space-y-5 sm:space-y-6">
             {/* Pet Image */}
             <div className="relative rounded-lg overflow-hidden border border-[var(--color-border)] bg-[var(--color-surface-2)] aspect-[4/3]">
               {!imgError && pet.imageURL ? (
@@ -128,9 +127,10 @@ export default function PetDetailsPage() {
                   sizes="(max-width: 768px) 100vw, 700px"
                   className="object-cover"
                   onError={() => setImgError(true)}
+                  priority
                 />
               ) : (
-                <div className="w-full h-full flex items-center justify-center text-8xl">
+                <div className="w-full h-full flex items-center justify-center text-6xl sm:text-8xl">
                   {pet.species === "Dog" ? "🐕" :
                     pet.species === "Cat" ? "🐈" :
                       pet.species === "Bird" ? "🦜" :
@@ -153,7 +153,7 @@ export default function PetDetailsPage() {
 
             {/* Pet Name & Basic Info */}
             <div>
-              <h1 className="text-3xl font-bold text-[var(--color-text-primary)] tracking-tight mb-2">
+              <h1 className="text-2xl sm:text-3xl font-bold text-[var(--color-text-primary)] tracking-tight mb-2">
                 {pet.name}
               </h1>
               <p className="text-[13px] font-semibold tracking-wider uppercase text-[var(--color-text-muted)]">
@@ -165,7 +165,7 @@ export default function PetDetailsPage() {
             {/* Description */}
             {pet.description && (
               <Card className="bg-[var(--color-surface)] border border-[var(--color-border)]">
-                <CardBody className="p-5">
+                <CardBody className="p-4 sm:p-5">
                   <h3 className="text-xs font-bold tracking-wider uppercase text-[var(--color-text-muted)] mb-3">
                     About {pet.name}
                   </h3>
@@ -178,7 +178,7 @@ export default function PetDetailsPage() {
 
             {/* Owner Info Card */}
             <Card className="bg-[var(--color-surface)] border border-[var(--color-border)]">
-              <CardBody className="p-5">
+              <CardBody className="p-4 sm:p-5">
                 <h3 className="text-xs font-bold tracking-wider uppercase text-[var(--color-text-muted)] mb-3">
                   Listed by
                 </h3>
@@ -192,8 +192,8 @@ export default function PetDetailsPage() {
                       color: colors.accent,
                     }}
                   />
-                  <div>
-                    <p className="text-sm font-semibold text-[var(--color-text-primary)]">
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm font-semibold text-[var(--color-text-primary)] truncate">
                       {pet.ownerEmail?.split("@")[0] || "Owner"}
                     </p>
                     <p className="text-xs text-[var(--color-text-muted)]">
@@ -210,7 +210,7 @@ export default function PetDetailsPage() {
             {/* Price Card */}
             {pet.adoptionFee !== undefined && (
               <Card className="bg-[var(--color-surface)] border border-[var(--color-border)]">
-                <CardBody className="p-5">
+                <CardBody className="p-4 sm:p-5">
                   <p className="text-[11px] text-[var(--color-text-muted)] tracking-wider uppercase mb-1">
                     Adoption Fee
                   </p>
@@ -223,7 +223,7 @@ export default function PetDetailsPage() {
 
             {/* Pet Stats Grid */}
             <Card className="bg-[var(--color-surface)] border border-[var(--color-border)]">
-              <CardBody className="p-5">
+              <CardBody className="p-4 sm:p-5">
                 <div className="grid grid-cols-2 gap-3">
                   {[
                     { label: "Age", value: pet.age || "Not specified" },
@@ -239,7 +239,7 @@ export default function PetDetailsPage() {
                       <p className="text-[10px] font-bold tracking-[0.1em] uppercase text-[var(--color-text-muted)] mb-1">
                         {item.label}
                       </p>
-                      <p className={`text-sm font-semibold ${item.highlight ? "text-[var(--color-success)]" : "text-[var(--color-text-primary)]"}`}>
+                      <p className={`text-sm font-semibold truncate ${item.highlight ? "text-[var(--color-success)]" : "text-[var(--color-text-primary)]"}`}>
                         {item.value}
                       </p>
                     </div>
@@ -268,7 +268,7 @@ export default function PetDetailsPage() {
                     background: `linear-gradient(90deg, transparent, ${colors.accent}60, transparent)`,
                   }}
                 />
-                <CardBody className="p-5">
+                <CardBody className="p-4 sm:p-5">
                   <h2 className="text-lg font-bold text-[var(--color-text-primary)] mb-2 tracking-tight">
                     Ready to adopt?
                   </h2>
@@ -299,6 +299,7 @@ export default function PetDetailsPage() {
                           strokeWidth="2.5"
                           strokeLinecap="round"
                           strokeLinejoin="round"
+                          className="flex-shrink-0"
                         >
                           <polyline points="20 6 9 17 4 12" />
                         </svg>
@@ -312,7 +313,7 @@ export default function PetDetailsPage() {
                       <div className="py-2.5 px-3 bg-[var(--color-surface-2)] border border-[var(--color-border)] rounded-sm text-center text-sm font-semibold text-[var(--color-text-muted)]">
                         This pet has been adopted
                       </div>
-                      <Link href="/all-pets">
+                      <Link href="/all-pets" className="block">
                         <Button
                           variant="bordered"
                           className="w-full border-[var(--color-border)] text-[var(--color-text-primary)]"
@@ -326,7 +327,7 @@ export default function PetDetailsPage() {
                       <div className="py-2.5 px-3 bg-[rgba(217,249,157,0.08)] border border-[rgba(217,249,157,0.2)] rounded-sm text-center text-xs text-[var(--color-lime)]">
                         You own this listing
                       </div>
-                      <Link href="/dashboard/my-listings">
+                      <Link href="/dashboard/my-listings" className="block">
                         <Button
                           variant="bordered"
                           className="w-full border-[var(--color-border)] text-[var(--color-text-primary)]"
@@ -337,12 +338,12 @@ export default function PetDetailsPage() {
                     </div>
                   ) : !isAuthenticated ? (
                     <div className="flex flex-col gap-2">
-                      <Link href={`/login?callbackUrl=/pets/${pet._id}`}>
+                      <Link href={`/login?callbackUrl=/pets/${pet._id}`} className="block">
                         <Button className="w-full bg-[var(--color-lime)] text-black font-bold">
                           Login to Adopt
                         </Button>
                       </Link>
-                      <Link href="/register">
+                      <Link href="/register" className="block">
                         <Button
                           variant="bordered"
                           className="w-full border-[var(--color-border)] text-[var(--color-text-primary)]"
@@ -442,7 +443,7 @@ function AdoptionForm({ pet, user, onClose, onSuccess }) {
         }}
       />
 
-      <CardHeader className="px-5 py-4 border-b border-[var(--color-border)] flex items-center justify-between">
+      <CardHeader className="px-4 sm:px-5 py-4 border-b border-[var(--color-border)] flex items-center justify-between">
         <h2 className="text-base font-bold text-[var(--color-text-primary)]">
           Adopt {pet.name}
         </h2>
@@ -460,93 +461,91 @@ function AdoptionForm({ pet, user, onClose, onSuccess }) {
         </Button>
       </CardHeader>
 
-      <CardBody className="p-5">
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <Input
-            type="text"
-            label="Pet Name"
-            value={pet.name}
-            isReadOnly
-            size="sm"
-            classNames={{
-              label: "text-[var(--color-text-secondary)] text-xs font-semibold uppercase tracking-wider",
-              input: "text-[var(--color-text-primary)] opacity-60",
-              inputWrapper: "bg-[var(--color-surface-2)] border-[var(--color-border)] cursor-not-allowed h-10",
-            }}
-          />
-
-          <Input
-            type="text"
-            label="Your Name"
-            value={user?.name || ""}
-            isReadOnly
-            size="sm"
-            classNames={{
-              label: "text-[var(--color-text-secondary)] text-xs font-semibold uppercase tracking-wider",
-              input: "text-[var(--color-text-primary)] opacity-60",
-              inputWrapper: "bg-[var(--color-surface-2)] border-[var(--color-border)] cursor-not-allowed h-10",
-            }}
-          />
-
-          <Input
-            type="email"
-            label="Your Email"
-            value={user?.email || ""}
-            isReadOnly
-            size="sm"
-            classNames={{
-              label: "text-[var(--color-text-secondary)] text-xs font-semibold uppercase tracking-wider",
-              input: "text-[var(--color-text-primary)] opacity-60",
-              inputWrapper: "bg-[var(--color-surface-2)] border-[var(--color-border)] cursor-not-allowed h-10",
-            }}
-          />
-
-          <Input
-            id="pickupDate"
-            name="pickupDate"
-            type="date"
-            label="Preferred Pickup Date"
-            value={formData.pickupDate}
-            onChange={handleChange}
-            min={minDate}
-            isInvalid={!!errors.pickupDate}
-            errorMessage={errors.pickupDate}
-            size="sm"
-            classNames={{
-              label: "text-[var(--color-text-secondary)] text-xs font-semibold uppercase tracking-wider",
-              input: "text-[var(--color-text-primary)] [color-scheme:dark]",
-              inputWrapper: "bg-[var(--color-surface-2)] border-[var(--color-border)] h-10",
-            }}
-          />
-
-          <Textarea
-            id="message"
-            name="message"
-            label={
-              <span>
-                Message to Owner{" "}
-                <span className="text-[11px] font-normal text-[var(--color-text-muted)] normal-case tracking-normal">
-                  (optional)
-                </span>
+      <CardBody className="p-4 sm:p-5">
+        <form onSubmit={handleSubmit} className="space-y-5">
+          {/* Pet Name Field */}
+          <div className="space-y-2">
+            <label className="block text-[var(--color-text-secondary)] text-xs font-semibold uppercase tracking-wider pb-2">
+              Pet Name
+            </label>
+            <div className="w-full h-10 px-3 py-2 bg-[var(--color-surface-2)] border border-[var(--color-border)] rounded-md flex items-center cursor-not-allowed">
+              <span className="text-[var(--color-text-primary)] opacity-60 text-sm">
+                {pet.name}
               </span>
-            }
-            value={formData.message}
-            onChange={handleChange}
-            placeholder={`Tell the owner why you would be a great match for ${pet.name}...`}
-            minRows={3}
-            classNames={{
-              label: "text-[var(--color-text-secondary)] text-xs font-semibold uppercase tracking-wider",
-              input: "text-[var(--color-text-primary)] resize-y",
-              inputWrapper: "bg-[var(--color-surface-2)] border-[var(--color-border)]",
-            }}
-          />
+            </div>
+          </div>
 
+          {/* Your Name Field */}
+          <div className="space-y-2">
+            <label className="block text-[var(--color-text-secondary)] text-xs font-semibold uppercase tracking-wider pt-3 pb-2">
+              Your Name
+            </label>
+            <div className="w-full h-10 px-3 py-2 bg-[var(--color-surface-2)] border border-[var(--color-border)] rounded-md flex items-center cursor-not-allowed">
+              <span className="text-[var(--color-text-primary)] opacity-60 text-sm">
+                {user?.name || ""}
+              </span>
+            </div>
+          </div>
+
+          {/* Your Email Field */}
+          <div className="space-y-2">
+            <label className="block text-[var(--color-text-secondary)] text-xs font-semibold uppercase tracking-wider pt-3 pb-2">
+              Your Email
+            </label>
+            <div className="w-full h-10 px-3 py-2 bg-[var(--color-surface-2)] border border-[var(--color-border)] rounded-md flex items-center cursor-not-allowed">
+              <span className="text-[var(--color-text-primary)] opacity-60 text-sm truncate">
+                {user?.email || ""}
+              </span>
+            </div>
+          </div>
+
+          {/* Pickup Date Field */}
+          <div className="space-y-2">
+            <label htmlFor="pickupDate" className="block text-[var(--color-text-secondary)] text-xs font-semibold uppercase tracking-wider pt-3 pb-2">
+              Preferred Pickup Date
+            </label>
+            <input
+              id="pickupDate"
+              name="pickupDate"
+              type="date"
+              value={formData.pickupDate}
+              onChange={handleChange}
+              min={minDate}
+              className={`w-full h-10 px-3 py-2 bg-[var(--color-surface-2)] border rounded-md text-[var(--color-text-primary)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-lime)] focus:border-transparent transition-all [color-scheme:dark] ${
+                errors.pickupDate ? "border-red-500" : "border-[var(--color-border)]"
+              }`}
+            />
+            {errors.pickupDate && (
+              <p className="text-xs text-red-500 mt-1">{errors.pickupDate}</p>
+            )}
+          </div>
+
+          {/* Message Field */}
+          <div className="space-y-2">
+            <label htmlFor="message" className="block text-[var(--color-text-secondary)] text-xs font-semibold uppercase tracking-wider pt-3 pb-2">
+              Message to Owner{" "}
+              <span className="text-[11px] font-normal text-[var(--color-text-muted)] normal-case tracking-normal">
+                (optional)
+              </span>
+            </label>
+            <textarea
+              id="message"
+              name="message"
+              value={formData.message}
+              onChange={handleChange}
+              placeholder={`Tell the owner why you would be a great match for ${pet.name}...`}
+              rows={4}
+              className="w-full px-3 py-2 bg-[var(--color-surface-2)] border border-[var(--color-border)] rounded-md text-[var(--color-text-primary)] text-sm placeholder:text-[var(--color-text-muted)] placeholder:opacity-50 focus:outline-none focus:ring-2 focus:ring-[var(--color-lime)] focus:border-transparent transition-all resize-y min-h-[80px]"
+            />
+          </div>
+
+          {/* Action Buttons */}
           <div className="flex flex-col gap-2 pt-2">
             <Button
               type="submit"
               isDisabled={isSubmitting}
               isLoading={isSubmitting}
-              className="w-full bg-[var(--color-lime)] text-black font-bold text-sm tracking-wider uppercase hover:bg-[var(--color-lime-dark)]"
+              className="w-full bg-[var(--color-lime)] text-black font-bold text-sm tracking-wider uppercase hover:bg-[var(--color-lime-dark)] transition-colors"
             >
               {isSubmitting ? "Submitting..." : "Submit Request"}
             </Button>
@@ -554,7 +553,7 @@ function AdoptionForm({ pet, user, onClose, onSuccess }) {
               type="button"
               variant="bordered"
               onPress={onClose}
-              className="w-full border-[var(--color-border)] text-[var(--color-text-primary)]"
+              className="w-full border-[var(--color-border)] text-[var(--color-text-primary)] hover:bg-[var(--color-surface-2)] transition-colors"
             >
               Cancel
             </Button>

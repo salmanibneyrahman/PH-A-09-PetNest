@@ -74,15 +74,15 @@ export default function MyRequestsPage() {
     const statusConfig = {
       pending: {
         color: "warning",
-        className: "bg-warning/12 text-[var(--color-warning)] border-warning/25",
+        className: "bg-warning/12 text-[var(--color-warning)] border-warning/25 px-2",
       },
       approved: {
         color: "success",
-        className: "bg-success/12 text-[var(--color-success)] border-success/25",
+        className: "bg-success/12 text-[var(--color-success)] border-success/25 px-2",
       },
       rejected: {
         color: "danger",
-        className: "bg-danger/12 text-[var(--color-error)] border-danger/25",
+        className: "bg-danger/12 text-[var(--color-error)] border-danger/25 px-2",
       },
     };
     

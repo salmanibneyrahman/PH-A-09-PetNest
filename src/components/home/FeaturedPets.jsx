@@ -185,6 +185,7 @@ export default function FeaturedPets() {
                         src={pet.imageURL}
                         alt={pet.name}
                         fill
+                        sizes="(max-width: 768px) 100vw, 700px"
                         style={{
                           width: "100%",
                           height: "100%",

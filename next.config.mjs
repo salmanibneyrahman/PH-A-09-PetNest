@@ -52,9 +52,6 @@
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    turbopack: {
-    enabled: false,
-  },
   images: {
     remotePatterns: [
       {
@@ -98,8 +95,8 @@ const nextConfig = {
       },
     ];
   },
-  serverExternalPackages: ["@better-auth/kysely-adapter", "kysely"],
+  // FIX: Added 'better-auth' to prevent Turbopack from bundling backend SQL dialects
+  serverExternalPackages: ["better-auth", "@better-auth/kysely-adapter", "kysely"],
 };
 
 export default nextConfig;
-

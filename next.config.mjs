@@ -95,8 +95,8 @@ const nextConfig = {
       },
     ];
   },
-  // FIX: Added 'better-auth' to prevent Turbopack from bundling backend SQL dialects
-  serverExternalPackages: ["better-auth", "@better-auth/kysely-adapter", "kysely"],
+  serverExternalPackages: ["@better-auth/kysely-adapter", "kysely"],
 };
 
 export default nextConfig;
+

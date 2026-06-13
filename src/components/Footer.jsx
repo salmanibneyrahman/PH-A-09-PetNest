@@ -188,7 +188,6 @@ export default function Footer() {
             </h4>
             <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: "12px" }}>
               {[
-                { label: "About Us", href: "/about" },
                 { label: "Our Program", href: "/program" },
                 { label: "Blog", href: "/blog" },
                 { label: "Contact", href: "/contact" },

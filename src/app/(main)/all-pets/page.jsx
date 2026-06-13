@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { getAllPets } from "@/lib/api";
 import PetCard from "@/components/PetCard";
@@ -53,7 +53,6 @@ const SPECIES_LIST = [
         <path d="M15.18 7.9 12 10" />
         <path d="M16.93 10H20a2 2 0 0 1 0 4H2" />
       </svg>
-
     ),
   },
   {
@@ -67,7 +66,6 @@ const SPECIES_LIST = [
         <path d="M20 8.54V4a2 2 0 1 0-4 0v3" />
         <path d="M7.612 12.524a3 3 0 1 0-1.6 4.3" />
       </svg>
-
     ),
   },
 ];
@@ -79,7 +77,7 @@ const SORT_OPTIONS = [
   { value: "price_desc", label: "Price: High to Low" },
 ];
 
-export default function AllPetsPage() {
+function AllPetsPageContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -353,7 +351,6 @@ export default function AllPetsPage() {
           </div>
         ) : (
           <>
-            {/* FIXED: Removed buggy .filter logic that hid single items. Now directly uses .slice(0,3) */}
             <div className="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-5 mb-10">
               {pets.slice(0, 3).map((pet) => (
                 <PetCard key={pet._id} pet={pet} />
@@ -440,5 +437,13 @@ function FeaturedSpotlight({ pet }) {
         </Button>
       </div>
     </Card>
+  );
+}
+
+export default function AllPetsPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-background flex items-center justify-center"><p className="text-foreground">Loading...</p></div>}>
+      <AllPetsPageContent />
+    </Suspense>
   );
 }

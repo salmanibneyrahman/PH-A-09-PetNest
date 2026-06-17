@@ -107,9 +107,8 @@ function DashboardSidebar({ isOpen, onClose }) {
 
       {/*Sidebar Layout*/}
       <aside
-        className={`w-[260px] h-[calc(100vh-64px)] bg-[var(--color-surface)] border-r border-[var(--color-border)] fixed top-[64px] left-0 flex flex-col z-40 transition-transform duration-300 ${
-          isOpen ? "translate-x-0" : "-translate-x-full"
-        } lg:translate-x-0`}
+        className={`w-[260px] h-[calc(100vh-64px)] bg-[var(--color-surface)] border-r border-[var(--color-border)] fixed top-[64px] left-0 flex flex-col z-40 transition-transform duration-300 ${isOpen ? "translate-x-0" : "-translate-x-full"
+          } lg:translate-x-0`}
       >
         {/* Header */}
         <div className="p-6 pb-5 border-b border-[var(--color-border)]">
@@ -118,9 +117,9 @@ function DashboardSidebar({ isOpen, onClose }) {
             <Card className="bg-[var(--color-surface-2)] border border-[var(--color-border)] p-3">
               <div className="flex items-center gap-2.5">
                 {user.image ? (
-                  <Image 
-                    src={user.image} 
-                    alt={user.name || "User"} 
+                  <Image
+                    src={user.image}
+                    alt={user.name || "User"}
                     width={34}
                     height={34}
                     className="w-[34px] h-[34px] rounded-full object-cover border border-[var(--color-border)] flex-shrink-0"
@@ -153,9 +152,8 @@ function DashboardSidebar({ isOpen, onClose }) {
                     key={item.href}
                     href={item.href}
                     onClick={onClose}
-                    className={`flex items-center gap-3 px-5 py-2.5 mx-3 my-0.5 text-sm rounded-sm no-underline transition-all duration-200 relative ${
-                      active ? "font-semibold text-[var(--color-text-primary)] bg-[rgba(217,249,157,0.08)] border border-[rgba(217,249,157,0.15)]" : "font-medium text-[var(--color-text-secondary)] border border-transparent hover:text-[var(--color-text-primary)] hover:bg-[var(--color-surface-2)]"
-                    }`}
+                    className={`flex items-center gap-3 px-5 py-2.5 mx-3 my-0.5 text-sm rounded-sm no-underline transition-all duration-200 relative ${active ? "font-semibold text-[var(--color-text-primary)] bg-[rgba(217,249,157,0.08)] border border-[rgba(217,249,157,0.15)]" : "font-medium text-[var(--color-text-secondary)] border border-transparent hover:text-[var(--color-text-primary)] hover:bg-[var(--color-surface-2)]"
+                      }`}
                   >
                     <span className={`flex items-center transition-colors duration-200 ${active ? "text-[var(--color-lime)]" : "text-[var(--color-text-muted)]"}`}>{item.icon}</span>
                     {item.label}
@@ -237,6 +235,13 @@ function DashboardContent({ children }) {
 }
 
 export default function DashboardLayout({ children }) {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
   return (
     <AuthProvider>
       <div className="dashboard-navbar-override">

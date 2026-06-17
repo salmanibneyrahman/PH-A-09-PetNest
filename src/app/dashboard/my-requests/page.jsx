@@ -102,16 +102,16 @@ export default function MyRequestsPage() {
         className: "bg-danger/12 text-[var(--color-error)] border-danger/25 px-2.5",
       },
     };
-    
+
     const config = statusConfig[status] || statusConfig.pending;
-    
+
     return (
       <Chip
         variant="bordered"
         size="sm"
         className={`${config.className} font-bold text-[11px] uppercase tracking-wider`}
         startContent={
-          <span className="w-1.5 h-1.5 rounded-full bg-current flex-shrink-0" />
+          <span className="w-1.5 h-1.5 rounded-full bg-current flex-shrink-0 me-1" />
         }
       >
         {status}
@@ -171,11 +171,10 @@ export default function MyRequestsPage() {
           <button
             key={stat.key}
             onClick={() => setFilterStatus(stat.key)}
-            className={`p-5 bg-[var(--color-surface)] rounded-lg text-left cursor-pointer transition-all duration-200 ${
-              filterStatus === stat.key
-                ? `shadow-[0_0_20px_${stat.color}10]`
-                : ""
-            }`}
+            className={`p-5 bg-[var(--color-surface)] rounded-lg text-left cursor-pointer transition-all duration-200 ${filterStatus === stat.key
+              ? `shadow-[0_0_20px_${stat.color}10]`
+              : ""
+              }`}
             style={{
               border: `1px solid ${filterStatus === stat.key ? stat.color + "40" : "var(--color-border)"}`,
             }}
@@ -261,11 +260,10 @@ export default function MyRequestsPage() {
             {filteredRequests.map((request, index) => (
               <div
                 key={request._id}
-                className={`px-6 py-5 flex items-center gap-4 flex-wrap transition-colors duration-200 hover:bg-white/[0.02] ${
-                  index < filteredRequests.length - 1
-                    ? "border-b border-[var(--color-border)]"
-                    : ""
-                }`}
+                className={`px-6 py-5 flex items-center gap-4 flex-wrap transition-colors duration-200 hover:bg-white/[0.02] ${index < filteredRequests.length - 1
+                  ? "border-b border-[var(--color-border)]"
+                  : ""
+                  }`}
               >
                 {/* Pet Image */}
                 <div className="w-[52px] h-[52px] rounded-lg bg-[var(--color-surface-2)] border border-[var(--color-border)] flex items-center justify-center overflow-hidden flex-shrink-0">
@@ -311,7 +309,7 @@ export default function MyRequestsPage() {
                 </div>
 
                 {/* Actions */}
-                <div className="flex items-center gap-3 flex-shrink-0 flex-wrap">
+                <div className="flex items-center gap-3 flex-wrap w-full md:w-auto md:flex-shrink-0 justify-start md:justify-end border-t border-dashed border-[var(--color-border)]/50 pt-3 md:border-t-0 md:pt-0">
                   {getStatusChip(request.status)}
 
                   <Link href={`/pets/${request.petId}`}>
@@ -332,7 +330,7 @@ export default function MyRequestsPage() {
                   {request.status === "pending" && (
                     <>
                       {confirmCancelId === request._id ? (
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-2 flex-wrap">
                           <span className="text-xs text-[var(--color-text-muted)] whitespace-nowrap">
                             Cancel request?
                           </span>
@@ -373,6 +371,7 @@ export default function MyRequestsPage() {
                     </>
                   )}
                 </div>
+
               </div>
             ))}
           </div>

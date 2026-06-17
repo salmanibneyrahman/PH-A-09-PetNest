@@ -4,10 +4,15 @@ export const toastState = {
     toasts: [],
     subscribe(listener) {
         listeners.add(listener);
+        listener([...this.toasts]);
         return () => listeners.delete(listener);
     },
     notify() {
         listeners.forEach((listener) => listener([...this.toasts]));
+    },
+    removeToast(id) {
+        this.toasts = this.toasts.filter(t => t.id !== id);
+        this.notify();
     }
 };
 
@@ -19,6 +24,8 @@ function createToast(message, type, duration) {
 
     toastState.toasts = [...toastState.toasts, newToast];
     toastState.notify();
+
+    return id;
 }
 
 export const toast = {

@@ -41,22 +41,51 @@ export default function MyListingsPage() {
   const [updatingRequestId, setUpdatingRequestId] = useState(null);
   const [showRequestsModal, setShowRequestsModal] = useState(false);
 
-  const fetchPets = useCallback(async () => {
+  const fetchPets = useCallback(async (isSilent = false) => {
     if (!user?.email) return;
-    setIsLoading(true);
+
+    if (!isSilent) {
+      setIsLoading(true);
+    }
+
     try {
       const data = await getOwnerPets(user.email);
-      setPets(data);
+      const notifiedIds = new Set();
+
+      setPets((prevPets) => {
+        if (isSilent && prevPets.length > 0) {
+          data.forEach(newPet => {
+            const oldPet = prevPets.find(p => p._id === newPet._id);
+            if (oldPet && ((newPet.pendingCount || 0) > (oldPet.pendingCount || 0)) && !notifiedIds.has(newPet._id)) {
+
+              notifiedIds.add(newPet._id);
+
+              setTimeout(() => {
+                toast.success(`🔔 New adoption request for ${newPet.name}!`);
+              }, 0);
+            }
+          });
+        }
+        return data;
+      });
+
     } catch (error) {
-      toast.error("Failed to load your listings");
+      if (!isSilent) toast.error("Failed to load your listings");
     } finally {
-      setIsLoading(false);
+      if (!isSilent) {
+        setIsLoading(false);
+      }
     }
   }, [user]);
 
   useEffect(() => {
     fetchPets();
+    const intervalId = setInterval(() => {
+      fetchPets(true);
+    }, 10000);
+    return () => clearInterval(intervalId);
   }, [fetchPets]);
+
 
   const filteredPets = useMemo(() => {
     return pets.filter((pet) => {
@@ -65,13 +94,13 @@ export default function MyListingsPage() {
         (filterStatus === "available" && pet.status === "available") ||
         (filterStatus === "pending" && pet.status === "pending") ||
         (filterStatus === "adopted" && pet.status === "adopted");
-      
+
       const matchesSearch =
         !searchQuery.trim() ||
         pet.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         (pet.species && pet.species.toLowerCase().includes(searchQuery.toLowerCase())) ||
         (pet.breed && pet.breed.toLowerCase().includes(searchQuery.toLowerCase()));
-        
+
       return matchesStatus && matchesSearch;
     });
   }, [pets, filterStatus, searchQuery]);
@@ -142,16 +171,16 @@ export default function MyListingsPage() {
         if (status === "approved") {
           setPets((prev) =>
             prev.map((p) =>
-              p._id === selectedPetForRequests._id 
-                ? { ...p, status: "adopted", pendingCount: 0 } 
+              p._id === selectedPetForRequests._id
+                ? { ...p, status: "adopted", pendingCount: 0 }
                 : p
             )
           );
         } else {
           setPets((prev) =>
             prev.map((p) =>
-              p._id === selectedPetForRequests._id 
-                ? { ...p, pendingCount: Math.max(0, (p.pendingCount || 1) - 1) } 
+              p._id === selectedPetForRequests._id
+                ? { ...p, pendingCount: Math.max(0, (p.pendingCount || 1) - 1) }
                 : p
             )
           );
@@ -568,8 +597,8 @@ const PetCard = ({ pet, onOpenRequests, onEdit, onDelete }) => {
     <Card
       className={`bg-[var(--color-surface)] border shadow-none transition-all duration-200 relative overflow-visible ${isAdopted
         ? "opacity-75 border-[var(--color-border)]"
-        : hasRequests 
-          ? "border-[var(--color-error)] shadow-[0_0_15px_rgba(239,68,68,0.15)]" 
+        : hasRequests
+          ? "border-[var(--color-error)] shadow-[0_0_15px_rgba(239,68,68,0.15)]"
           : "border-[var(--color-border)] hover:border-[rgba(217,249,157,0.2)]"
         }`}
     >

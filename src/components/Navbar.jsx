@@ -173,12 +173,20 @@ export default function Navbar() {
                         </Link>
                     ))}
                     {isAuthenticated && (
-                        <Link
-                            href="/dashboard/my-requests"
-                            className={`nav-link ${isActive("/dashboard/my-requests") ? "active" : ""}`}
-                        >
-                            My Requests
-                        </Link>
+                        <>
+                            <Link
+                                href="/dashboard/my-requests"
+                                className={`nav-link ${isActive("/dashboard/my-requests") ? "active" : ""}`}
+                            >
+                                My Requests
+                            </Link>
+                            <Link
+                                href="/dashboard/wishlist"
+                                className={`nav-link ${isActive("/dashboard/wishlist") ? "active" : ""}`}
+                            >
+                                Wishlist
+                            </Link>
+                        </>
                     )}
                 </nav>
 
@@ -364,6 +372,17 @@ export default function Navbar() {
                                             }
                                             label="My Requests"
                                         />
+                                        <DropdownItem
+                                            href="/dashboard/wishlist"
+                                            icon={
+                                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                                                    stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                                                </svg>
+                                            }
+                                            label="Wishlist"
+                                        />
+
                                     </div>
 
                                     <div
@@ -422,7 +441,7 @@ export default function Navbar() {
                     )}
 
                     <button
-                        id="mobile-toggle-btn" 
+                        id="mobile-toggle-btn"
                         onClick={() => setIsMobileMenuOpen((prev) => !prev)}
                         className="mobile-menu-btn"
                         style={{
@@ -433,8 +452,8 @@ export default function Navbar() {
                             cursor: "pointer",
                             color: "var(--color-text-primary)",
                             display: "none",
-                            position: "relative", 
-                            zIndex: 150,         
+                            position: "relative",
+                            zIndex: 150,
                         }}
                         aria-label="Toggle mobile menu"
                     >
@@ -492,26 +511,48 @@ export default function Navbar() {
                         </Link>
                     ))}
                     {isAuthenticated && (
-                        <Link
-                            href="/dashboard/my-requests"
-                            style={{
-                                display: "block",
-                                padding: "12px 16px",
-                                fontSize: "14px",
-                                fontWeight: "600",
-                                letterSpacing: "0.06em",
-                                textTransform: "uppercase",
-                                color: isActive("/dashboard/my-requests")
-                                    ? "var(--color-lime)"
-                                    : "var(--color-text-secondary)",
-                                borderRadius: "var(--radius-sm)",
-                                background: isActive("/dashboard/my-requests")
-                                    ? "var(--color-lime-glow)"
-                                    : "transparent",
-                            }}
-                        >
-                            My Requests
-                        </Link>
+                        <>
+                            <Link
+                                href="/dashboard/my-requests"
+                                style={{
+                                    display: "block",
+                                    padding: "12px 16px",
+                                    fontSize: "14px",
+                                    fontWeight: "600",
+                                    letterSpacing: "0.06em",
+                                    textTransform: "uppercase",
+                                    color: isActive("/dashboard/my-requests")
+                                        ? "var(--color-lime)"
+                                        : "var(--color-text-secondary)",
+                                    borderRadius: "var(--radius-sm)",
+                                    background: isActive("/dashboard/my-requests")
+                                        ? "var(--color-lime-glow)"
+                                        : "transparent",
+                                }}
+                            >
+                                My Requests
+                            </Link>
+                            <Link
+                                href="/dashboard/wishlist"
+                                style={{
+                                    display: "block",
+                                    padding: "12px 16px",
+                                    fontSize: "14px",
+                                    fontWeight: "600",
+                                    letterSpacing: "0.06em",
+                                    textTransform: "uppercase",
+                                    color: isActive("/dashboard/wishlist")
+                                        ? "var(--color-lime)"
+                                        : "var(--color-text-secondary)",
+                                    borderRadius: "var(--radius-sm)",
+                                    background: isActive("/dashboard/wishlist")
+                                        ? "var(--color-lime-glow)"
+                                        : "transparent",
+                                }}
+                            >
+                                Wishlist
+                            </Link>
+                        </>
                     )}
 
                     <div

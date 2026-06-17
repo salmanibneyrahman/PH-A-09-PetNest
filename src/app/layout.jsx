@@ -1,4 +1,5 @@
 import "./globals.css";
+import ToastContainer from "@/components/ToastContainer";
 
 export const metadata = {
     title: "PetNest - Find Your Perfect Companion",
@@ -29,6 +30,7 @@ export default function RootLayout({ children }) {
             </head>
             <body>
                 {children}
+                <ToastContainer />
             </body>
         </html>
     );

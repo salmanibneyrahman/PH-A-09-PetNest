@@ -5,6 +5,10 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { getAllPets } from "@/lib/api";
 import PetCard from "@/components/PetCard";
 import { Button, Select, Card, Skeleton, ListBox, Label } from "@heroui/react";
+import { motion } from "framer-motion";
+import { useAuth } from "@/lib/AuthContext";
+import { addToWishlist, removeFromWishlist, getWishlist } from "@/lib/api";
+import { toast } from "@/lib/toast";
 import Image from "next/image";
 
 const SPECIES_LIST = [
@@ -351,22 +355,32 @@ function AllPetsPageContent() {
           </div>
         ) : (
           <>
-            <div className="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-5 mb-10">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ staggerChildren: 0.1 }}
+              className="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-5 mb-10"
+            >
               {pets.slice(0, 3).map((pet) => (
                 <PetCard key={pet._id} pet={pet} />
               ))}
-            </div>
+            </motion.div>
 
             {pets.length > 3 && (
               <FeaturedSpotlight pet={pets[3]} />
             )}
 
             {pets.length > 4 && (
-              <div className="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-5 mt-10">
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ staggerChildren: 0.1 }}
+                className="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-5 mt-10"
+              >
                 {pets.slice(4).map((pet) => (
                   <PetCard key={pet._id} pet={pet} />
                 ))}
-              </div>
+              </motion.div>
             )}
           </>
         )}
@@ -377,9 +391,59 @@ function AllPetsPageContent() {
 
 function FeaturedSpotlight({ pet }) {
   const router = useRouter();
+  const { isAuthenticated, user } = useAuth();
   const [imgError, setImgError] = useState(false);
+  const [isInWishlist, setIsInWishlist] = useState(false);
+  const [wishlistId, setWishlistId] = useState(null);
+  const [isWishlistLoading, setIsWishlistLoading] = useState(false);
 
   if (!pet) return null;
+
+  // Check if pet is in user's wishlist
+  useEffect(() => {
+    const checkWishlistStatus = async () => {
+      if (!isAuthenticated || !user?.email) return;
+      try {
+        const wishlistData = await getWishlist(user.email);
+        const found = wishlistData.find((item) => item._id === pet._id);
+        if (found && found.wishlistId) {
+          setIsInWishlist(true);
+          setWishlistId(found.wishlistId);
+        }
+      } catch (error) {
+
+      }
+    };
+    checkWishlistStatus();
+  }, [isAuthenticated, user, pet._id]);
+
+  const handleWishlistToggle = async (e) => {
+    e.stopPropagation();
+    if (!isAuthenticated) {
+      toast.error("Please login to add to wishlist");
+      router.push("/login");
+      return;
+    }
+
+    setIsWishlistLoading(true);
+    try {
+      if (isInWishlist && wishlistId) {
+        await removeFromWishlist(wishlistId);
+        setIsInWishlist(false);
+        setWishlistId(null);
+        toast.success("Removed from wishlist");
+      } else {
+        const result = await addToWishlist(pet._id, user.email);
+        setIsInWishlist(true);
+        setWishlistId(result.id);
+        toast.success("Added to wishlist");
+      }
+    } catch (error) {
+      toast.error(error.message || "Failed to update wishlist");
+    } finally {
+      setIsWishlistLoading(false);
+    }
+  };
 
   return (
     <Card className="grid grid-cols-1 md:grid-cols-2 bg-content1 border border-default-200 rounded-lg overflow-hidden mt-2 shadow-none">
@@ -398,6 +462,66 @@ function FeaturedSpotlight({ pet }) {
             🐦
           </div>
         )}
+
+        {/* WISHLIST HEART BUTTON */}
+        <motion.button
+          onClick={handleWishlistToggle}
+          disabled={isWishlistLoading}
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+          style={{
+            position: "absolute",
+            top: "16px",
+            right: "16px",
+            width: "44px",
+            height: "44px",
+            borderRadius: "50%",
+            background: "rgba(0,0,0,0.6)",
+            backdropFilter: "blur(8px)",
+            border: "1px solid rgba(255,255,255,0.15)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            cursor: isWishlistLoading ? "wait" : "pointer",
+            color: isInWishlist ? "#fb7185" : "rgba(255,255,255,0.8)",
+            transition: "all 0.2s ease",
+            pointerEvents: isWishlistLoading ? "none" : "auto",
+            zIndex: 10,
+          }}
+          aria-label={isInWishlist ? "Remove from wishlist" : "Add to wishlist"}
+        >
+          <motion.svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill={isInWishlist ? "currentColor" : "none"}
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            animate={isInWishlist ? { scale: [1, 1.2, 1] } : {}}
+            transition={{ duration: 0.3 }}
+          >
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+          </motion.svg>
+        </motion.button>
+
+        {/* STATUS BADGE */}
+        <div
+          style={{
+            position: "absolute",
+            top: "16px",
+            left: "16px",
+          }}
+        >
+          {pet.status === "adopted" ? (
+            <span className="badge badge-adopted">ADOPTED</span>
+          ) : pet.status === "pending" ? (
+            <span className="badge badge-pending">PENDING</span>
+          ) : (
+            <span className="badge badge-lime">AVAILABLE</span>
+          )}
+        </div>
       </div>
 
       <div className="p-10 flex flex-col justify-center">

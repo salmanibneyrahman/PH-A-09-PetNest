@@ -1,16 +1,22 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useAuth } from "@/lib/AuthContext";
 import { useRouter } from "next/navigation";
+import { addToWishlist, removeFromWishlist, getWishlist } from "@/lib/api";
+import { toast } from "@/lib/toast";
+import { motion } from "framer-motion";
 import Image from "next/image";
 
 export default function PetCard({ pet }) {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
   const router = useRouter();
   const [isHovered, setIsHovered] = useState(false);
   const [imgError, setImgError] = useState(false);
+  const [isInWishlist, setIsInWishlist] = useState(false);
+  const [wishlistId, setWishlistId] = useState(null);
+  const [isWishlistLoading, setIsWishlistLoading] = useState(false);
 
   const speciesColors = {
     Dog: { border: "rgba(168, 85, 247, 0.4)", glow: "rgba(168, 85, 247, 0.08)" },
@@ -23,6 +29,52 @@ export default function PetCard({ pet }) {
 
   const colors = speciesColors[pet.species] || speciesColors.default;
 
+  // Check if pet is in user's wishlist
+  useEffect(() => {
+    const checkWishlistStatus = async () => {
+      if (!isAuthenticated || !user?.email) return;
+      try {
+        const wishlistData = await getWishlist(user.email);
+        const found = wishlistData.find((item) => item._id === pet._id);
+        if (found && found.wishlistId) {
+          setIsInWishlist(true);
+          setWishlistId(found.wishlistId);
+        }
+      } catch (error) {
+        // Silently fail - wishlist is optional feature
+      }
+    };
+    checkWishlistStatus();
+  }, [isAuthenticated, user, pet._id]);
+
+  const handleWishlistToggle = async (e) => {
+    e.stopPropagation();
+    if (!isAuthenticated) {
+      toast.error("Please login to add to wishlist");
+      router.push("/login");
+      return;
+    }
+
+    setIsWishlistLoading(true);
+    try {
+      if (isInWishlist && wishlistId) {
+        await removeFromWishlist(wishlistId);
+        setIsInWishlist(false);
+        setWishlistId(null);
+        toast.success("Removed from wishlist");
+      } else {
+        const result = await addToWishlist(pet._id, user.email);
+        setIsInWishlist(true);
+        setWishlistId(result.id);
+        toast.success("Added to wishlist");
+      }
+    } catch (error) {
+      toast.error(error.message || "Failed to update wishlist");
+    } finally {
+      setIsWishlistLoading(false);
+    }
+  };
+
   const handleViewDetails = () => {
     if (!isAuthenticated) {
       router.push(`/login?callbackUrl=/pets/${pet._id}`);
@@ -34,7 +86,11 @@ export default function PetCard({ pet }) {
   const isAdopted = pet.status === "adopted";
 
   return (
-    <div
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, ease: "easeOut" }}
+      whileHover={{ y: -4, transition: { duration: 0.2 } }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       style={{
@@ -44,7 +100,6 @@ export default function PetCard({ pet }) {
         overflow: "hidden",
         transition: "all 0.3s ease",
         boxShadow: isHovered ? `0 0 24px ${colors.glow}` : "none",
-        transform: isHovered ? "translateY(-2px)" : "translateY(0)",
         opacity: isAdopted ? 0.7 : 1,
       }}
     >
@@ -108,37 +163,47 @@ export default function PetCard({ pet }) {
           )}
         </div>
 
-        <button
+        {/* WISHLIST HEART BUTTON WITH ANIMATION */}
+        <motion.button
+          onClick={handleWishlistToggle}
+          disabled={isWishlistLoading}
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
           style={{
             position: "absolute",
             top: "12px",
             right: "12px",
-            width: "32px",
-            height: "32px",
+            width: "36px",
+            height: "36px",
             borderRadius: "50%",
             background: "rgba(0,0,0,0.6)",
+            backdropFilter: "blur(4px)",
             border: "1px solid rgba(255,255,255,0.15)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            cursor: "pointer",
-            color: "rgba(255,255,255,0.7)",
+            cursor: isWishlistLoading ? "wait" : "pointer",
+            color: isInWishlist ? "var(--color-coral)" : "rgba(255,255,255,0.7)",
             transition: "all 0.2s ease",
+            pointerEvents: isWishlistLoading ? "none" : "auto",
           }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.color = "var(--color-coral)";
-            e.currentTarget.style.background = "rgba(251, 113, 133, 0.2)";
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.color = "rgba(255,255,255,0.7)";
-            e.currentTarget.style.background = "rgba(0,0,0,0.6)";
-          }}
-          aria-label="Save pet"
+          aria-label={isInWishlist ? "Remove from wishlist" : "Add to wishlist"}
         >
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <motion.svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill={isInWishlist ? "currentColor" : "none"}
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            animate={isInWishlist ? { scale: [1, 1.2, 1] } : {}}
+            transition={{ duration: 0.3 }}
+          >
             <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
-          </svg>
-        </button>
+          </motion.svg>
+        </motion.button>
       </div>
 
       <div style={{ padding: "20px" }}>
@@ -286,6 +351,6 @@ export default function PetCard({ pet }) {
           </button>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }

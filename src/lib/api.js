@@ -162,3 +162,23 @@ export async function cancelRequest(requestId) {
         method: "DELETE",
     });
 }
+
+// ─── WISHLIST API ────────────────────────────────────────────────────────────
+
+export async function addToWishlist(petId, userEmail) {
+  return await apiFetch("/api/wishlist", {
+    method: "POST",
+    body: JSON.stringify({ petId, userEmail }),
+  });
+}
+
+export async function getWishlist(email) {
+  return await apiFetch(`/api/wishlist/${encodeURIComponent(email)}`);
+}
+
+export async function removeFromWishlist(petId, userEmail) {
+  return await apiFetch("/api/wishlist", {
+    method: "DELETE",
+    body: JSON.stringify({ petId, userEmail }),
+  });
+}

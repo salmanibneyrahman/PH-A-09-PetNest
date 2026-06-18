@@ -8,7 +8,7 @@ import { AuthProvider } from "@/lib/AuthContext";
 import { toast } from "@/lib/toast";
 import { Button } from "@heroui/button";
 import { Card } from "@heroui/card";
-import { Spinner } from "@heroui/spinner";
+import LoadingSpinner from "@/components/LoadingSpinner";
 import Image from "next/image";
 import Navbar from "@/components/Navbar";
 
@@ -196,7 +196,7 @@ function DashboardContent({ children }) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[var(--color-bg)]">
         <div className="flex flex-col items-center gap-4">
-          <Spinner size="lg" color="success" />
+          <LoadingSpinner size="lg" color="success" />
           <p className="text-sm text-[var(--color-text-muted)]">Loading dashboard...</p>
         </div>
       </div>

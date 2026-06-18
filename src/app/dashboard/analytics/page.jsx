@@ -5,7 +5,7 @@ import { useAuth } from "@/lib/AuthContext";
 import { getOwnerPets, getUserRequests } from "@/lib/api";
 import { Card, CardBody } from "@heroui/card";
 import { Chip } from "@heroui/chip";
-import { Spinner } from "@heroui/spinner";
+import LoadingSpinner from "@/components/LoadingSpinner";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -124,7 +124,7 @@ export default function AnalyticsPage() {
   if (authLoading || isLoading) {
     return (
       <div className="min-h-[60vh] flex flex-col items-center justify-center">
-        <Spinner size="lg" color="success" />
+        <LoadingSpinner size="48" color="success" />
         <p className="text-sm text-[var(--color-text-muted)] mt-4">
           Loading analytics...
         </p>

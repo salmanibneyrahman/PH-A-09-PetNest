@@ -74,17 +74,11 @@ export default function RegisterPage() {
             newErrors.photoURL = "Photo URL is required";
         } else {
             try {
-                const url = new URL(formData.photoURL);
-                const isImage = /\.(jpeg|jpg|gif|png|webp)/i.test(url.pathname);
-
-                if (!isImage) {
-                    newErrors.photoURL = "Must be a direct image link (ends with .jpg, .png, etc.)";
-                }
+                new URL(formData.photoURL);
             } catch {
                 newErrors.photoURL = "Please enter a valid URL";
             }
         }
-
         if (!formData.password) {
             newErrors.password = "Password is required";
         } else {

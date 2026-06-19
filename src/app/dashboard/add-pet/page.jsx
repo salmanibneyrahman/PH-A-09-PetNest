@@ -43,11 +43,7 @@ export default function AddPetPage() {
       newErrors.imageURL = "Image URL is required";
     } else {
       try {
-        const url = new URL(formData.imageURL);
-        const isImage = /\.(jpeg|jpg|gif|png|webp)/i.test(url.pathname);
-        if (!isImage) {
-          newErrors.imageURL = "Must be a direct image link (ends with .jpg, .png, etc.)";
-        }
+        new URL(formData.imageURL);
       } catch {
         newErrors.imageURL = "Please enter a valid image URL";
       }

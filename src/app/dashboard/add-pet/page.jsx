@@ -39,9 +39,15 @@ export default function AddPetPage() {
     if (!formData.age.trim()) newErrors.age = "Age is required";
     if (!formData.gender) newErrors.gender = "Gender is required";
     if (!formData.location.trim()) newErrors.location = "Location is required";
-    if (formData.imageURL && formData.imageURL.trim()) {
+    if (!formData.imageURL || !formData.imageURL.trim()) {
+      newErrors.imageURL = "Image URL is required";
+    } else {
       try {
-        new URL(formData.imageURL);
+        const url = new URL(formData.imageURL);
+        const isImage = /\.(jpeg|jpg|gif|png|webp)/i.test(url.pathname);
+        if (!isImage) {
+          newErrors.imageURL = "Must be a direct image link (ends with .jpg, .png, etc.)";
+        }
       } catch {
         newErrors.imageURL = "Please enter a valid image URL";
       }

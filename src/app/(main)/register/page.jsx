@@ -70,9 +70,16 @@ export default function RegisterPage() {
             newErrors.email = "Please enter a valid email address";
         }
 
-        if (formData.photoURL && formData.photoURL.trim()) {
+        if (!formData.photoURL || !formData.photoURL.trim()) {
+            newErrors.photoURL = "Photo URL is required";
+        } else {
             try {
-                new URL(formData.photoURL);
+                const url = new URL(formData.photoURL);
+                const isImage = /\.(jpeg|jpg|gif|png|webp)/i.test(url.pathname);
+
+                if (!isImage) {
+                    newErrors.photoURL = "Must be a direct image link (ends with .jpg, .png, etc.)";
+                }
             } catch {
                 newErrors.photoURL = "Please enter a valid URL";
             }
@@ -391,7 +398,7 @@ export default function RegisterPage() {
                             {/* Photo URL */}
                             <div className="flex flex-col gap-1.5">
                                 <label htmlFor="photoURL" className="text-[13px] font-semibold text-foreground">
-                                    Photo URL <span className="text-[11px] font-normal text-default-400 tracking-normal">(optional)</span>
+                                    Photo URL <span className="text-[11px] font-normal text-default-400 tracking-normal">(required)</span>
                                 </label>
                                 <Input
                                     id="photoURL"
